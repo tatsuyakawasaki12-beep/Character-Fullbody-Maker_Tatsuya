@@ -1,6 +1,10 @@
-# Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta 10
+# Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta 11
 
-- UI wording and body-hair workflow refinement
-- Garment front/back/material controls
-- Expanded Character Sheet fields
-- Improved AI body consistency checks
+## Main changes
+- AI-specific garment terminology dictionaries for ChatGPT and Gemini
+- Structural costume-language conversion
+- Safety / balanced / shape-priority prompt modes
+- Japanese explanation of AI-side transformations
+- Neutral-expression retry prompt
+- Improved garment consistency checks
+- Beta10 JSON migration support

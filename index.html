@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta 10</title>
+<title>Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta 11</title>
 <style>
 :root{--bg:#f4f7fb;--panel:#fff;--text:#182235;--muted:#718096;--line:#d9e2ef;--accent:#3563e9;--soft:#eef3ff;--danger:#b42318}
 *{box-sizing:border-box}
@@ -49,7 +49,7 @@ body.level-detail .standard,body.level-detail .detail{display:block}
 <body class="level-easy">
 <header><div class="wrap">
 <h1>Character Fullbody Maker — Tatsuya Edition Ver.2.0</h1>
-<div class="sub">開発版 Beta 10：UI整理・体毛設計・衣装構造・AI別最適化</div>
+<div class="sub">開発版 Beta 11：構造用語変換・AI別辞書・安全表現再生成</div>
 </div></header>
 
 <main>
@@ -112,8 +112,8 @@ body.level-detail .standard,body.level-detail .detail{display:block}
 
 <script>
 "use strict";
-const STORAGE_CURRENT="cfm_beta10_current";
-const STORAGE_LIBRARY="cfm_beta10_library";
+const STORAGE_CURRENT="cfm_beta11_current";
+const STORAGE_LIBRARY="cfm_beta11_library";
 let currentStep=1;
 let toastTimer=null;
 
@@ -128,7 +128,7 @@ const state={
  outputType:"正面・側面・背面の三面図",pose:"軽く脚を開く",armsPose:"両手を頭の後ろで組む",legsPose:"自然",gaze:"自然",
  background:"グレー",lighting:"柔らかなスタジオ照明",camera:"余白を含む全身",style:"フォトリアル",quality:"細部まで鮮明",ratio:"3:4",
  extra:"",locked:"",negative:"余分な手足、不自然な手指、人物重複、顔の不一致、体型の不一致、衣装の左右差、文字化け、ロゴ、透かし",
- assistStrength:"自然",assistAdjustWeight:"提案のみ",assistLockNonBody:"固定する", trailBelow:"ヘソ下・細く自然",trailAroundNavel:"ヘソを通過",trailAbove:"ヘソ上・細く自然",trailChestLink:"胸毛とはつながらない", pubicDensity:"自然",groinHair:"自然",innerThighHair:"薄い",hairContinuity:"自然につながる",lowerHairSpread:"陰毛周辺にまとまる",lowerHairDensity:"自然",lowerHairConnection:"全体が自然につながる", framingSafety:"自動で見切れ防止",infoDisplay:"表示しない",infoLayout:"シンプル一行",infoPlacement:"上部の白余白",infoLanguage:"日本語",nameDisplayRule:"入力どおり表示",referenceMode:"通常衣装",showProject:"表示しない",projectName:"Character Fullbody Maker",showVersion:"表示しない",sheetVersion:"2026.07",showSheetNo:"表示しない",sheetNo:"001",showCreator:"表示しない",creatorName:"Tatsuya",showTraits:"表示しない",showHair:"表示しない",showEyes:"表示しない",showOutfit:"表示しない",showPose:"表示しない",showNotes:"表示しない",targetAI:"ChatGPT画像生成",outputLanguage:"英語のみ", settingLevel:"easy",changeMode:"confirm",projectStatus:"作成途中"
+ assistStrength:"自然",assistAdjustWeight:"提案のみ",assistLockNonBody:"固定する", trailBelow:"ヘソ下・細く自然",trailAroundNavel:"ヘソを通過",trailAbove:"ヘソ上・細く自然",trailChestLink:"胸毛とはつながらない", pubicDensity:"自然",groinHair:"自然",innerThighHair:"薄い",hairContinuity:"自然につながる",lowerHairSpread:"陰毛周辺にまとまる",lowerHairDensity:"自然",lowerHairConnection:"全体が自然につながる", framingSafety:"自動で見切れ防止",infoDisplay:"表示しない",infoLayout:"シンプル一行",infoPlacement:"上部の白余白",infoLanguage:"日本語",nameDisplayRule:"入力どおり表示",referenceMode:"通常衣装",showProject:"表示しない",projectName:"Character Fullbody Maker",showVersion:"表示しない",sheetVersion:"2026.07",showSheetNo:"表示しない",sheetNo:"001",showCreator:"表示しない",creatorName:"Tatsuya",showTraits:"表示しない",showHair:"表示しない",showEyes:"表示しない",showOutfit:"表示しない",showPose:"表示しない",showNotes:"表示しない",targetAI:"ChatGPT画像生成",promptSensitivity:"バランス",safeRetryLevel:"通常",outputLanguage:"英語のみ", settingLevel:"easy",changeMode:"confirm",projectStatus:"作成途中"
 };
 const initial=JSON.parse(JSON.stringify(state));
 const stepNames=["基本情報","顔","髪","肌","身体","体毛","衣装","ポーズ","背景","完成"];
@@ -305,17 +305,31 @@ function pageHtml(){
  </div>
  <div class="note">Character Sheet／制作資料では、AIによる要約・推測・特徴文の創作を禁止し、入力済みの設定値だけを表示します。</div>${navButtons()}`;
 
- return `<h2 class="section-title">STEP 10　完成</h2><div class="lead">日本語で設定内容を確認し、AIへは最適化した英語プロンプトだけを送ります。</div><div class="grid">
- ${field("targetAI","生成AI",["ChatGPT画像生成","Gemini画像生成"],"wide")}
+ return `<h2 class="section-title">STEP 10　完成</h2>
+ <div class="lead">画面上の日本語設定を、選択したAIが理解しやすい英語の構造設計表現へ変換します。</div>
+ <div class="grid">
+ ${field("targetAI","生成AI",["ChatGPT画像生成","Gemini画像生成"],"standard")}
+ ${field("promptSensitivity","衣装表現の変換強度",["安全優先","バランス","形状再現優先"],"standard")}
  ${textareaField("extra","追加指定","日本語で入力できます","wide")}
  ${textareaField("locked","変更禁止","日本語で入力できます","wide")}
  ${textareaField("negative","避ける要素","日本語で入力できます","wide")}
  </div>
+ <div class="help">安全優先：より中立的な衣装設計用語／バランス：安全性と形状再現の両立／形状再現優先：前後形状をより具体的に記述します。いずれも成人の非性的な制作資料として構成します。</div>
+
  <h3>日本語設定サマリー</h3>
  <div id="jpSummary" class="summary-output"></div>
+
+ <h3>AIへの変換内容</h3>
+ <div id="transformSummary" class="transform-output"></div>
+
  <h3>AI送信用・英語プロンプト</h3>
+ <div id="promptStatus" class="prompt-status">通常表現</div>
  <textarea id="output" class="output"></textarea>
- <div class="note">「コピー」は英語プロンプトだけをコピーします。</div>
+ <div class="secondary-actions">
+   <button id="saferRetryBtn">安全表現で再生成</button>
+   <button id="normalPromptBtn">通常表現に戻す</button>
+ </div>
+ <div class="note">「安全表現で再生成」は、設定内容を削除するのではなく、同じ衣装をより中立的な構造設計用語で組み直します。「コピー」は現在表示中の英語プロンプトだけをコピーします。</div>
  <div class="actions"><button id="prevBtn">◀ 前へ</button><button id="copyBtn" class="primary">英語プロンプトをコピー</button></div>`;
 }
 
@@ -326,6 +340,18 @@ function bindPage(){
  });
  if($("prevBtn"))$("prevBtn").addEventListener("click",()=>{savePageToState();if(currentStep>1){currentStep--;render();window.scrollTo({top:0,behavior:"smooth"})}});
  if($("nextBtn"))$("nextBtn").addEventListener("click",()=>{savePageToState();if(currentStep<10){currentStep++;render();window.scrollTo({top:0,behavior:"smooth"})}else generatePrompt()});
+ if($("saferRetryBtn"))$("saferRetryBtn").addEventListener("click",()=>{
+   savePageToState();
+   state.safeRetryLevel="安全表現";
+   generatePrompt();
+   showToast("より中立的な構造設計表現で再生成しました。");
+ });
+ if($("normalPromptBtn"))$("normalPromptBtn").addEventListener("click",()=>{
+   savePageToState();
+   state.safeRetryLevel="通常";
+   generatePrompt();
+   showToast("通常の変換表現へ戻しました。");
+ });
  if($("copyBtn"))$("copyBtn").addEventListener("click",async()=>{
    savePageToState();
    generatePrompt();
@@ -373,20 +399,73 @@ function suggestedWeightRange(){
  const h=parseNumber(state.height,180)/100;
  return {low:Math.round(18.5*h*h),mid:Math.round(22*h*h),high:Math.round(24.9*h*h)};
 }
-function topGarmentDescription(value){
- const map={
-  "上半身裸":"no upper-body garment",
-  "Tシャツ(無地)":"a plain T-shirt with no text, logo, or graphic",
-  "Tシャツ(ノースリーブ)":"a sleeveless T-shirt retaining a conventional T-shirt neckline and torso shape",
-  "シャツ(長袖)":"a long-sleeved collared shirt",
-  "シャツ(半袖)":"a short-sleeved collared shirt",
-  "ポロシャツ(半袖)":"a short-sleeved polo shirt",
-  "タンクトップ(インナー)":"an undershirt-style tank top with a moderately deep U-neck, regular back, straight hem, and enough length to cover the abdomen",
-  "タンクトップ(レイヤード)":"a layered tank top with a higher U-neck, racerback, long length, and rounded hem",
-  "タンクトップ(ボディビル)":"a bodybuilding stringer tank with an extremely deep front scoop, very narrow straps, open sides, T-back, and long rounded hem",
-  "スポーツトップ(ノースリーブ)":"a sleeveless athletic top"
+function promptProfile(){
+ return {
+   ai:state.targetAI,
+   sensitivity:state.promptSensitivity||"バランス",
+   retry:state.safeRetryLevel||"通常"
  };
- return map[value]||value;
+}
+function structuralTerm(level, safety, balanced, precise){
+ const p=promptProfile();
+ if(p.retry==="安全表現")return safety;
+ if(p.sensitivity==="安全優先")return safety;
+ if(p.sensitivity==="形状再現優先")return precise;
+ return balanced;
+}
+function topGarmentTranslation(value){
+ const common={
+  "上半身裸":{
+    safety:"no upper-body garment; the torso is shown only for neutral anatomy and costume-fit reference",
+    balanced:"no upper-body garment",
+    precise:"no upper-body garment; unobstructed torso for adult character turnaround reference",
+    jp:"上半身衣装なし。成人キャラクターの人体・衣装フィット確認用として指示"
+  },
+  "Tシャツ(無地)":{
+    safety:"a plain, opaque T-shirt with no text, logo, or graphic",
+    balanced:"a plain T-shirt with no text, logo, or graphic",
+    precise:"a plain opaque T-shirt with a conventional crew neckline and no text, logo, or graphic",
+    jp:"無地Tシャツとして、文字・ロゴ・柄を付けないよう指示"
+  },
+  "Tシャツ(ノースリーブ)":{
+    safety:"an opaque sleeveless T-shirt with a conventional neckline and full torso coverage",
+    balanced:"a sleeveless T-shirt retaining a conventional T-shirt neckline and torso shape",
+    precise:"a sleeveless T-shirt with a standard crew neckline, broad shoulder panels, and full torso coverage",
+    jp:"通常のTシャツ形状を残したノースリーブとして指示"
+  },
+  "シャツ(長袖)":{safety:"an opaque long-sleeved collared shirt",balanced:"a long-sleeved collared shirt",precise:"a structured long-sleeved collared shirt",jp:"長袖の襟付きシャツとして指示"},
+  "シャツ(半袖)":{safety:"an opaque short-sleeved collared shirt",balanced:"a short-sleeved collared shirt",precise:"a structured short-sleeved collared shirt",jp:"半袖の襟付きシャツとして指示"},
+  "ポロシャツ(半袖)":{safety:"an opaque short-sleeved polo shirt",balanced:"a short-sleeved polo shirt",precise:"a fitted short-sleeved polo shirt with a conventional collar and placket",jp:"半袖ポロシャツとして指示"},
+  "タンクトップ(インナー)":{
+    safety:"an opaque undershirt-style tank top with moderate arm openings and full abdominal coverage",
+    balanced:"an undershirt-style tank top with a moderately deep U-neck, regular back, straight hem, and enough length to cover the abdomen",
+    precise:"an undershirt-style tank top with a moderately deep U-neck, regular full back, moderate arm openings, straight hem, and full abdominal coverage",
+    jp:"インナー型タンクトップとして、腹部を覆う十分な丈と通常の背面を指示"
+  },
+  "タンクトップ(レイヤード)":{
+    safety:"an opaque layered tank top with a higher neckline, athletic back, and long rounded hem",
+    balanced:"a layered tank top with a higher U-neck, racerback, long length, and rounded hem",
+    precise:"a layered tank top with a high U-neck, racerback construction, extended length, and pronounced rounded hem",
+    jp:"レイヤード用タンクトップとして、詰まった首元・レーサーバック・長い丸裾を指示"
+  },
+  "タンクトップ(ボディビル)":{
+    safety:"an opaque bodybuilding training tank with narrow shoulder straps, large arm openings, an athletic narrow-back construction, and a long hem",
+    balanced:"a bodybuilding training tank with a deep front scoop, narrow shoulder straps, large arm openings, a narrow athletic back panel, and a long rounded hem",
+    precise:"a bodybuilding stringer-style training tank with a very deep front scoop, extremely narrow shoulder straps, arm openings extending toward the waist, a very narrow central athletic back panel, and a long rounded hem",
+    jp:"ボディビル用トレーニングタンクとして、深い前開き・細い肩紐・大きな脇口・細い背面パネルを構造的に指示"
+  },
+  "スポーツトップ(ノースリーブ)":{
+    safety:"an opaque sleeveless athletic top with full torso coverage",
+    balanced:"a sleeveless athletic top",
+    precise:"a fitted sleeveless athletic top with performance fabric and full torso coverage",
+    jp:"ノースリーブのスポーツトップとして指示"
+  }
+ };
+ const item=common[value]||{safety:value,balanced:value,precise:value,jp:`「${value}」を衣装名として指示`};
+ return {
+   en:structuralTerm(value,item.safety,item.balanced,item.precise),
+   jp:item.jp
+ };
 }
 function topFitDescription(){
  const fitMap={"コンプレッション":"compression fit closely following the body","タイト":"tight fit","ジャストフィット":"true-to-size fitted silhouette","レギュラーフィット":"regular fit","ゆったり":"relaxed fit","オーバーサイズ":"oversized fit"};
@@ -394,48 +473,229 @@ function topFitDescription(){
  const hemMap={"身体に沿う":"hem following the body","自然に垂れる":"hem hanging naturally","直線カット":"straight-cut hem","ラウンドヘム":"rounded hem","パンツの外へ出す":"worn untucked","パンツへ入れる":"tucked into the lower garment"};
  return `${fitMap[state.topFit]||state.topFit}; ${lengthMap[state.topLength]||state.topLength}; ${hemMap[state.topHem]||state.topHem}`;
 }
-function bottomGarmentDescription(value){
- const map={
-  "ボクサーパンツ(ハイライズ)":"high-rise boxer briefs with the waistband at or above the navel and a clearly deep rise",
-  "ボクサーパンツ(ミッドライズ)":"mid-rise boxer briefs with the waistband slightly below the navel and a conventional rise",
-  "ボクサーパンツ(ローライズ)":"distinctly low-rise boxer briefs with the waistband resting on the hip-bone line, leaving a clear distance below the navel",
-  "ブリーフ(スタンダード)":"classic briefs with a conventional rise and standard leg openings",
-  "トランクス(クラシック)":"relaxed classic boxer shorts",
-  "競泳パンツ(ビキニ)":"a fitted swim brief with a conventional waist and standard leg openings",
-  "競泳パンツ(ブーメラン)":"a narrow-sided competitive swim brief with high-cut leg openings",
-  "競泳パンツ(クラシック)":"a classic competitive swim brief with standard side width",
-  "競泳パンツ(ボクサー)":"short fitted swim trunks covering the upper thighs",
-  "競泳パンツ(ハーフスパッツ)":"fitted swim jammers ending above the knees",
-  "競泳パンツ(ロングスパッツ)":"long fitted swim leggings",
-  "ビキニ(スタンダード)":"a men's bikini brief with a conventional waist and standard leg openings",
-  "ビキニ(ローライズ)":"a distinctly low-rise men's bikini brief worn on the hip-bone line, with a shallow rise and low-to-standard leg openings; not high-cut",
-  "ビキニ(ハイレグ)":"a high-cut men's bikini brief with leg openings rising clearly toward the hip bones; not low-rise",
-  "ビキニ(スポーツ)":"a fitted athletic men's bikini brief with a conventional waist",
-  "ビルダーパンツ":"compact bodybuilding posing trunks with high leg openings designed to show the upper-thigh musculature",
-  "ふんどし(越中)":"an Etchu-style fundoshi with a waist cord and a rectangular front apron, with the rear cloth covering the buttocks",
-  "ふんどし(六尺)":"a rokushaku fundoshi made from a long narrow cloth, tightly wrapped, with a narrow rear passage and tied waist structure",
-  "ふんどし(もっこ)":"a mokko fundoshi with a pouch-like front and rear coverage, closer in construction to simple briefs",
-  "ふんどし(黒猫)":"a kuroneko fundoshi with a small triangular front panel and a narrow thong-like rear strap",
-  "ふんどし(割)":"a wari fundoshi with a wrapped traditional cloth structure and clearly separated front and rear sections",
-  "相撲まわし":"a traditional sumo mawashi made from a thick cloth belt tightly wrapped around the waist and crotch",
-  "締込み":"a traditional festival shimekomi with a tightly wrapped waist and narrow rear section",
-  "デニムパンツ(ロング)":"full-length denim jeans",
-  "チノパン(ロング)":"full-length chino trousers",
-  "スラックス(ロング)":"full-length tailored slacks",
-  "ショートパンツ":"above-the-knee shorts",
-  "スポーツパンツ":"athletic shorts or trousers"
+function bottomGarmentTranslation(value){
+ const ai=state.targetAI;
+ const items={
+  "ボクサーパンツ(ハイライズ)":{
+   safety:"opaque high-rise boxer briefs with a deep waistband at or above the navel and full front and rear coverage",
+   balanced:"high-rise boxer briefs with the waistband at or above the navel and a clearly deep rise",
+   precise:"high-rise boxer briefs with a broad waistband positioned at or above the navel, long rise depth, short fitted legs, and full rear coverage",
+   jp:"ハイライズのボクサーパンツとして、へそ付近以上の腰位置と深い股上を指示"
+  },
+  "ボクサーパンツ(ミッドライズ)":{
+   safety:"opaque mid-rise boxer briefs with a standard waistband slightly below the navel and full coverage",
+   balanced:"mid-rise boxer briefs with the waistband slightly below the navel and a conventional rise",
+   precise:"mid-rise boxer briefs with a waistband slightly below the navel, conventional rise depth, short fitted legs, and full rear coverage",
+   jp:"ミッドライズのボクサーパンツとして、へその少し下の腰位置を指示"
+  },
+  "ボクサーパンツ(ローライズ)":{
+   safety:"opaque low-rise boxer briefs with the waistband resting securely along the hip-bone line and full front and rear coverage",
+   balanced:"distinctly low-rise boxer briefs with the waistband resting on the hip-bone line, leaving a clear distance below the navel",
+   precise:"distinctly low-rise boxer briefs with a broad waistband placed on the hip-bone and pelvic line, a shallow rise, short fitted legs, and full rear coverage",
+   jp:"ローライズのボクサーパンツとして、腰骨ラインの低い腰位置と浅い股上を指示"
+  },
+  "ブリーフ(スタンダード)":{
+   safety:"opaque classic briefs with a conventional rise and full appropriate coverage",
+   balanced:"classic briefs with a conventional rise and standard leg openings",
+   precise:"classic briefs with a mid-rise waistband, standard side panels, standard leg openings, and full rear coverage",
+   jp:"標準的なブリーフとして、中程度の股上・標準脚ぐり・十分な背面被覆を指示"
+  },
+  "トランクス(クラシック)":{
+   safety:"opaque relaxed classic boxer shorts with full coverage",
+   balanced:"relaxed classic boxer shorts",
+   precise:"relaxed classic boxer shorts with a loose rectangular silhouette, short legs, and full coverage",
+   jp:"ゆったりしたクラシックトランクスとして指示"
+  },
+  "競泳パンツ(ビキニ)":{
+   safety:"opaque fitted competitive swim briefs with a conventional waist, standard leg openings, and full appropriate coverage",
+   balanced:"fitted competitive swim briefs with a conventional waist and standard leg openings",
+   precise:"fitted competitive swim briefs with a conventional waistband, standard side width, standard-cut leg openings, shaped front panel, and full rear coverage",
+   jp:"競泳用ビキニとして、標準腰位置・標準脚ぐり・競泳素材を指示"
+  },
+  "競泳パンツ(ブーメラン)":{
+   safety:"opaque compact competitive swim briefs with narrow side panels and high athletic leg openings",
+   balanced:"compact competitive swim briefs with narrow side panels and high-cut athletic leg openings",
+   precise:"compact competitive swim briefs with very narrow side panels, high athletic leg openings rising toward the hip bones, a shaped front panel, and secure rear coverage",
+   jp:"ブーメラン型競泳パンツとして、細い脇幅と高い競技用脚ぐりを指示"
+  },
+  "競泳パンツ(クラシック)":{
+   safety:"opaque classic competitive swim briefs with standard side width and secure coverage",
+   balanced:"classic competitive swim briefs with standard side width",
+   precise:"classic competitive swim briefs with a conventional waistband, standard side width, medium leg openings, shaped front panel, and full rear coverage",
+   jp:"クラシック型競泳パンツとして、標準的な脇幅と被覆を指示"
+  },
+  "競泳パンツ(ボクサー)":{
+   safety:"opaque fitted square-cut swim trunks covering the upper thighs",
+   balanced:"short fitted swim trunks covering the upper thighs",
+   precise:"fitted square-cut swim trunks with a conventional waistband, short legs covering the upper thighs, and full rear coverage",
+   jp:"ボクサー型競泳パンツとして、上部太ももまで覆う短い脚部を指示"
+  },
+  "競泳パンツ(ハーフスパッツ)":{
+   safety:"opaque fitted swim jammers ending above the knees",
+   balanced:"fitted swim jammers ending above the knees",
+   precise:"compression-fit swim jammers extending from the waist to just above the knees",
+   jp:"ハーフスパッツ型競泳パンツとして、膝上までの丈を指示"
+  },
+  "競泳パンツ(ロングスパッツ)":{
+   safety:"opaque long fitted swim leggings",
+   balanced:"long fitted swim leggings",
+   precise:"compression-fit long swim leggings extending from the waist to the ankles",
+   jp:"ロングスパッツ型競泳パンツとして、足首付近までの丈を指示"
+  },
+  "ビキニ(スタンダード)":{
+   safety:"opaque compact men's brief-style garment with a conventional waist, standard leg openings, and secure coverage",
+   balanced:"a compact men's bikini-style brief with a conventional waist and standard leg openings",
+   precise:"a compact men's bikini-style brief with a conventional waistband, standard side panels, standard leg openings, a shaped front panel, and standard rear coverage",
+   jp:"スタンダードビキニとして、標準腰位置・標準脚ぐり・標準被覆を指示"
+  },
+  "ビキニ(ローライズ)":{
+   safety:"opaque compact low-rise men's brief-style garment worn securely on the hip-bone line with low-to-standard leg openings",
+   balanced:"a distinctly low-rise compact men's brief-style garment worn on the hip-bone line, with a shallow rise and low-to-standard leg openings; not high-cut",
+   precise:"a distinctly low-rise compact men's bikini-style brief with the waistband on the hip-bone line, shallow front and back rise, narrow-to-standard side panels, low-to-standard leg openings, and secure rear coverage",
+   jp:"ローライズビキニとして、腰骨ライン・浅い股上・低めから標準の脚ぐりを指示"
+  },
+  "ビキニ(ハイレグ)":{
+   safety:"opaque compact men's brief-style garment with clearly elevated athletic leg openings and secure coverage",
+   balanced:"a compact men's brief-style garment with high athletic leg openings rising clearly toward the hip bones; not low-cut",
+   precise:"a high-leg compact men's bikini-style brief with leg openings rising clearly toward the hip bones, narrow side panels, conventional waistband height, shaped front panel, and secure rear coverage",
+   jp:"ハイレグビキニとして、腰骨方向へ明確に高く上がる脚ぐりを指示"
+  },
+  "ビキニ(スポーツ)":{
+   safety:"opaque fitted athletic brief-style garment with secure coverage",
+   balanced:"a fitted athletic men's brief-style garment with a conventional waist",
+   precise:"a fitted athletic men's bikini-style brief with performance fabric, conventional waistband, medium-high leg openings, and secure rear coverage",
+   jp:"スポーツビキニとして、運動用素材と安定した被覆を指示"
+  },
+  "ビルダーパンツ":{
+   safety:"opaque compact bodybuilding posing garment with high athletic leg openings and secure front and rear panels",
+   balanced:"compact bodybuilding posing trunks with high athletic leg openings designed to show the upper-thigh musculature while maintaining appropriate coverage",
+   precise:"compact bodybuilding posing trunks with a low waistband, very high athletic leg openings, narrow side panels, a shaped opaque front panel, and a secure compact rear panel",
+   jp:"ビルダーパンツとして、筋肉確認用の高い脚ぐり・細い脇幅・不透明な前後パネルを指示"
+  },
+  "ふんどし(越中)":{
+   safety:"an opaque traditional Japanese wrapped-waist cloth garment with a waist cord, rectangular front apron, and broad rear cloth panel",
+   balanced:"a traditional Japanese wrapped-waist cloth garment in the Etchu construction, with a waist cord, rectangular front apron, and rear cloth panel covering the seat",
+   precise:"an Etchu-style traditional Japanese wrapped-waist garment with a separate waist cord, a rectangular front apron hanging from the waist, and a broad rear cloth panel providing appropriate coverage",
+   jp:"越中褌を、腰紐・長方形の前垂れ・広い背面布からなる伝統的な巻き布衣装として変換"
+  },
+  "ふんどし(六尺)":{
+   safety:"an opaque traditional Japanese wrapped-waist cloth garment made from a long narrow fabric strip, secured around the waist and arranged as a narrow central rear cloth section",
+   balanced:"a traditional Japanese wrapped-waist cloth garment made from one long narrow fabric strip, tightly secured around the waist, passed between the legs, and arranged as a narrow central rear cloth section with appropriate coverage",
+   precise:"a rokushaku-style traditional Japanese wrapped-waist garment made from one long narrow strip of opaque cloth, wrapped repeatedly around the waist, routed between the legs, tightened at the front, and forming a narrow central rear cloth section",
+   jp:"六尺褌を、一本の長い細幅布を腰へ巻き、脚の間を通して固定する伝統衣装として変換"
+  },
+  "ふんどし(もっこ)":{
+   safety:"an opaque traditional Japanese pouch-style wrapped garment with a supported front panel and broad rear coverage",
+   balanced:"a traditional Japanese mokko-style wrapped garment with a supported pouch-shaped front panel, waist ties, and a broad rear cloth panel",
+   precise:"a mokko-style traditional Japanese garment with side waist ties, a softly shaped front cloth panel, and a broad rear panel resembling simple brief construction",
+   jp:"もっこ褌を、紐で支える前面布と広い背面布を持つ伝統衣装として変換"
+  },
+  "ふんどし(黒猫)":{
+   safety:"an opaque traditional Japanese minimal wrapped-waist cloth garment with a small triangular front panel and a narrow central rear cloth section, maintaining appropriate coverage",
+   balanced:"a traditional Japanese minimal wrapped-waist cloth garment with a small triangular front panel, thin waist cords, and a narrow central rear cloth section, shown strictly as costume-construction reference",
+   precise:"a kuroneko-style traditional Japanese wrapped-waist garment with a compact triangular opaque front panel, very thin waist cords, and a narrow central rear cloth strip, while maintaining non-explicit appropriate coverage",
+   jp:"黒猫褌を、小さな三角形の前面布・細い腰紐・細い中央背面布からなる衣装構造として変換"
+  },
+  "ふんどし(割)":{
+   safety:"an opaque traditional Japanese wrapped cloth garment with separately arranged front and rear cloth sections and secure waist wrapping",
+   balanced:"a traditional Japanese wari-style wrapped cloth garment with securely wrapped waist fabric and clearly separated front and rear cloth sections",
+   precise:"a wari-style traditional Japanese wrapped garment with a secure layered waist wrap, a structured front cloth section, and a separately arranged rear cloth section",
+   jp:"割褌を、腰巻きと前後に分かれた布構造を持つ伝統衣装として変換"
+  },
+  "相撲まわし":{
+   safety:"an opaque traditional sumo training belt made from thick wrapped cloth with secure full construction",
+   balanced:"a traditional sumo mawashi made from a thick opaque cloth belt tightly and securely wrapped around the waist and lower torso",
+   precise:"a traditional sumo mawashi made from a long thick opaque cloth, repeatedly wrapped around the waist, secured through a central lower wrap, and finished with a firm rear knot structure",
+   jp:"相撲まわしを、厚い長布を腰へ複数回巻いて固定する競技衣装として変換"
+  },
+  "締込み":{
+   safety:"an opaque traditional festival wrapped-waist garment with secure waist wrapping and a narrow central rear cloth section",
+   balanced:"a traditional festival shimekomi constructed from opaque wrapped cloth, with a tightly secured waist band, structured front cloth, and narrow central rear section",
+   precise:"a traditional festival shimekomi made from opaque cloth tightly wrapped around the waist, with a compact structured front panel and a narrow central rear cloth section",
+   jp:"締込みを、強く固定した腰巻き・前面布・細い中央背面布からなる祭礼衣装として変換"
+  },
+  "デニムパンツ(ロング)":{safety:"opaque full-length denim jeans",balanced:"full-length denim jeans",precise:"full-length structured denim jeans with a conventional waistband and straight legs",jp:"ロングデニムパンツとして指示"},
+  "チノパン(ロング)":{safety:"opaque full-length chino trousers",balanced:"full-length chino trousers",precise:"full-length chino trousers with a conventional waistband and straight legs",jp:"ロングチノパンとして指示"},
+  "スラックス(ロング)":{safety:"opaque full-length tailored slacks",balanced:"full-length tailored slacks",precise:"full-length tailored slacks with pressed creases and a conventional waistband",jp:"ロングスラックスとして指示"},
+  "ショートパンツ":{safety:"opaque above-the-knee shorts with full coverage",balanced:"above-the-knee shorts",precise:"above-the-knee shorts with a conventional waistband, relaxed leg openings, and full coverage",jp:"膝上丈のショートパンツとして指示"},
+  "スポーツパンツ":{safety:"opaque athletic shorts or trousers with full coverage",balanced:"athletic shorts or trousers",precise:"performance-fabric athletic bottoms with a secure waistband and full coverage",jp:"スポーツパンツとして指示"}
  };
- return map[value]||value;
+ const item=items[value]||{safety:value,balanced:value,precise:value,jp:`「${value}」を衣装名として指示`};
+ let en=structuralTerm(value,item.safety,item.balanced,item.precise);
+ if(ai==="Gemini画像生成"){
+   en=en.replace(/; /g,", ");
+ }
+ return {en,jp:item.jp};
 }
-function bottomShapeDescription(){
- const rise={"自動":"","ハイライズ：へそ付近から上":"high-rise waistband at or above the navel","ミッドライズ：へその少し下":"mid-rise waistband slightly below the navel","ローライズ：腰骨・骨盤付近":"low-rise waistband placed on the hip-bone and pelvic line"}[state.bottomRise]||"";
- const leg={"自動":"","低い":"low-cut leg openings","標準":"standard leg openings","高い":"high-cut leg openings","非常に高い":"very high-cut leg openings"}[state.bottomLegOpening]||"";
- const side={"自動":"","広い":"wide side panels","標準":"standard side width","細い":"narrow side panels","非常に細い":"very narrow side straps"}[state.bottomSideWidth]||"";
- const coverage={"自動":"","全面を覆う":"full rear coverage","標準":"standard rear coverage","少なめ":"reduced rear coverage","Tバック状":"thong-like rear coverage"}[state.bottomCoverage]||"";
- const front={"自動":"","平坦":"flat front panel","自然な立体":"naturally contoured front panel","しっかり立体":"strongly contoured front panel","縦長":"vertically elongated front panel","横長":"horizontally wide front panel","三角形":"triangular front panel"}[state.bottomFrontShape]||"";
- const back={"自動":"","全面":"full back panel","標準":"standard back panel","細い中央線":"narrow central rear strip","Tバック":"T-back construction","布で広く覆う":"broad cloth coverage at the rear"}[state.bottomBackShape]||"";
- const material={"自動":"","綿":"cotton fabric","伸縮性のある綿":"stretch cotton","競泳水着素材":"smooth competitive swimwear fabric","光沢あり":"slightly glossy material","マット":"matte material","厚手布":"thick woven cloth","薄手布":"lightweight cloth"}[state.bottomMaterial]||"";
- return [rise,leg,side,coverage,front,back,material].filter(Boolean).join("; ");
+function bottomShapeTranslation(){
+ const p=promptProfile();
+ const riseMap={
+  "自動":{en:"",jp:"股上は衣装既定値"},
+  "ハイライズ：へそ付近から上":{en:"high-rise waistband positioned at or above the navel",jp:"腰位置はへそ付近以上"},
+  "ミッドライズ：へその少し下":{en:"mid-rise waistband positioned slightly below the navel",jp:"腰位置はへその少し下"},
+  "ローライズ：腰骨・骨盤付近":{en:"low-rise waistband securely positioned along the hip-bone and pelvic line",jp:"腰位置は腰骨・骨盤ライン"}
+ };
+ const legMap={
+  "自動":{en:"",jp:"脚ぐりは衣装既定値"},
+  "低い":{en:"low-cut leg openings",jp:"脚ぐりは低い"},
+  "標準":{en:"standard-cut leg openings",jp:"脚ぐりは標準"},
+  "高い":{en:"high athletic leg openings",jp:"脚ぐりは高い"},
+  "非常に高い":{en:"very high athletic leg openings rising toward the hip bones",jp:"脚ぐりは非常に高い"}
+ };
+ const sideMap={
+  "自動":{en:"",jp:"脇幅は衣装既定値"},
+  "広い":{en:"wide side panels",jp:"脇幅は広い"},
+  "標準":{en:"standard-width side panels",jp:"脇幅は標準"},
+  "細い":{en:"narrow side panels",jp:"脇幅は細い"},
+  "非常に細い":{en:structuralTerm("side","slim side connections","very narrow side panels","extremely narrow side straps"),jp:"脇幅は非常に細い"}
+ };
+ const coverageMap={
+  "自動":{en:"",jp:"背面被覆は衣装既定値"},
+  "全面を覆う":{en:"full rear fabric coverage",jp:"臀部は全面を覆う"},
+  "標準":{en:"standard rear fabric coverage",jp:"臀部被覆は標準"},
+  "少なめ":{en:structuralTerm("coverage","compact but complete rear panel","reduced rear fabric coverage while maintaining appropriate coverage","small rear panel with reduced fabric area while maintaining non-explicit coverage"),jp:"臀部の布面積は少なめだが適切な被覆を維持"},
+  "Tバック状":{en:structuralTerm("coverage","narrow central rear cloth panel","narrow central rear panel with minimal side fabric","T-shaped narrow central rear panel with minimal side connections, maintaining non-explicit coverage"),jp:"Tバック状を、細い中央背面パネルと最小限の脇布からなる構造として変換"}
+ };
+ const frontMap={
+  "自動":{en:"",jp:"前面形状は衣装既定値"},
+  "平坦":{en:"flat opaque front garment panel",jp:"前面布は平坦"},
+  "自然な立体":{en:"naturally shaped opaque front garment panel for comfortable garment fit",jp:"前面布は自然な立体形状"},
+  "しっかり立体":{en:structuralTerm("front","clearly shaped opaque front garment panel for accurate fit","clearly contoured opaque front garment panel with structured shaping for accurate fit","strongly three-dimensionally contoured opaque front garment panel with structured seams for precise fit, without anatomical emphasis"),jp:"しっかり立体を、身体そのものではなく衣装の立体裁断・縫製構造として変換"},
+  "縦長":{en:"vertically elongated opaque front garment panel",jp:"前面布は縦長"},
+  "横長":{en:"horizontally wide opaque front garment panel",jp:"前面布は横長"},
+  "三角形":{en:"triangular opaque front garment panel",jp:"前面布は三角形"}
+ };
+ const backMap={
+  "自動":{en:"",jp:"背面形状は衣装既定値"},
+  "全面":{en:"broad full-coverage rear garment panel",jp:"背面布は全面型"},
+  "標準":{en:"standard rear garment panel",jp:"背面布は標準型"},
+  "細い中央線":{en:"narrow central rear cloth section",jp:"背面は細い中央布"},
+  "Tバック":{en:structuralTerm("back","narrow central rear cloth panel","narrow T-shaped central rear panel with minimal side fabric","T-shaped narrow central rear panel with very slim side connections, maintaining non-explicit coverage"),jp:"Tバックを、細い中央背面パネルと脇の接続布からなる衣装構造として変換"},
+  "布で広く覆う":{en:"broad rear cloth panel providing full coverage",jp:"背面を広い布で覆う"}
+ };
+ const materialMap={
+  "自動":{en:"",jp:"素材は衣装既定値"},
+  "綿":{en:"opaque cotton fabric",jp:"綿素材"},
+  "伸縮性のある綿":{en:"opaque stretch-cotton fabric",jp:"伸縮性のある綿素材"},
+  "競泳水着素材":{en:"opaque smooth competitive swimwear fabric",jp:"競泳水着素材"},
+  "光沢あり":{en:"opaque slightly glossy performance fabric",jp:"やや光沢のある素材"},
+  "マット":{en:"opaque matte fabric",jp:"マット素材"},
+  "厚手布":{en:"thick opaque woven cloth",jp:"厚手布"},
+  "薄手布":{en:"lightweight but fully opaque cloth",jp:"薄手だが不透明な布"}
+ };
+ const entries=[
+   riseMap[state.bottomRise]||riseMap["自動"],
+   legMap[state.bottomLegOpening]||legMap["自動"],
+   sideMap[state.bottomSideWidth]||sideMap["自動"],
+   coverageMap[state.bottomCoverage]||coverageMap["自動"],
+   frontMap[state.bottomFrontShape]||frontMap["自動"],
+   backMap[state.bottomBackShape]||backMap["自動"],
+   materialMap[state.bottomMaterial]||materialMap["自動"]
+ ];
+ return {
+   en:entries.map(x=>x.en).filter(Boolean).join("; "),
+   jp:entries.map(x=>x.jp).join("／")
+ };
 }
 function lowerHairEnglish(){
  const spread={"陰毛周辺にまとまる":"localized mainly around the covered groin area","下腹部まで自然に広がる":"extending naturally from the covered groin area onto the lower abdomen","下腹部と鼠径部まで広がる":"extending across the lower abdomen and groin region","下腹部・鼠径部・内もも上部まで自然に広がる":"extending naturally across the lower abdomen, groin region, and upper inner thighs","下腹部・鼠径部・内もも上部まで広く濃く広がる":"broadly extending across the lower abdomen, groin region, and upper inner thighs"}[state.lowerHairSpread]||"localized lower-torso distribution";
@@ -444,21 +704,62 @@ function lowerHairEnglish(){
  return `${density} visible lower-torso and upper-thigh body hair, ${spread}, ${connection}; do not expose or emphasize intimate anatomy`;
 }
 function aiSpecificInstruction(){
+ const p=promptProfile();
  if(state.targetAI==="Gemini画像生成"){
-  return `Model-specific guidance for Gemini:
-Use a clean non-sexual adult character-design and costume-reference context.
-Treat each body-shape and garment-shape instruction as a separate requirement.
-Do not average low-rise, mid-rise, high-rise, low-cut, and high-cut garment shapes into one generic brief.
-Keep the face identity identical across all views.
-Render crisp, high-resolution skin, hair, visible body hair, garment seams, and edges.
-For information panels, prefer clear English labels and avoid pseudo-text.`;
+  return `MODEL-SPECIFIC GUIDANCE FOR GEMINI
+This is a clean, non-sexual adult character-design, garment-construction, and orthographic turnaround reference.
+Interpret every garment property independently: waistband height, rise depth, leg-opening height, side-panel width, front-panel construction, rear-panel construction, material, fit, and length.
+Do not collapse distinct garment designs into one generic brief.
+Do not alter the face identity or body proportions between views.
+Use crisp, high-resolution rendering with clean garment seams and edges.
+Keep all selected garments opaque and appropriately covering.
+Information panels must use clear readable labels and only the supplied values.`;
  }
- return `Model-specific guidance for ChatGPT image generation:
-Create a non-sexual adult character turnaround and costume-design reference.
-The subject is an adult and remains appropriately covered by the selected garment.
-Do not reinterpret the request as erotic or pornographic.
-Follow the garment rise, waistband position, leg-opening height, side width, rear coverage, fit, and length exactly.
-Keep the same face, hair, body proportions, garment, and scale in every view.`;
+ return `MODEL-SPECIFIC GUIDANCE FOR CHATGPT IMAGE GENERATION
+Create a clean, non-sexual adult character turnaround and garment-construction reference.
+The subject is an adult and remains appropriately covered by the selected opaque garment.
+Treat terms such as narrow rear panel, wrapped-waist cloth, contoured front panel, and reduced fabric area strictly as garment-pattern and costume-construction instructions.
+Do not reinterpret garment construction as erotic content.
+Follow the selected waistband position, rise depth, leg-opening height, side-panel width, front-panel structure, rear-panel structure, material, fit, and length.
+Keep the same face, hair, body proportions, visible body-hair pattern, garment construction, and scale in every view.
+${p.retry==="安全表現"?"Use the most neutral technical costume-design interpretation and avoid unnecessary anatomical emphasis.":""}`;
+}
+function transformationSummary(){
+ const top=topGarmentTranslation(state.top);
+ const bottom=bottomGarmentTranslation(state.bottom);
+ const shape=bottomShapeTranslation();
+ const mode=state.safeRetryLevel==="安全表現"?"安全表現で再生成":"通常表現";
+ const sensitivity=state.promptSensitivity||"バランス";
+ return `【変換モード】
+生成AI：${state.targetAI}
+衣装表現の変換強度：${sensitivity}
+現在の出力：${mode}
+
+【上半身衣装】
+画面上の設定：${state.top}
+AIへの伝え方：${top.jp}
+英語構造表現：${top.en}
+
+【下半身衣装】
+画面上の設定：${state.bottom}
+AIへの伝え方：${bottom.jp}
+英語構造表現：${bottom.en}
+
+【下半身衣装の個別形状】
+${shape.jp}
+英語構造表現：${shape.en||"衣装既定形状を使用"}
+
+【体毛】
+「量」「どこまで広がるか」「どうつながるか」を分けて英語へ変換します。
+量：${state.lowerHairDensity}
+広がり：${state.lowerHairSpread}
+つながり方：${state.lowerHairConnection}
+
+【共通方針】
+・成人の非性的なキャラクター制作資料として指示
+・衣装は不透明かつ適切な被覆を維持
+・身体そのものではなく、布・パネル・腰位置・脚ぐり・脇幅・縫製形状として記述
+・入力していない人物設定や測定値は追加しない`;
 }
 function japaneseSummary(){
  const bmi=bodyMassIndex(),assessment=bmiAssessment(bmi);
@@ -525,10 +826,13 @@ ${state.targetAI}`;
 
 function generatePrompt(){
  if(!$("output"))return;
- const topDesc=topGarmentDescription(state.top);
+ const topTranslation=topGarmentTranslation(state.top);
+ const topDesc=topTranslation.en;
  const topFit=topFitDescription();
- const bottomDesc=bottomGarmentDescription(state.bottom);
- const bottomShape=bottomShapeDescription();
+ const bottomTranslation=bottomGarmentTranslation(state.bottom);
+ const bottomDesc=bottomTranslation.en;
+ const bottomShapeData=bottomShapeTranslation();
+ const bottomShape=bottomShapeData.en;
  const aiTune=aiSpecificInstruction();
  const upperBare=state.top==="上半身裸";
  const minimalBottom=["ふんどし(越中)","ふんどし(六尺)","ふんどし(もっこ)","ふんどし(黒猫)","ふんどし(割)","相撲まわし","締込み","ビルダーパンツ","ビキニ(スタンダード)","ビキニ(ローライズ)","ビキニ(ハイレグ)","ビキニ(スポーツ)","競泳パンツ(ビキニ)","競泳パンツ(ブーメラン)","競泳パンツ(クラシック)"].includes(state.bottom);
@@ -574,6 +878,12 @@ VISIBLE BODY HAIR
 ${visibleHairLines.join("\n")}
 Keep body hair realistic and consistent across all views. Do not expose or emphasize intimate anatomy.
 
+PROMPT CONVERSION PROFILE
+Target model: ${state.targetAI}.
+Garment-language mode: ${state.promptSensitivity}.
+Expression version: ${state.safeRetryLevel}.
+All garment terms below describe opaque fabric construction, pattern pieces, seam layout, fit, and coverage for a non-sexual adult costume reference.
+
 COSTUME
 Reference context: ${state.referenceMode}. This is an adult character-design and costume-construction reference.
 Upper garment: ${state.top}, color ${state.topColor}.
@@ -582,6 +892,7 @@ Upper-garment fit and length: ${topFit}.
 Lower garment: ${state.bottom}, color ${state.bottomColor}.
 Lower-garment construction: ${bottomDesc}.
 Additional lower-garment geometry: ${bottomShape||"use the garment's defined default geometry"}.
+The lower garment must be opaque, securely constructed, and appropriately covering. Interpret all narrow, reduced, shaped, wrapped, or contoured elements only as fabric pattern and costume construction.
 Keep the subject appropriately covered by the selected garment. Do not replace the selected garment with a generic brief.
 Footwear: ${state.shoes}. Accessories: ${state.accessory}.
 
@@ -624,6 +935,8 @@ ${state.negative||"extra limbs, malformed hands, inconsistent face, inconsistent
 
  $("output").value=prompt;
  if($("jpSummary"))$("jpSummary").textContent=japaneseSummary();
+ if($("transformSummary"))$("transformSummary").textContent=transformationSummary();
+ if($("promptStatus"))$("promptStatus").textContent=state.safeRetryLevel==="安全表現"?"安全表現で再生成済み":"通常表現";
 }
 function safeGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
 function safeSet(k,v){try{localStorage.setItem(k,v);return true}catch(e){return false}}
@@ -648,10 +961,12 @@ function applyAll(o){
  if(o&&o.outputLanguage==="日本語")o.outputLanguage="英語のみ";
  if(o&&o.lowerHairSpread==="標準")o.lowerHairSpread="陰毛周辺にまとまる";
  if(o&&!o.lowerHairConnection)o.lowerHairConnection="全体が自然につながる";
+ if(o&&!o.promptSensitivity)o.promptSensitivity="バランス";
+ if(o&&!o.safeRetryLevel)o.safeRetryLevel="通常";
  if(o&&o.bottom==="ボクサーパンツ(ローライズ)"&&!o.bottomRise)o.bottomRise="ローライズ：腰骨・骨盤付近";
  Object.assign(state,o||{});$("settingLevel").value=state.settingLevel||"easy";$("changeMode").value=state.changeMode||"confirm";$("projectStatus").value=state.projectStatus||"作成途中";render()}
 function saveDraft(){ if(currentStep===10)generatePrompt();
- const data={id:Date.now(),savedAt:new Date().toISOString(),version:"2.0-beta10",currentStep,data:collectAll()};
+ const data={id:Date.now(),savedAt:new Date().toISOString(),version:"2.0-beta11",currentStep,data:collectAll()};
  safeSet(STORAGE_CURRENT,JSON.stringify(data));
  const lib=getLibrary();const idx=lib.findIndex(x=>x.data&&x.data.name===data.data.name&&x.data.projectStatus===data.data.projectStatus);
  if(idx>=0){data.id=lib[idx].id;lib[idx]=data}else lib.unshift(data);setLibrary(lib.slice(0,50));
@@ -666,9 +981,9 @@ function newProject(){
  $("displayStatus").textContent="未保存・新規作成";render();window.scrollTo({top:0,behavior:"smooth"});showToast("新規作成に切り替えました。");
 }
 function exportJSON(){ if(currentStep===10)generatePrompt();
- const data={app:"Character Fullbody Maker — Tatsuya Edition",version:"2.0-beta10",exportedAt:new Date().toISOString(),currentStep,data:collectAll()};
+ const data={app:"Character Fullbody Maker — Tatsuya Edition",version:"2.0-beta11",exportedAt:new Date().toISOString(),currentStep,data:collectAll()};
  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");
- a.href=url;a.download=(state.name.trim()||"character")+"_beta10.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ a.href=url;a.download=(state.name.trim()||"character")+"_beta11.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 function importJSON(file){const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);currentStep=d.currentStep||1;applyAll(d.data||d);showToast("JSONを読み込みました。")}catch(e){alert("JSONを読み込めませんでした。")}};r.readAsText(file)}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
@@ -764,6 +1079,10 @@ function runConsistencyCheck(){
  if(state.bottom==="ビキニ(ハイレグ)"&&state.bottomLegOpening==="低い")issues.push({type:"warn",text:"ビキニ（ハイレグ）に低い脚ぐりが指定されています。"});
  if(state.bottom==="ボクサーパンツ(ローライズ)"&&!["自動","ローライズ：腰骨・骨盤付近"].includes(state.bottomRise))issues.push({type:"warn",text:"ボクサーパンツ（ローライズ）ですが、股上がローライズに設定されていません。"});
  if(state.top==="タンクトップ(インナー)"&&["クロップド丈","短め"].includes(state.topLength))issues.push({type:"warn",text:"タンクトップ（インナー）の丈が短いため、腹部が露出する可能性があります。"});
+ if(state.bottomCoverage==="Tバック状"&&state.bottomBackShape==="全面")issues.push({type:"warn",text:"臀部の覆いは「Tバック状」ですが、背面形状は「全面」です。どちらを優先するか確認してください。"});
+ if(state.bottomBackShape==="Tバック"&&state.bottomCoverage==="全面を覆う")issues.push({type:"warn",text:"背面形状は「Tバック」ですが、臀部の覆いは「全面を覆う」です。設定が矛盾しています。"});
+ if(state.bottomFrontShape==="しっかり立体"&&state.bottomMaterial==="薄手布")issues.push({type:"warn",text:"立体的な前面形状に薄手布を組み合わせています。形状を安定させる場合は伸縮素材または厚みのある素材が適しています。"});
+ if(["ふんどし(六尺)","ふんどし(黒猫)","締込み"].includes(state.bottom)&&state.bottomMaterial==="競泳水着素材")issues.push({type:"warn",text:"伝統的な巻き布衣装に競泳水着素材が指定されています。意図的な組み合わせか確認してください。"});
  if(!issues.length)issues.push({type:"ok",text:"大きな矛盾は見つかりませんでした。"});
 
  $("checkList").innerHTML=issues.map(x=>`<div class="checkitem ${x.type}">${x.text}</div>`).join("");
