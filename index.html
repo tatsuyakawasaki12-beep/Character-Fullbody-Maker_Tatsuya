@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta 11</title>
+<title>Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta 12</title>
 <style>
-:root{--bg:#f4f7fb;--panel:#fff;--text:#182235;--muted:#718096;--line:#d9e2ef;--accent:#3563e9;--soft:#eef3ff;--danger:#b42318}
+:root{--bg:#f4f7fb;--panel:#fff;--text:#182235;--muted:#718096;--line:#d9e2ef;--accent:#3563e9;--soft:#eef3ff;--danger:#b42318;--safe:#16794f;--safe-bg:#eefbf4}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif}
 button,input,select,textarea{font:inherit}
@@ -43,13 +43,14 @@ body.level-detail .standard,body.level-detail .detail{display:block}
 .assist-grid{display:grid;gap:10px}.checklist{display:grid;gap:8px;margin-top:12px}.checkitem{border:1px solid var(--line);border-radius:12px;padding:10px;background:#fff}.checkitem.warn{border-color:#f0b429;background:#fffaf0}.checkitem.ok{border-color:#12b76a;background:#f0fff7}.mini{font-size:12px;color:var(--muted)}.assist-item{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff}.assist-item b{display:block;margin-bottom:4px}
 .toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);background:#182235;color:#fff;padding:12px 16px;border-radius:12px;font-size:13px;font-weight:750;opacity:0;pointer-events:none;transition:.22s;z-index:80;max-width:88%;text-align:center}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.safe-banner{display:none;margin:10px 0;padding:12px 14px;border-radius:12px;background:var(--safe-bg);color:var(--safe);font-weight:900;border:1px solid #9fdec0}.safe-active .safe-banner{display:block}.safe-active #promptStatus{background:var(--safe-bg);color:var(--safe);border:1px solid #9fdec0;font-weight:900}.safe-active #saferRetryBtn{background:var(--safe);color:#fff;border-color:var(--safe)}.safe-active #step10Panel{background:linear-gradient(180deg,#fff 0%,var(--safe-bg) 100%)}.conditional-hidden{display:none!important}
 @media(max-width:720px){.controls,.grid{grid-template-columns:1fr}.wide{grid-column:auto}.steps{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body class="level-easy">
 <header><div class="wrap">
 <h1>Character Fullbody Maker — Tatsuya Edition Ver.2.0</h1>
-<div class="sub">開発版 Beta 11：構造用語変換・AI別辞書・安全表現再生成</div>
+<div class="sub">開発版 Beta 12：条件付き表示・構図最適化・衣装詳細強化</div>
 </div></header>
 
 <main>
@@ -112,8 +113,8 @@ body.level-detail .standard,body.level-detail .detail{display:block}
 
 <script>
 "use strict";
-const STORAGE_CURRENT="cfm_beta11_current";
-const STORAGE_LIBRARY="cfm_beta11_library";
+const STORAGE_CURRENT="cfm_beta12_current";
+const STORAGE_LIBRARY="cfm_beta12_library";
 let currentStep=1;
 let toastTimer=null;
 
@@ -124,8 +125,8 @@ const state={
  skinTone:"健康的",skinTexture:"自然",ageLook:"少し若く見える",wrinkles:"なし",spots:"なし",beard:"なし",
  bodyBuild:"引き締まった",shoulder:"やや広め",neck:"標準",chest:"ほどよく厚い",abdomen:"薄く腹筋",waist:"やや細い",hip:"引き締まった",arms:"引き締まった",hands:"標準",thighs:"引き締まった",calves:"引き締まった",legs:"標準",inseam:"標準",headRatio:"標準",shoeSize:"27.0cm",chestCirc:"94cm",waistCirc:"74cm",
  chestHair:"なし",abHair:"薄い",trail:"ヘソより下だけ・自然",armpit:"やや濃い",armHair:"なし",handHair:"なし",thighHair:"やや濃い",shinHair:"濃い",shoulderBackHair:"なし",upperBackHair:"なし",lowerBackHair:"なし",waistBackHair:"ごく薄い",buttockHair:"薄い",
- top:"上半身裸",bottom:"競泳パンツ(ビキニ)",topColor:"白",bottomColor:"水色",topFit:"ジャストフィット",topLength:"腰骨まで",topHem:"直線カット",bottomRise:"自動",bottomLegOpening:"自動",bottomSideWidth:"自動",bottomCoverage:"自動",bottomFrontShape:"自動",bottomBackShape:"自動",bottomMaterial:"自動",shoes:"裸足",accessory:"なし",
- outputType:"正面・側面・背面の三面図",pose:"軽く脚を開く",armsPose:"両手を頭の後ろで組む",legsPose:"自然",gaze:"自然",
+ top:"上半身裸",topArmhole:"標準",bottom:"競泳パンツ(ビキニ)",topColor:"白",bottomColor:"水色",topFit:"ジャストフィット",topLength:"腰骨まで",topHem:"直線カット",bottomRise:"自動",bottomLegOpening:"自動",bottomSideWidth:"自動",bottomCoverage:"自動",bottomFrontShape:"自動",bottomBackShape:"自動",bottomMaterial:"自動",shoes:"裸足",accessory:"なし",
+ outputType:"正面・側面・背面の三面図",pose:"軽く脚を開く",armsPose:"両手を頭の後ろで組む",legsPose:"自然",framingMargin:"広め",gaze:"自然",
  background:"グレー",lighting:"柔らかなスタジオ照明",camera:"余白を含む全身",style:"フォトリアル",quality:"細部まで鮮明",ratio:"3:4",
  extra:"",locked:"",negative:"余分な手足、不自然な手指、人物重複、顔の不一致、体型の不一致、衣装の左右差、文字化け、ロゴ、透かし",
  assistStrength:"自然",assistAdjustWeight:"提案のみ",assistLockNonBody:"固定する", trailBelow:"ヘソ下・細く自然",trailAroundNavel:"ヘソを通過",trailAbove:"ヘソ上・細く自然",trailChestLink:"胸毛とはつながらない", pubicDensity:"自然",groinHair:"自然",innerThighHair:"薄い",hairContinuity:"自然につながる",lowerHairSpread:"陰毛周辺にまとまる",lowerHairDensity:"自然",lowerHairConnection:"全体が自然につながる", framingSafety:"自動で見切れ防止",infoDisplay:"表示しない",infoLayout:"シンプル一行",infoPlacement:"上部の白余白",infoLanguage:"日本語",nameDisplayRule:"入力どおり表示",referenceMode:"通常衣装",showProject:"表示しない",projectName:"Character Fullbody Maker",showVersion:"表示しない",sheetVersion:"2026.07",showSheetNo:"表示しない",sheetNo:"001",showCreator:"表示しない",creatorName:"Tatsuya",showTraits:"表示しない",showHair:"表示しない",showEyes:"表示しない",showOutfit:"表示しない",showPose:"表示しない",showNotes:"表示しない",targetAI:"ChatGPT画像生成",promptSensitivity:"バランス",safeRetryLevel:"通常",outputLanguage:"英語のみ", settingLevel:"easy",changeMode:"confirm",projectStatus:"作成途中"
@@ -164,8 +165,7 @@ function pageHtml(){
  ${field("height","身長",Array.from({length:51},(_,i)=>(150+i)+"cm"))}
  ${field("weight","体重",Array.from({length:81},(_,i)=>(40+i)+"kg"))}
  ${field("preset","体型プリセット",["日本人標準・標準体型","日本人標準・引き締まった体型","モデル体型","細身","細マッチョ","水泳選手体型","ランナー体型","がっしり体型","自転車競技者体型"],"wide")}
- ${field("inseam","脚の長さ",["短め","やや短め","標準","やや長め","長い"],"standard")}
- ${field("headRatio","頭身",["低め","標準","やや高い","モデル体型"],"standard")}
+  ${field("headRatio","頭身",["低め","標準","やや高い","モデル体型"],"standard")}
  ${field("shoeSize","足のサイズ",Array.from({length:17},(_,i)=>(22+i*.5).toFixed(1)+"cm"),"detail")}
  ${field("chestCirc","胸囲",["指定なし",...Array.from({length:51},(_,i)=>(75+i)+"cm")],"detail")}
  ${field("waistCirc","ウエスト",["指定なし",...Array.from({length:56},(_,i)=>(55+i)+"cm")],"detail")}
@@ -258,6 +258,7 @@ function pageHtml(){
  ${field("topColor","上半身の衣装色",["白","黒","グレー","青","濃紺","水色","赤","緑","紫","ベージュ"])}
  ${field("topFit","上半身衣装のフィット感",["コンプレッション","タイト","ジャストフィット","レギュラーフィット","ゆったり","オーバーサイズ"],"standard")}
  ${field("topLength","上半身衣装の丈",["クロップド丈","短め","ジャスト丈","腰骨まで","ヒップ上部まで","ロング丈"],"standard")}
+ ${field("topArmhole","脇ぐり",["標準","やや深い","深い","ウエスト付近まで深い","非常に深い"],"standard")}
  ${field("topHem","上半身衣装の裾",["身体に沿う","自然に垂れる","直線カット","ラウンドヘム","パンツの外へ出す","パンツへ入れる"],"detail")}
  ${field("bottom","下半身",["ボクサーパンツ(ハイライズ)","ボクサーパンツ(ミッドライズ)","ボクサーパンツ(ローライズ)","ブリーフ(スタンダード)","トランクス(クラシック)","競泳パンツ(ビキニ)","競泳パンツ(ブーメラン)","競泳パンツ(クラシック)","競泳パンツ(ボクサー)","競泳パンツ(ハーフスパッツ)","競泳パンツ(ロングスパッツ)","ビキニ(スタンダード)","ビキニ(ローライズ)","ビキニ(ハイレグ)","ビキニ(スポーツ)","ビルダーパンツ","ふんどし(越中)","ふんどし(六尺)","ふんどし(もっこ)","ふんどし(黒猫)","ふんどし(割)","相撲まわし","締込み","デニムパンツ(ロング)","チノパン(ロング)","スラックス(ロング)","ショートパンツ","スポーツパンツ"])}
  ${field("bottomColor","下半身の衣装色",["白","黒","グレー","青","濃紺","水色","赤","緑","紫","ベージュ"])}
@@ -276,9 +277,10 @@ function pageHtml(){
  ${field("outputType","出力タイプ",["正面・側面・背面の三面図","正面・側面の二面図","全身正面","全身側面","全身背面","キャラクター設定シート"])}
  ${field("pose","基本ポーズ",["自然な直立","気をつけ","リラックスした直立","軽く脚を開く","片脚重心","歩行"])}
  ${field("armsPose","腕・手",["体側に自然に下ろす","両手を頭の後ろで組む","腕組み","腰に手","片手をポケット","両手を後ろで組む"],"standard")}
- ${field("legsPose","脚",["自然","両脚を揃える","肩幅に開く","軽く前後にずらす","片脚重心"],"standard")}
+ ${field("legsPose","脚",["自然","両脚を揃える","やや開く","肩幅程度に開く","大きく開く","非常に大きく開く","軽く前後にずらす","片脚重心"],"standard")}
  ${field("gaze","視線",["自然","カメラを見る","正面を見る","遠くを見る","横を見る"],"detail")}
  ${field("framingSafety","見切れ防止",["自動で見切れ防止","頭頂と足先を必ず含める","手・肘・足を必ず含める","三面とも同じ余白","見切れ防止を使用しない"],"standard")}
+ ${field("framingMargin","構図の安全余白",["標準","広め","かなり広め"],"standard")}
  </div>${navButtons()}`;
 
  if(currentStep===9)return `<h2 class="section-title">STEP 9　背景・カメラ・情報表示</h2><div class="lead">Character Sheet風・制作資料風は固定レイアウトで、設定値だけを表示します。</div><div class="grid">
@@ -289,7 +291,7 @@ function pageHtml(){
  ${field("quality","品質",["高解像度","非常に高解像度","細部まで鮮明","自然なディテール","過度なシャープ化なし"],"detail")}
  ${field("ratio","画像比率",["3:4","2:3","4:5","1:1","16:9"],"detail")}
  ${field("infoDisplay","身体データ表示",["表示しない","最小表示：名前・年齢・身長・体重","標準表示：最小＋国籍・体型","詳細表示：標準＋胸囲・ウエスト・ヒップ・足サイズ・頭身"],"standard")}
- ${field("infoLayout","情報レイアウト",["シンプル一行","Character Sheet風","制作資料風","縦型プロフィール","表形式"],"standard")}
+ ${field("infoLayout","情報レイアウト",["シンプル一行","横長・右側データ欄","人物のみ＋データ別シート","横長・下部データ欄","Character Sheet風","制作資料風","縦型プロフィール","表形式"],"standard")}
  ${field("infoPlacement","情報表示位置",["上部の白余白","下部の白余白","左側の情報欄","右側の情報欄"],"detail")}
  ${field("infoLanguage","情報表示言語",["日本語","英語"],"detail")}
  ${field("nameDisplayRule","名前表示",["入力どおり表示","英字のみ","日本語のみ"],"detail")}
@@ -305,7 +307,7 @@ function pageHtml(){
  </div>
  <div class="note">Character Sheet／制作資料では、AIによる要約・推測・特徴文の創作を禁止し、入力済みの設定値だけを表示します。</div>${navButtons()}`;
 
- return `<h2 class="section-title">STEP 10　完成</h2>
+ return `<div id="step10Panel"><h2 class="section-title">STEP 10　完成</h2>
  <div class="lead">画面上の日本語設定を、選択したAIが理解しやすい英語の構造設計表現へ変換します。</div>
  <div class="grid">
  ${field("targetAI","生成AI",["ChatGPT画像生成","Gemini画像生成"],"standard")}
@@ -323,20 +325,30 @@ function pageHtml(){
  <div id="transformSummary" class="transform-output"></div>
 
  <h3>AI送信用・英語プロンプト</h3>
- <div id="promptStatus" class="prompt-status">通常表現</div>
+ <div class="safe-banner">✓ SAFE MODE：安全表現で再生成済み</div><div id="promptStatus" class="prompt-status">通常表現</div>
  <textarea id="output" class="output"></textarea>
  <div class="secondary-actions">
    <button id="saferRetryBtn">安全表現で再生成</button>
    <button id="normalPromptBtn">通常表現に戻す</button>
  </div>
  <div class="note">「安全表現で再生成」は、設定内容を削除するのではなく、同じ衣装をより中立的な構造設計用語で組み直します。「コピー」は現在表示中の英語プロンプトだけをコピーします。</div>
- <div class="actions"><button id="prevBtn">◀ 前へ</button><button id="copyBtn" class="primary">英語プロンプトをコピー</button></div>`;
+ <div class="actions"><button id="prevBtn">◀ 前へ</button><button id="copyBtn" class="primary">英語プロンプトをコピー</button></div></div>`;
+}
+
+function applyConditionalUI(){
+ const hide=(id,yes)=>{const e=$(id);if(e&&e.parentElement)e.parentElement.classList.toggle("conditional-hidden",!!yes)};
+ const noTop=state.top==="上半身裸";
+ ["topColor","topFit","topLength","topHem","topArmhole"].forEach(id=>hide(id,noTop));
+ const tank=/タンクトップ|ノースリーブ/.test(state.top); hide("topArmhole",noTop||!tank);
+ const noInfo=state.infoDisplay==="表示しない"; ["infoLayout","infoPlacement","infoLanguage","nameDisplayRule","showTraits","showHair","showEyes","showOutfit","showPose","showNotes","showProject","projectName","showVersion","sheetVersion","showSheetNo","sheetNo","showCreator","creatorName"].forEach(id=>hide(id,noInfo));
+ const p=$("step10Panel"); if(p)p.classList.toggle("safe-active",state.safeRetryLevel==="安全表現");
+ const b=$("saferRetryBtn"); if(b)b.textContent=state.safeRetryLevel==="安全表現"?"✓ 安全表現で再生成済み":"安全表現で再生成";
 }
 
 function bindPage(){
  document.querySelectorAll("#page input,#page select,#page textarea").forEach(el=>{
    if(el.id==="output")return;
-   el.addEventListener("input",()=>{state[el.id]=el.value;refreshHeader();if(currentStep===10)generatePrompt()});
+   el.addEventListener("input",()=>{state[el.id]=el.value;refreshHeader();applyConditionalUI();if(currentStep===10)generatePrompt()});
  });
  if($("prevBtn"))$("prevBtn").addEventListener("click",()=>{savePageToState();if(currentStep>1){currentStep--;render();window.scrollTo({top:0,behavior:"smooth"})}});
  if($("nextBtn"))$("nextBtn").addEventListener("click",()=>{savePageToState();if(currentStep<10){currentStep++;render();window.scrollTo({top:0,behavior:"smooth"})}else generatePrompt()});
@@ -886,7 +898,7 @@ All garment terms below describe opaque fabric construction, pattern pieces, sea
 
 COSTUME
 Reference context: ${state.referenceMode}. This is an adult character-design and costume-construction reference.
-Upper garment: ${state.top}, color ${state.topColor}.
+Upper garment: ${state.top}, color ${state.topColor}. Armhole depth: ${state.topArmhole}.
 Upper-garment construction: ${topDesc}.
 Upper-garment fit and length: ${topFit}.
 Lower garment: ${state.bottom}, color ${state.bottomColor}.
@@ -899,7 +911,7 @@ Footwear: ${state.shoes}. Accessories: ${state.accessory}.
 POSE AND COMPOSITION
 Output type: ${state.outputType}.
 Base pose: ${state.pose}. Arms and hands: ${state.armsPose}. Legs: ${state.legsPose}. Gaze: ${state.gaze}.
-Framing rule: ${state.framingSafety}. Include the full head, both elbows, both hands, and both feet with comfortable margins.
+Framing rule: ${state.framingSafety}. Safety margin: ${state.framingMargin}. Include the full head, both elbows, both hands, and both feet with comfortable margins. Automatically widen the camera framing when the legs are spread widely. Do not crop any body part.
 Background: ${state.background}. Lighting: ${state.lighting}. Camera framing: ${state.camera}.
 Visual style: ${state.style}. Quality: ${state.quality}. Aspect ratio: ${state.ratio}.
 
@@ -909,7 +921,7 @@ Keep the face, hairstyle, body proportions, visible body-hair pattern, garment c
 Do not crop any body part.
 
 INFORMATION PANEL
-Display mode: ${state.infoDisplay}. Layout: ${state.infoLayout}. Position: ${state.infoPlacement}. Language: ${state.infoLanguage}.
+Display mode: ${state.infoDisplay}. Layout: ${state.infoLayout}. Position: ${state.infoPlacement}. Language: ${state.infoLanguage}. Prioritize natural human proportions and generous spacing; never compress or elongate the character to make room for the data panel. For a separate-data-sheet layout, render the turnaround and data sheet as separate pages.
 Use only the supplied setting values. Do not invent summaries, personality descriptions, aliases, or additional measurements.
 Project: ${state.showProject==="表示する"?state.projectName:"do not display"}.
 Version: ${state.showVersion==="表示する"?state.sheetVersion:"do not display"}.
@@ -936,7 +948,7 @@ ${state.negative||"extra limbs, malformed hands, inconsistent face, inconsistent
  $("output").value=prompt;
  if($("jpSummary"))$("jpSummary").textContent=japaneseSummary();
  if($("transformSummary"))$("transformSummary").textContent=transformationSummary();
- if($("promptStatus"))$("promptStatus").textContent=state.safeRetryLevel==="安全表現"?"安全表現で再生成済み":"通常表現";
+ if($("promptStatus"))$("promptStatus").textContent=state.safeRetryLevel==="安全表現"?"✓ 安全表現で再生成済み":"通常表現"; applyConditionalUI();
 }
 function safeGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
 function safeSet(k,v){try{localStorage.setItem(k,v);return true}catch(e){return false}}
@@ -966,7 +978,7 @@ function applyAll(o){
  if(o&&o.bottom==="ボクサーパンツ(ローライズ)"&&!o.bottomRise)o.bottomRise="ローライズ：腰骨・骨盤付近";
  Object.assign(state,o||{});$("settingLevel").value=state.settingLevel||"easy";$("changeMode").value=state.changeMode||"confirm";$("projectStatus").value=state.projectStatus||"作成途中";render()}
 function saveDraft(){ if(currentStep===10)generatePrompt();
- const data={id:Date.now(),savedAt:new Date().toISOString(),version:"2.0-beta11",currentStep,data:collectAll()};
+ const data={id:Date.now(),savedAt:new Date().toISOString(),version:"2.0-beta12",currentStep,data:collectAll()};
  safeSet(STORAGE_CURRENT,JSON.stringify(data));
  const lib=getLibrary();const idx=lib.findIndex(x=>x.data&&x.data.name===data.data.name&&x.data.projectStatus===data.data.projectStatus);
  if(idx>=0){data.id=lib[idx].id;lib[idx]=data}else lib.unshift(data);setLibrary(lib.slice(0,50));
@@ -981,9 +993,9 @@ function newProject(){
  $("displayStatus").textContent="未保存・新規作成";render();window.scrollTo({top:0,behavior:"smooth"});showToast("新規作成に切り替えました。");
 }
 function exportJSON(){ if(currentStep===10)generatePrompt();
- const data={app:"Character Fullbody Maker — Tatsuya Edition",version:"2.0-beta11",exportedAt:new Date().toISOString(),currentStep,data:collectAll()};
+ const data={app:"Character Fullbody Maker — Tatsuya Edition",version:"2.0-beta12",exportedAt:new Date().toISOString(),currentStep,data:collectAll()};
  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");
- a.href=url;a.download=(state.name.trim()||"character")+"_beta11.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ a.href=url;a.download=(state.name.trim()||"character")+"_beta12.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 function importJSON(file){const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);currentStep=d.currentStep||1;applyAll(d.data||d);showToast("JSONを読み込みました。")}catch(e){alert("JSONを読み込めませんでした。")}};r.readAsText(file)}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
