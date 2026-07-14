@@ -1,9 +1,11 @@
-# Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta 12
+# Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta 13
 
-- 条件付き表示（不要な衣装項目を自動非表示）
-- 脚の長さをSTEP 5へ一本化
-- 脚の開き幅を拡張
-- タンクトップ／ノースリーブ用の脇ぐり設定
-- 見切れ防止・構図安全余白
-- 横長レイアウト／データ別シート
-- SAFE MODEの強調表示
+## Main changes
+
+- Prompt Optimizer: removes settings that do not apply to the selected configuration
+- When `上半身裸` is selected, upper-garment color, fit, length, hem, and armhole instructions are omitted from the AI prompt
+- Upper-garment armhole instructions are output only for tank-top and sleeveless garments
+- Hidden information-panel settings are omitted from the prompt
+- Added prompt detail profiles: concise, standard, and detailed
+- Reduced duplicate instructions while preserving selected character settings
+- Updated JSON save/export version to Beta 13
