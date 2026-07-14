@@ -1,9 +1,15 @@
-# Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta 14
+# Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta 15
 
-Main changes:
-- One-shot prompt assistant with automatic risk diagnostics
-- Conditional omission of irrelevant garment fields
-- Stronger contradiction and duplicate-instruction removal
-- Automatic aspect-ratio and framing optimization for wide poses
-- Improved lower-abdomen and upper-thigh body-hair continuity wording
-- Stronger no-crop margins around all body parts
+## 主な改善
+
+- STEP 8「ポーズ」を、姿勢・腕／手・脚幅・脚の前後位置・足先の向き・視線に分離
+- 「基本ポーズ」と「脚」の矛盾を解消し、脚幅を一つの項目だけで決定
+- 現在のポーズ組み合わせを画面内に表示
+- 「大きく開く」「非常に大きく開く」の英語プロンプトを強化
+- 大きな脚幅では、カメラ距離・三面の間隔・左右余白を自動的に強化
+- Beta 14以前のJSONを読み込んだ際、旧ポーズ項目をBeta 15形式へ自動変換
+- 上半身裸時の不要な上半身衣装項目を非表示・非出力にするBeta 14仕様を継承
+
+## GitHub Pagesへアップロードするファイル
+
+`index.html` をリポジトリ直下へアップロードしてください。

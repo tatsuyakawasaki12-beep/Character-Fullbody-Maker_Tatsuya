@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta 14</title>
+<title>Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta 15</title>
 <style>
 :root{--bg:#f4f7fb;--panel:#fff;--text:#182235;--muted:#718096;--line:#d9e2ef;--accent:#3563e9;--soft:#eef3ff;--danger:#b42318;--safe:#16794f;--safe-bg:#eefbf4}
 *{box-sizing:border-box}
@@ -50,7 +50,7 @@ body.level-detail .standard,body.level-detail .detail{display:block}
 <body class="level-easy">
 <header><div class="wrap">
 <h1>Character Fullbody Maker — Tatsuya Edition Ver.2.0</h1>
-<div class="sub">開発版 Beta 14：矛盾自動除去・一発生成アシスト・構図最適化</div>
+<div class="sub">開発版 Beta 15：ポーズ構造再設計・脚幅強化・構図安定化</div>
 </div></header>
 
 <main>
@@ -113,8 +113,8 @@ body.level-detail .standard,body.level-detail .detail{display:block}
 
 <script>
 "use strict";
-const STORAGE_CURRENT="cfm_beta14_current";
-const STORAGE_LIBRARY="cfm_beta14_library";
+const STORAGE_CURRENT="cfm_beta15_current";
+const STORAGE_LIBRARY="cfm_beta15_library";
 let currentStep=1;
 let toastTimer=null;
 
@@ -126,7 +126,7 @@ const state={
  bodyBuild:"引き締まった",shoulder:"やや広め",neck:"標準",chest:"ほどよく厚い",abdomen:"薄く腹筋",waist:"やや細い",hip:"引き締まった",arms:"引き締まった",hands:"標準",thighs:"引き締まった",calves:"引き締まった",legs:"標準",inseam:"標準",headRatio:"標準",shoeSize:"27.0cm",chestCirc:"94cm",waistCirc:"74cm",
  chestHair:"なし",abHair:"薄い",trail:"ヘソより下だけ・自然",armpit:"やや濃い",armHair:"なし",handHair:"なし",thighHair:"やや濃い",shinHair:"濃い",shoulderBackHair:"なし",upperBackHair:"なし",lowerBackHair:"なし",waistBackHair:"ごく薄い",buttockHair:"薄い",
  top:"上半身裸",topArmhole:"標準",bottom:"競泳パンツ(ビキニ)",topColor:"白",bottomColor:"水色",topFit:"ジャストフィット",topLength:"腰骨まで",topHem:"直線カット",bottomRise:"自動",bottomLegOpening:"自動",bottomSideWidth:"自動",bottomCoverage:"自動",bottomFrontShape:"自動",bottomBackShape:"自動",bottomMaterial:"自動",shoes:"裸足",accessory:"なし",
- outputType:"正面・側面・背面の三面図",pose:"軽く脚を開く",armsPose:"両手を頭の後ろで組む",legsPose:"自然",framingMargin:"広め",gaze:"自然",
+ outputType:"正面・側面・背面の三面図",bodyPosture:"自然な直立",armsPose:"両手を頭の後ろで組む",legWidth:"肩幅程度に開く",legOffset:"左右を揃える",footDirection:"自然な外向き",framingMargin:"広め",gaze:"自然",
  background:"グレー",lighting:"柔らかなスタジオ照明",camera:"余白を含む全身",style:"フォトリアル",quality:"細部まで鮮明",ratio:"3:4",
  extra:"",locked:"",negative:"余分な手足、不自然な手指、人物重複、顔の不一致、体型の不一致、衣装の左右差、文字化け、ロゴ、透かし",
  assistStrength:"自然",assistAdjustWeight:"提案のみ",assistLockNonBody:"固定する", trailBelow:"ヘソ下・細く自然",trailAroundNavel:"ヘソを通過",trailAbove:"ヘソ上・細く自然",trailChestLink:"胸毛とはつながらない", pubicDensity:"自然",groinHair:"自然",innerThighHair:"薄い",hairContinuity:"自然につながる",lowerHairSpread:"陰毛周辺にまとまる",lowerHairDensity:"自然",lowerHairConnection:"全体が自然につながる", framingSafety:"自動で見切れ防止",infoDisplay:"表示しない",infoLayout:"シンプル一行",infoPlacement:"上部の白余白",infoLanguage:"日本語",nameDisplayRule:"入力どおり表示",referenceMode:"通常衣装",showProject:"表示しない",projectName:"Character Fullbody Maker",showVersion:"表示しない",sheetVersion:"2026.07",showSheetNo:"表示しない",sheetNo:"001",showCreator:"表示しない",creatorName:"Tatsuya",showTraits:"表示しない",showHair:"表示しない",showEyes:"表示しない",showOutfit:"表示しない",showPose:"表示しない",showNotes:"表示しない",targetAI:"ChatGPT画像生成",promptSensitivity:"バランス",safeRetryLevel:"通常",promptDetail:"標準（バランス）",autoCompile:"自動（推奨）",outputLanguage:"英語のみ", settingLevel:"easy",changeMode:"confirm",projectStatus:"作成途中"
@@ -274,12 +274,15 @@ function pageHtml(){
  ${field("accessory","小物",["なし","腕時計","スポーツウォッチ","眼鏡","サングラス","ネックレス","指輪","ピアス"],"detail")}
  </div>${navButtons()}`;
 
- if(currentStep===8)return `<h2 class="section-title">STEP 8　ポーズ</h2><div class="lead">ポーズに応じてカメラ距離と余白を調整し、頭・肘・手・足の見切れを防ぎます。</div><div class="grid">
+ if(currentStep===8)return `<h2 class="section-title">STEP 8　ポーズ</h2><div class="lead">姿勢・腕・脚幅・足先を独立して設定します。上から順に組み合わせるため、項目同士が打ち消し合いません。</div><div class="grid">
  ${field("outputType","出力タイプ",["正面・側面・背面の三面図","正面・側面の二面図","全身正面","全身側面","全身背面","キャラクター設定シート"])}
- ${field("pose","基本ポーズ",["自然な直立","気をつけ","リラックスした直立","軽く脚を開く","片脚重心","歩行"])}
- ${field("armsPose","腕・手",["体側に自然に下ろす","両手を頭の後ろで組む","腕組み","腰に手","片手をポケット","両手を後ろで組む"],"standard")}
- ${field("legsPose","脚",["自然","両脚を揃える","やや開く","肩幅程度に開く","大きく開く","非常に大きく開く","軽く前後にずらす","片脚重心"],"standard")}
- ${field("gaze","視線",["自然","カメラを見る","正面を見る","遠くを見る","横を見る"],"detail")}
+ ${field("bodyPosture","① 姿勢",["自然な直立","気をつけ","リラックスした直立","片脚重心","歩行"])}
+ ${field("armsPose","② 腕・手",["体側に自然に下ろす","両手を頭の後ろで組む","腕組み","腰に手","片手をポケット","両手を後ろで組む"],"standard")}
+ ${field("legWidth","③ 脚幅",["両脚を揃える","狭め","肩幅程度に開く","肩幅より広く開く","大きく開く","非常に大きく開く"],"standard")}
+ ${field("legOffset","④ 脚の前後位置",["左右を揃える","わずかに前後へずらす","片脚を前へ出す","片脚重心"],"standard")}
+ ${field("footDirection","⑤ 足先の向き",["正面","やや外向き","自然な外向き","大きく外向き"],"standard")}
+ ${field("gaze","⑥ 視線",["自然","カメラを見る","正面を見る","遠くを見る","横を見る"],"detail")}
+ <div class="note wide"><strong>現在の組み合わせ：</strong>${state.bodyPosture}／${state.armsPose}／脚幅 ${state.legWidth}／${state.legOffset}／足先 ${state.footDirection}<br><span class="mini">「姿勢」は上半身を含む立ち方、「脚幅」は左右の足の距離です。脚を開く量は③だけで決まります。</span></div>
  ${field("framingSafety","見切れ防止",["自動で見切れ防止","頭頂と足先を必ず含める","手・肘・足を必ず含める","三面とも同じ余白","見切れ防止を使用しない"],"standard")}
  ${field("framingMargin","構図の安全余白",["標準","広め","かなり広め"],"standard")}
  </div>${navButtons()}`;
@@ -756,7 +759,7 @@ function compileRisk(){
  if(["非常に細い"].includes(state.bottomSideWidth)){score+=1;reasons.push("非常に細い脇幅");}
  if(["少なめ","Tバック状"].includes(state.bottomCoverage)){score+=2;reasons.push("背面被覆が少ない設定");}
  if(["しっかり立体"].includes(state.bottomFrontShape)){score+=1;reasons.push("強い前面立体指定");}
- if(state.legsPose==="非常に大きく開く"){score+=1;reasons.push("非常に大きい脚幅");}
+ if(state.legWidth==="非常に大きく開く"){score+=1;reasons.push("非常に大きい脚幅");}
  if(state.lowerHairDensity==="非常に濃い" && /内もも/.test(state.lowerHairSpread)){score+=1;reasons.push("下腹部から内ももまで非常に濃い体毛");}
  return {score,reasons,level:score>=6?"高":score>=3?"中":"低"};
 }
@@ -771,15 +774,15 @@ function effectiveCompileProfile(){
 function effectiveRatio(){
  if(state.ratio!=="自動（構図優先）")return state.ratio;
  const multi=/三面図|二面図/.test(state.outputType);
- const wide=["大きく開く","非常に大きく開く"].includes(state.legsPose);
+ const wide=["大きく開く","非常に大きく開く"].includes(state.legWidth);
  return multi&&wide?"16:9":multi?"4:5":"3:4";
 }
 function framingEnglish(){
- const veryWide=state.legsPose==="非常に大きく開く";
- const wide=veryWide||state.legsPose==="大きく開く";
+ const veryWide=state.legWidth==="非常に大きく開く";
+ const wide=veryWide||state.legWidth==="大きく開く";
  let lines=["Include the full head, both elbows, both hands, and both feet with comfortable empty margins.","No body part may touch or cross any image edge.","Keep additional lateral space outside both feet in every view."];
- if(wide)lines.push("Use a wider camera distance and wider horizontal spacing between the three views to accommodate the spread-leg pose.");
- if(veryWide)lines.push("The feet should be placed substantially wider than shoulder width while maintaining a stable neutral anatomy-reference stance.");
+ if(wide)lines.push("Use a wider camera distance and wider horizontal spacing between the three views. Preserve the selected leg width in all views; do not reduce it for a more conventional standing pose.");
+ if(veryWide)lines.push("Place the feet unmistakably and substantially wider than shoulder width. Maintain this very wide stance in the front, side, and back views, with visible floor space outside both feet.");
  lines.push("Do not crop any body part.");
  return lines.join(" ");
 }
@@ -791,7 +794,8 @@ function compileDiagnostics(){
  if(state.accessory==="なし")omissions.push("小物の詳細");
  if(state.infoDisplay==="表示しない")omissions.push("情報パネルのレイアウト・言語・項目");
  const ratio=effectiveRatio();
- return `【診断結果】\nリスク目安：${risk.level}（${risk.score}点）\n${risk.reasons.length?"判定要因："+risk.reasons.join("／"):"判定要因：特になし"}\n\n【一発生成アシスト】\n選択：${state.autoCompile||"自動（推奨）"}\n実際に使用する表現：${p.expression}\n実際に使用する詳細度：${p.detail}\n実際に使用する画像比率：${ratio}${state.ratio==="自動（構図優先）"?"（構図から自動決定）":""}\n\n【矛盾・不要項目の自動除去】\n${omissions.length?omissions.map(x=>"・"+x+"を出力しない").join("\n"):"・除去対象なし"}\n・同義の衣装形状指定は重複を整理\n・衣装名と個別形状が競合する場合は、個別形状を優先\n・見切れ防止は画像端に触れない余白指定へ強化`;
+ return `【診断結果】\nリスク目安：${risk.level}（${risk.score}点）\n${risk.reasons.length?"判定要因："+risk.reasons.join("／"):"判定要因：特になし"}\n\n【一発生成アシスト】\n選択：${state.autoCompile||"自動（推奨）"}\n実際に使用する表現：${p.expression}\n実際に使用する詳細度：${p.detail}\n実際に使用する画像比率：${ratio}${state.ratio==="自動（構図優先）"?"（構図から自動決定）":""}\n\n【矛盾・不要項目の自動除去】\n${omissions.length?omissions.map(x=>"・"+x+"を出力しない").join("\n"):"・除去対象なし"}\n・同義の衣装形状指定は重複を整理\n・衣装名と個別形状が競合する場合は、個別形状を優先\n・見切れ防止は画像端に触れない余白指定へ強化
+・姿勢と脚幅を独立させ、脚幅指定の競合を除去`;
 }
 function transformationSummary(){
  const top=topGarmentTranslation(state.top);
@@ -891,7 +895,10 @@ Treasure Trail：ヘソ下 ${state.trailBelow}／ヘソ上 ${state.trailAbove}
 
 【ポーズ・画面】
 ${state.outputType}
-ポーズ：${state.pose}
+姿勢：${state.bodyPosture}
+脚幅：${state.legWidth}
+脚の前後位置：${state.legOffset}
+足先：${state.footDirection}
 腕・手：${state.armsPose}
 背景：${state.background}
 画風：${state.style}
@@ -961,7 +968,7 @@ Creator: ${state.showCreator==="表示する"?state.creatorName:"do not display"
 Hair: ${state.showHair==="表示する"?`${state.hairColor}, ${state.hairStyle}`:"do not display"}.
 Eyes: ${state.showEyes==="表示する"?`${state.eyelid}, ${state.eyeShape}`:"do not display"}.
 Outfit: ${state.showOutfit==="表示する"?`${state.top} / ${state.bottom}`:"do not display"}.
-Pose: ${state.showPose==="表示する"?`${state.pose}, ${state.armsPose}`:"do not display"}.
+Pose: ${state.showPose==="表示する"?`${state.bodyPosture}, ${state.armsPose}, leg width ${state.legWidth}, ${state.legOffset}, feet ${state.footDirection}`:"do not display"}.
 Notes: ${state.showNotes==="表示する"?"display only supplied setting values":"do not display"}.
 If a value is unavailable, display an em dash.`;
  }
@@ -1009,7 +1016,7 @@ ${conversionProfile}${costumeLines.join("\n")}
 
 POSE AND COMPOSITION
 Output type: ${state.outputType}.
-Base pose: ${state.pose}. Arms and hands: ${state.armsPose}. Legs: ${state.legsPose}. Gaze: ${state.gaze}.
+Body posture: ${state.bodyPosture}. Arms and hands: ${state.armsPose}. Leg stance width: ${state.legWidth}. Fore-aft leg placement: ${state.legOffset}. Foot direction: ${state.footDirection}. Gaze: ${state.gaze}.
 Framing rule: ${state.framingSafety}. Safety margin: ${state.framingMargin}. ${framingEnglish()}
 Background: ${state.background}. Lighting: ${state.lighting}. Camera framing: ${state.camera}.
 Visual style: ${state.style}. Quality: ${state.quality}. Aspect ratio: ${effectiveRatio()}.
@@ -1061,10 +1068,22 @@ function applyAll(o){
  if(o&&!o.safeRetryLevel)o.safeRetryLevel="通常";
  if(o&&!o.promptDetail)o.promptDetail="標準（バランス）";
  if(o&&!o.autoCompile)o.autoCompile="自動（推奨）";
+ // Beta14以前の「基本ポーズ」と「脚」を、Beta15の独立項目へ移行
+ if(o&&!o.bodyPosture){
+   const legacyPose=o.pose||"自然な直立";
+   o.bodyPosture=["軽く脚を開く"].includes(legacyPose)?"自然な直立":legacyPose;
+ }
+ if(o&&!o.legWidth){
+   const legacyLeg=o.legsPose||"自然";
+   const map={"自然":"肩幅程度に開く","やや開く":"肩幅程度に開く","肩幅程度に開く":"肩幅程度に開く","両脚を揃える":"両脚を揃える","大きく開く":"大きく開く","非常に大きく開く":"非常に大きく開く"};
+   o.legWidth=map[legacyLeg]||(o.pose==="軽く脚を開く"?"肩幅程度に開く":"肩幅程度に開く");
+ }
+ if(o&&!o.legOffset)o.legOffset=(o.legsPose==="軽く前後にずらす"?"わずかに前後へずらす":o.legsPose==="片脚重心"?"片脚重心":"左右を揃える");
+ if(o&&!o.footDirection)o.footDirection="自然な外向き";
  if(o&&o.bottom==="ボクサーパンツ(ローライズ)"&&!o.bottomRise)o.bottomRise="ローライズ：腰骨・骨盤付近";
  Object.assign(state,o||{});$("settingLevel").value=state.settingLevel||"easy";$("changeMode").value=state.changeMode||"confirm";$("projectStatus").value=state.projectStatus||"作成途中";render()}
 function saveDraft(){ if(currentStep===10)generatePrompt();
- const data={id:Date.now(),savedAt:new Date().toISOString(),version:"2.0-beta14",currentStep,data:collectAll()};
+ const data={id:Date.now(),savedAt:new Date().toISOString(),version:"2.0-beta15",currentStep,data:collectAll()};
  safeSet(STORAGE_CURRENT,JSON.stringify(data));
  const lib=getLibrary();const idx=lib.findIndex(x=>x.data&&x.data.name===data.data.name&&x.data.projectStatus===data.data.projectStatus);
  if(idx>=0){data.id=lib[idx].id;lib[idx]=data}else lib.unshift(data);setLibrary(lib.slice(0,50));
@@ -1079,9 +1098,9 @@ function newProject(){
  $("displayStatus").textContent="未保存・新規作成";render();window.scrollTo({top:0,behavior:"smooth"});showToast("新規作成に切り替えました。");
 }
 function exportJSON(){ if(currentStep===10)generatePrompt();
- const data={app:"Character Fullbody Maker — Tatsuya Edition",version:"2.0-beta14",exportedAt:new Date().toISOString(),currentStep,data:collectAll()};
+ const data={app:"Character Fullbody Maker — Tatsuya Edition",version:"2.0-beta15",exportedAt:new Date().toISOString(),currentStep,data:collectAll()};
  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");
- a.href=url;a.download=(state.name.trim()||"character")+"_beta14.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ a.href=url;a.download=(state.name.trim()||"character")+"_beta15.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 function importJSON(file){const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);currentStep=d.currentStep||1;applyAll(d.data||d);showToast("JSONを読み込みました。")}catch(e){alert("JSONを読み込めませんでした。")}};r.readAsText(file)}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
