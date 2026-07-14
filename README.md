@@ -1,12 +1,8 @@
-# Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta 16
+# Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta 17
 
-## 主な改善
-
-- 体毛指定を「開始位置 → 分布範囲 → 分布方法」の3段階へ再設計
-- 脚幅を姿勢から独立させ、広い脚幅を維持する英語指示を強化
-- 下半身衣装ごとの専用テンプレートを調整
-- 三面図での顔立ちの一貫性を強化
-- 濃いワキ毛・脚毛の連続性を補助する指示を追加
-- 上半身裸の場合は不要な衣装項目を画面・プロンプトから除外
-
-GitHub Pagesでは、このフォルダの `index.html` を公開してください。
+- Refined lower-body hair start/area/flow controls
+- Explicit hip-bone density transition
+- Separate upper thigh, lower thigh, shin, and calf hair density
+- Leg-hair distribution and knee-transition controls
+- Stronger full-body margin and edge-clearance controls
+- Preserved Beta16 face and pose consistency improvements
