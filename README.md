@@ -1,18 +1,3 @@
-# Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta 20.1
+# Character Fullbody Maker Beta20.2
 
-## 小改良内容
-
-- ワキ毛に「総毛量・毛の本数」を追加
-- 自然な毛束感・分け目・毛先・隙間を維持したまま、全体の毛量を増やす内部指示へ調整
-- ワキ毛の分け目を「浅い自然な谷＋両側へ放射」として明確化
-- Treasure Trailに「上端位置の固定」を追加
-- 「へその下縁で厳密に止める」「へそ上に毛を出さない」「へその中心線を越えない」を内部指示
-- 一本線は腰骨ラインまでほぼ一定幅を維持
-- 周囲毛が「ごく薄い」の場合、孤立した細い毛だけに制限
-- メイン分布がTreasure Trailを上方向から飲み込まないよう優先順位を明確化
-- 安全表現でも一本線と上端位置を維持
-- Beta20保存データからの移行処理を追加
-
-## GitHub Pagesへの更新
-
-このZIP内の `index.html` を、GitHubリポジトリにある既存の `index.html` と置き換えてください。
+GitHub Pages更新用です。`index.html` を既存の `index.html` と置き換えてください。
