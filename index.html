@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta 19</title>
+<title>Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta 20</title>
 <style>
 :root{--bg:#f4f7fb;--panel:#fff;--text:#182235;--muted:#718096;--line:#d9e2ef;--accent:#3563e9;--soft:#eef3ff;--danger:#b42318;--safe:#16794f;--safe-bg:#eefbf4}
 *{box-sizing:border-box}
@@ -50,7 +50,7 @@ body.level-detail .standard,body.level-detail .detail{display:block}
 <body class="level-easy">
 <header><div class="wrap">
 <h1>Character Fullbody Maker — Tatsuya Edition Ver.2.0</h1>
-<div class="sub">開発版 Beta 19：Natural Body Hair System・安全表現補正・横長三面図最適化</div>
+<div class="sub">開発版 Beta 20：Body Hair Naturalism・ワキ毛質感・Treasure Trail個体差・安全表現補正強化</div>
 </div></header>
 
 <main>
@@ -113,8 +113,8 @@ body.level-detail .standard,body.level-detail .detail{display:block}
 
 <script>
 "use strict";
-const STORAGE_CURRENT="cfm_beta19_current";
-const STORAGE_LIBRARY="cfm_beta19_library";
+const STORAGE_CURRENT="cfm_beta20_current";
+const STORAGE_LIBRARY="cfm_beta20_library";
 let currentStep=1;
 let toastTimer=null;
 
@@ -124,12 +124,12 @@ const state={
  hairColor:"自然な黒",hairLength:"ショート",hairStyle:"ツーブロック",bangs:"短い",sideburns:"自然",nape:"短め",hairVolume:"標準",hairTexture:"直毛",
  skinTone:"健康的",skinTexture:"自然",ageLook:"少し若く見える",wrinkles:"なし",spots:"なし",beard:"なし",
  bodyBuild:"引き締まった",shoulder:"やや広め",neck:"標準",chest:"ほどよく厚い",abdomen:"薄く腹筋",waist:"やや細い",hip:"引き締まった",arms:"引き締まった",hands:"標準",thighs:"引き締まった",calves:"引き締まった",legs:"標準",inseam:"標準",headRatio:"標準",shoeSize:"27.0cm",chestCirc:"94cm",waistCirc:"74cm",
- chestHair:"なし",abHair:"薄い",trail:"ヘソより下だけ・自然",armpit:"やや濃い",armpitArea:"広い",armpitLength:"標準",armpitTexture:"自然な毛束感",armpitDirection:"自然な放射状",armHair:"なし",handHair:"なし",thighHair:"やや濃い",lowerThighHair:"やや濃い",shinHair:"濃い",calfHair:"濃い",legHairDistribution:"脚全体に均一",kneeHairTransition:"膝周辺も自然につながる",legHairLength:"標準",legHairTexture:"自然な一本毛",shoulderBackHair:"なし",upperBackHair:"なし",lowerBackHair:"なし",waistBackHair:"ごく薄い",buttockHair:"薄い",
+ chestHair:"なし",abHair:"薄い",trail:"ヘソより下だけ・自然",armpit:"やや濃い",armpitArea:"広い",armpitLength:"標準",armpitTexture:"自然な毛束感",armpitDirection:"自然な放射状",armpitParting:"自然な分け目あり",armpitTipVariation:"毛先に自然なばらつき",armpitGapPattern:"小さな隙間あり",armHair:"なし",handHair:"なし",thighHair:"やや濃い",lowerThighHair:"やや濃い",shinHair:"濃い",calfHair:"濃い",legHairDistribution:"脚全体に均一",kneeHairTransition:"膝周辺も自然につながる",legHairLength:"標準",legHairTexture:"自然な一本毛",shoulderBackHair:"なし",upperBackHair:"なし",lowerBackHair:"なし",waistBackHair:"ごく薄い",buttockHair:"薄い",
  top:"上半身裸",topArmhole:"標準",bottom:"競泳パンツ(ビキニ)",topColor:"白",bottomColor:"水色",topFit:"ジャストフィット",topLength:"腰骨まで",topHem:"直線カット",bottomRise:"自動",bottomLegOpening:"自動",bottomSideWidth:"自動",bottomCoverage:"自動",bottomFrontShape:"自動",bottomBackShape:"自動",bottomMaterial:"自動",shoes:"裸足",accessory:"なし",
  outputType:"正面・側面・背面の三面図",bodyPosture:"自然な直立",armsPose:"両手を頭の後ろで組む",legWidth:"肩幅程度に開く",legOffset:"左右を揃える",footDirection:"自然な外向き",framingMargin:"広め",gaze:"自然",
  background:"グレー",lighting:"柔らかなスタジオ照明",camera:"余白を含む全身",style:"フォトリアル",quality:"細部まで鮮明",ratio:"自動（構図優先）",
  extra:"",locked:"",negative:"余分な手足、不自然な手指、人物重複、顔の不一致、体型の不一致、衣装の左右差、文字化け、ロゴ、透かし",
- assistStrength:"自然",assistAdjustWeight:"提案のみ",assistLockNonBody:"固定する", trailBelow:"ヘソ下・細く自然",trailBridgeWidth:"細い",trailBridgeDensity:"濃い",trailBridgeContinuity:"途切れず連続",trailBridgeEnd:"腰骨ラインで主分布へ接続",trailAroundNavel:"ヘソを通過",trailAbove:"なし",trailChestLink:"胸毛とはつながらない", pubicDensity:"自然",groinHair:"自然",innerThighHair:"薄い",hairContinuity:"自然につながる",lowerHairSpread:"陰毛周辺にまとまる",lowerHairDensity:"自然",lowerHairConnection:"全体が自然につながる",lowerHairStart:"腰骨ラインから広がる",lowerHairArea:"左右腰骨間の下腹部・鼠径部・内もも上部へ広く",lowerHairHorizontal:"左右腰骨間いっぱい",lowerHairVertical:"鼠径部・内もも上部まで広く",lowerHairBoundary:"周囲へ自然にぼかす",lowerHairFlow:"境目なく自然に連続", framingSafety:"自動で見切れ防止",framingPriority:"全身と余白を最優先",edgeClearance:"かなり広い",infoDisplay:"表示しない",infoLayout:"シンプル一行",infoPlacement:"上部の白余白",infoLanguage:"日本語",nameDisplayRule:"入力どおり表示",referenceMode:"人体・衣装構造資料",showProject:"表示しない",projectName:"Character Fullbody Maker",showVersion:"表示しない",sheetVersion:"2026.07",showSheetNo:"表示しない",sheetNo:"001",showCreator:"表示しない",creatorName:"Tatsuya",showTraits:"表示しない",showHair:"表示しない",showEyes:"表示しない",showOutfit:"表示しない",showPose:"表示しない",showNotes:"表示しない",targetAI:"ChatGPT画像生成",promptSensitivity:"バランス",safeRetryLevel:"通常",promptDetail:"標準（バランス）",autoCompile:"自動（推奨）",outputLanguage:"英語のみ", settingLevel:"easy",changeMode:"confirm",projectStatus:"作成途中"
+ assistStrength:"自然",assistAdjustWeight:"提案のみ",assistLockNonBody:"固定する", trailBelow:"ヘソ下・細く自然",trailBridgeWidth:"細い",trailBridgeDensity:"濃い",trailBridgeContinuity:"途切れず連続",trailBridgeEnd:"腰骨ラインで主分布へ接続",trailStyle:"濃い一本線",trailSurroundingHair:"周囲はごく薄い",trailTransitionZone:"短く自然に移行",trailAroundNavel:"ヘソを通過",trailAbove:"なし",trailChestLink:"胸毛とはつながらない", pubicDensity:"自然",groinHair:"自然",innerThighHair:"薄い",hairContinuity:"自然につながる",lowerHairSpread:"陰毛周辺にまとまる",lowerHairDensity:"自然",lowerHairConnection:"全体が自然につながる",lowerHairStart:"腰骨ラインから広がる",lowerHairArea:"左右腰骨間の下腹部・鼠径部・内もも上部へ広く",lowerHairHorizontal:"左右腰骨間いっぱい",lowerHairVertical:"鼠径部・内もも上部まで広く",lowerHairBoundary:"周囲へ自然にぼかす",lowerHairFlow:"境目なく自然に連続",lowerHairShape:"横長の自然分布", framingSafety:"自動で見切れ防止",framingPriority:"全身と余白を最優先",edgeClearance:"かなり広い",infoDisplay:"表示しない",infoLayout:"シンプル一行",infoPlacement:"上部の白余白",infoLanguage:"日本語",nameDisplayRule:"入力どおり表示",referenceMode:"人体・衣装構造資料",showProject:"表示しない",projectName:"Character Fullbody Maker",showVersion:"表示しない",sheetVersion:"2026.07",showSheetNo:"表示しない",sheetNo:"001",showCreator:"表示しない",creatorName:"Tatsuya",showTraits:"表示しない",showHair:"表示しない",showEyes:"表示しない",showOutfit:"表示しない",showPose:"表示しない",showNotes:"表示しない",targetAI:"ChatGPT画像生成",promptSensitivity:"バランス",safeRetryLevel:"通常",promptDetail:"標準（バランス）",autoCompile:"自動（推奨）",outputLanguage:"英語のみ", settingLevel:"easy",changeMode:"confirm",projectStatus:"作成途中"
 };
 const initial=JSON.parse(JSON.stringify(state));
 const stepNames=["基本情報","顔","髪","肌","身体","体毛","衣装","ポーズ","背景","完成"];
@@ -236,7 +236,10 @@ ${field("armpitArea","面積",["狭い","標準","広い","ワキ全体を覆う
 ${field("armpitLength","長さ",["短い","やや短い","標準","やや長い","長い"],"standard")}
 ${field("armpitTexture","毛質・毛束感",["柔らかく細い","自然な一本毛","自然な毛束感","やや硬く粗い","はっきりした毛束感"],"standard")}
 ${field("armpitDirection","生える方向",["中央にまとまる","自然な放射状","外側へ広がる","下向きに流れる"],"standard")}
-<div class="wide help">密度だけでなく、<strong>どの範囲を覆うか・毛の長さ・一本毛か毛束か・生える方向</strong>を分けて指定します。</div>
+${field("armpitParting","分け目・毛流れの分離",["分け目なし","ごく弱い分け目","自然な分け目あり","腕の折り目に沿う明瞭な分け目","左右二方向へ分かれる"],"standard")}
+${field("armpitTipVariation","毛先のばらつき",["整い気味","わずかにばらつく","毛先に自然なばらつき","長短差が大きい","不規則で自然"],"standard")}
+${field("armpitGapPattern","毛束間の隙間",["ほぼ隙間なし","小さな隙間あり","自然な隙間","隙間がやや多い"],"standard")}
+<div class="wide help">密度だけでなく、<strong>面積・長さ・一本毛か毛束か・生える方向・分け目・毛先・毛束間の隙間</strong>を分けて指定します。黒い塊ではなく、一本一本の毛と小さな毛束として描かせます。</div>
 
 <div class="wide section-subtitle">ヘソ周辺・ヘソ上（補助設定）</div>
 ${field("trailAroundNavel","ヘソ周辺",["ヘソで止まる","ヘソを囲む","ヘソを通過","ヘソ周辺へ少し広がる"],"detail")}
@@ -248,13 +251,17 @@ ${field("trailBridgeWidth","線の太さ",["毛なし","ごく細い","細い","
 ${field("trailBridgeDensity","線の濃さ",["適用なし","ごく薄い","薄い","自然","濃い","非常に濃い"],"standard")}
 ${field("trailBridgeContinuity","線の連続性",["適用なし","途切れず連続","途中で少し薄くなる","途中で一度途切れる","腰骨付近だけ現れる"],"standard")}
 ${field("trailBridgeEnd","主分布への接続",["接続しない","腰骨ラインで急に広がる","腰骨ラインで自然に広がる","腰骨へ近づくほど徐々に広がる","そのまま同じ幅で終わる"],"standard")}
-<div class="wide help">「ヘソ → 毛なし → 腰骨ライン」も、「ヘソ → 細く濃い線 → 腰骨ラインから広がる」も独立して設定できます。</div>
+${field("trailStyle","Treasure Trail スタイル",["濃い一本線","細い一本線＋周囲は無毛","細い一本線＋周囲はごく薄い","一本線から下で少し広がる","帯状","自然な不規則ライン"],"standard")}
+${field("trailSurroundingHair","周囲の毛",["周囲は無毛","周囲はごく薄い","周囲は薄い","周囲は自然","周囲もやや濃い"],"standard")}
+${field("trailTransitionZone","主分布への移行帯",["移行帯なし","ごく短く急に移行","短く自然に移行","徐々に広がる","長く緩やかに移行"],"standard")}
+<div class="wide help">「ヘソ → 毛なし → 腰骨ライン」も、「濃い一本線＋周囲は無毛／薄毛」も、「一本線から下で少し広がる」も独立して設定できます。</div>
 
 <div class="wide section-subtitle">メイン分布 — 下腹部・鼠径部・内もも上部</div>
 ${field("lowerHairStart","開始位置",["へそ直下から徐々に広がる","へそと腰骨の中間から広がる","腰骨ラインから広がる","腰骨ラインより下から広がる"],"standard")}
 ${field("lowerHairHorizontal","横方向の広がり",["中央だけ","やや広い","左右腰骨間の内側","左右腰骨間いっぱい","腰骨の外側近くまで"],"standard")}
 ${field("lowerHairVertical","下方向の広がり",["下腹部のみ","衣装周辺まで","鼠径部まで","鼠径部・内もも上部まで","鼠径部・内もも上部まで広く"],"standard")}
 ${field("lowerHairFlow","全体形状",["中央から徐々に左右へ広がる","扇状に広がる","V字状に広がる","台形状に広がる","全範囲へほぼ均一","自然な不規則分布"],"standard")}
+${field("lowerHairShape","メイン分布の輪郭",["横長の自然分布","逆三角形","丸みのある台形","楕円形","中央密集・左右へ薄く","自然な左右非対称"],"standard")}
 ${field("lowerHairBoundary","境界",["はっきり区切る","自然な境界","周囲へ自然にぼかす","境目なく連続"],"standard")}
 ${field("lowerHairDensity","主分布部分の体毛量",["ごく薄い","薄い","自然","濃い","非常に濃い"],"standard")}
 <div class="wide help"><strong>最大範囲の組み合わせ：</strong>横方向「左右腰骨間いっぱい」＋下方向「鼠径部・内もも上部まで広く」。内部では、左右の腰骨間の下腹部全体から両側の鼠径部、内もも上部へ連続する分布として変換します。</div>
@@ -762,118 +769,47 @@ function bottomShapeTranslation(){
 }
 function lowerHairEnglish(){
  const density={"ごく薄い":"very sparse","薄い":"light","自然":"natural","濃い":"dense","非常に濃い":"very dense"}[state.lowerHairDensity]||"natural";
- const widthMap={
-  "毛なし":"no visible connecting trail",
-  "ごく細い":"an extremely narrow connecting trail",
-  "細い":"a narrow connecting trail",
-  "自然な太さ":"a natural narrow-to-medium connecting trail",
-  "やや太い":"a moderately broad connecting trail",
-  "幅広":"a broad connecting trail"
- };
- const densityMap={
-  "適用なし":"",
-  "ごく薄い":"with very sparse individual hairs",
-  "薄い":"with light but visible individual hairs",
-  "自然":"with natural visible density",
-  "濃い":"with clearly dense visibility",
-  "非常に濃い":"with very dense and unmistakably visible natural hairs"
- };
- const continuityMap={
-  "適用なし":"",
-  "途切れず連続":"remaining continuously visible from the navel to the main distribution",
-  "途中で少し薄くなる":"becoming slightly lighter midway before becoming denser again near the main distribution",
-  "途中で一度途切れる":"with one natural interruption between the navel and the main distribution",
-  "腰骨付近だけ現れる":"appearing mainly near the hip-bone line rather than directly below the navel"
- };
- const endMap={
-  "接続しない":"ending before it reaches the main distribution",
-  "腰骨ラインで急に広がる":"then widening distinctly at the hip-bone line",
-  "腰骨ラインで自然に広がる":"then blending naturally into the broad distribution at the hip-bone line",
-  "腰骨へ近づくほど徐々に広がる":"gradually widening as it approaches the hip-bone line",
-  "そのまま同じ幅で終わる":"ending at approximately the same width"
- };
- const startMap={
-  "へそ直下から徐々に広がる":"The main distribution begins immediately below the navel.",
-  "へそと腰骨の中間から広がる":"The main distribution begins midway between the navel and the bilateral anterior hip-bone line.",
-  "腰骨ラインから広がる":"The main broad distribution begins clearly at the bilateral anterior hip-bone line.",
-  "腰骨ラインより下から広がる":"The main broad distribution begins below the bilateral anterior hip-bone line."
- };
- const horizontalMap={
-  "中央だけ":"Keep the horizontal coverage close to the central lower abdomen.",
-  "やや広い":"Extend moderately to both sides of the central lower abdomen.",
-  "左右腰骨間の内側":"Cover most of the lower abdomen inside the left and right hip-bone landmarks.",
-  "左右腰骨間いっぱい":"Cover the full lower abdomen from the left anterior hip-bone landmark to the right anterior hip-bone landmark.",
-  "腰骨の外側近くまで":"Extend broadly toward the outer edges of both hip-bone landmarks while remaining anatomically natural."
- };
- const verticalMap={
-  "下腹部のみ":"Keep the downward coverage within the visible lower abdomen.",
-  "衣装周辺まで":"Continue to the naturally visible skin immediately around the opaque garment edges.",
-  "鼠径部まで":"Extend continuously into both visible groin folds.",
-  "鼠径部・内もも上部まで":"Extend into both visible groin folds and the upper inner thighs.",
-  "鼠径部・内もも上部まで広く":"Extend widely through both visible groin folds and across the upper inner thighs."
- };
- const shapeMap={
-  "中央から徐々に左右へ広がる":"Use a gradual center-to-side widening pattern.",
-  "扇状に広がる":"Use a broad fan-shaped distribution.",
-  "V字状に広がる":"Use a natural V-shaped distribution.",
-  "台形状に広がる":"Use a broad trapezoidal distribution across the lower abdomen.",
-  "全範囲へほぼ均一":"Keep the selected coverage area nearly uniform in density.",
-  "自然な不規則分布":"Use subtle natural irregularity rather than geometric perfection."
- };
- const boundaryMap={
-  "はっきり区切る":"Keep a readable but anatomically plausible boundary.",
-  "自然な境界":"Use a natural boundary with small local variation.",
-  "周囲へ自然にぼかす":"Feather the density gradually toward the surrounding skin.",
-  "境目なく連続":"Blend continuously into all neighboring visible hair zones with no abrupt boundary."
- };
-
- let bridge;
- if(state.trailBridgeWidth==="毛なし"){
-  bridge="Between the navel and the main distribution, keep the skin visibly free of a continuous hair trail.";
- }else{
-  bridge=`Between the navel and the main distribution, preserve ${widthMap[state.trailBridgeWidth]||widthMap["細い"]} ${densityMap[state.trailBridgeDensity]||densityMap["自然"]}, ${continuityMap[state.trailBridgeContinuity]||continuityMap["途切れず連続"]}, ${endMap[state.trailBridgeEnd]||endMap["腰骨ラインで自然に広がる"]}.`;
- }
+ const widthMap={"毛なし":"no visible connecting trail","ごく細い":"an extremely narrow central trail","細い":"a narrow central trail","自然な太さ":"a natural narrow-to-medium central trail","やや太い":"a moderately broad central trail","幅広":"a broad central strip"};
+ const densityMap={"適用なし":"","ごく薄い":"with very sparse individual hairs","薄い":"with light but visible individual hairs","自然":"with natural visible density","濃い":"with clearly dense visibility","非常に濃い":"with very dense and unmistakably visible natural hairs"};
+ const continuityMap={"適用なし":"","途切れず連続":"remaining continuously visible from the navel to the transition zone","途中で少し薄くなる":"becoming slightly lighter midway before becoming denser again","途中で一度途切れる":"with one natural interruption","腰骨付近だけ現れる":"appearing mainly near the hip-bone line"};
+ const styleMap={"濃い一本線":"Keep one clearly defined dense central line.","細い一本線＋周囲は無毛":"Keep one narrow defined central line with visibly hair-free skin on both sides.","細い一本線＋周囲はごく薄い":"Keep one narrow defined central line with only very sparse fine hairs on both sides.","一本線から下で少し広がる":"Keep a defined central line that widens only slightly near its lower end.","帯状":"Use a narrow vertical strip rather than a single line.","自然な不規則ライン":"Use a narrow natural line with subtle local irregularity."};
+ const surroundMap={"周囲は無毛":"Keep the surrounding lower-abdomen skin visibly hair-free until the transition zone.","周囲はごく薄い":"Allow only very sparse fine surrounding hairs.","周囲は薄い":"Allow light surrounding hairs that remain clearly less dense than the central trail.","周囲は自然":"Use a natural amount of surrounding hairs with the central trail still dominant.","周囲もやや濃い":"Use moderately dense surrounding hairs while retaining a readable central trail."};
+ const transitionMap={"移行帯なし":"Move directly from the trail into the main distribution.","ごく短く急に移行":"Use a very short, distinct widening transition.","短く自然に移行":"Use a short natural widening transition.","徐々に広がる":"Gradually widen the trail into the main distribution.","長く緩やかに移行":"Use a long, gentle widening transition."};
+ const endMap={"接続しない":"End the trail before the main distribution.","腰骨ラインで急に広がる":"Widen distinctly at the hip-bone line.","腰骨ラインで自然に広がる":"Blend naturally into the broad distribution at the hip-bone line.","腰骨へ近づくほど徐々に広がる":"Gradually widen as the trail approaches the hip-bone line.","そのまま同じ幅で終わる":"End at approximately the same width."};
+ const startMap={"へそ直下から徐々に広がる":"The main distribution begins immediately below the navel.","へそと腰骨の中間から広がる":"The main distribution begins midway between the navel and the bilateral anterior hip-bone line.","腰骨ラインから広がる":"The main broad distribution begins clearly at the bilateral anterior hip-bone line.","腰骨ラインより下から広がる":"The main broad distribution begins below the bilateral anterior hip-bone line."};
+ const horizontalMap={"中央だけ":"Keep the horizontal coverage close to the central lower abdomen.","やや広い":"Extend moderately to both sides of the central lower abdomen.","左右腰骨間の内側":"Cover most of the lower abdomen inside the left and right hip-bone landmarks.","左右腰骨間いっぱい":"Cover the full lower abdomen from the left anterior hip-bone landmark to the right anterior hip-bone landmark.","腰骨の外側近くまで":"Extend broadly toward the outer edges of both hip-bone landmarks while remaining anatomically natural."};
+ const verticalMap={"下腹部のみ":"Keep the downward coverage within the visible lower abdomen.","衣装周辺まで":"Continue to the naturally visible skin immediately around the opaque garment edges.","鼠径部まで":"Extend continuously into both visible groin folds.","鼠径部・内もも上部まで":"Extend into both visible groin folds and the upper inner thighs.","鼠径部・内もも上部まで広く":"Extend widely through both visible groin folds and across the upper inner thighs."};
+ const flowMap={"中央から徐々に左右へ広がる":"Use a gradual center-to-side widening pattern.","扇状に広がる":"Use a broad fan-shaped distribution.","V字状に広がる":"Use a natural V-shaped distribution.","台形状に広がる":"Use a broad trapezoidal distribution.","全範囲へほぼ均一":"Keep the selected coverage area nearly uniform in density.","自然な不規則分布":"Use subtle natural irregularity rather than geometric perfection."};
+ const shapeMap={"横長の自然分布":"Use a broad horizontally oriented natural distribution.","逆三角形":"Use an inverted-triangle silhouette.","丸みのある台形":"Use a softly rounded trapezoidal silhouette.","楕円形":"Use a low oval silhouette.","中央密集・左右へ薄く":"Keep the center densest and feather gradually toward both sides.","自然な左右非対称":"Allow slight natural left-right asymmetry without changing the overall coverage."};
+ const boundaryMap={"はっきり区切る":"Keep a readable but anatomically plausible boundary.","自然な境界":"Use a natural boundary with small local variation.","周囲へ自然にぼかす":"Feather the density gradually toward the surrounding skin.","境目なく連続":"Blend continuously into all neighboring visible hair zones with no abrupt boundary."};
+ let trail;
+ if(state.trailBridgeWidth==="毛なし") trail="TREASURE TRAIL\nBetween the navel and the main distribution, keep the skin visibly free of a continuous trail.";
+ else trail=`TREASURE TRAIL
+Core trail: ${widthMap[state.trailBridgeWidth]||widthMap["細い"]}, ${densityMap[state.trailBridgeDensity]||densityMap["自然"]}, ${continuityMap[state.trailBridgeContinuity]||continuityMap["途切れず連続"]}.
+Style: ${styleMap[state.trailStyle]||styleMap["濃い一本線"]} ${surroundMap[state.trailSurroundingHair]||surroundMap["周囲はごく薄い"]}
+Transition: ${transitionMap[state.trailTransitionZone]||transitionMap["短く自然に移行"]} ${endMap[state.trailBridgeEnd]||endMap["腰骨ラインで自然に広がる"]}`;
  const detail=`Visible garment-edge region density: ${state.pubicDensity}; visible groin-fold hair: ${state.groinHair}; visible upper-inner-thigh hair: ${state.innerThighHair}.`;
- return `${bridge} Main-region density: ${density}. ${startMap[state.lowerHairStart]||startMap["腰骨ラインから広がる"]} ${horizontalMap[state.lowerHairHorizontal]||horizontalMap["左右腰骨間いっぱい"]} ${verticalMap[state.lowerHairVertical]||verticalMap["鼠径部・内もも上部まで広く"]} ${shapeMap[state.lowerHairFlow]||shapeMap["自然な不規則分布"]} ${boundaryMap[state.lowerHairBoundary]||boundaryMap["周囲へ自然にぼかす"]} ${detail} Render only naturally visible body hair on exposed skin around the fully opaque garment; preserve appropriate coverage and avoid anatomical emphasis`;
+ return `${trail}
+
+MAIN LOWER-ABDOMEN DISTRIBUTION
+Main-region density: ${density}. ${startMap[state.lowerHairStart]||startMap["腰骨ラインから広がる"]} ${horizontalMap[state.lowerHairHorizontal]||horizontalMap["左右腰骨間いっぱい"]} ${verticalMap[state.lowerHairVertical]||verticalMap["鼠径部・内もも上部まで広く"]} ${flowMap[state.lowerHairFlow]||flowMap["自然な不規則分布"]} ${shapeMap[state.lowerHairShape]||shapeMap["横長の自然分布"]} ${boundaryMap[state.lowerHairBoundary]||boundaryMap["周囲へ自然にぼかす"]} ${detail}
+Render only naturally visible body hair on exposed skin around the fully opaque garment; preserve appropriate coverage and avoid anatomical emphasis.`;
 }
 function armpitHairEnglish(){
- const density={
-  "なし":"no visible",
-  "ごく薄い":"very sparse",
-  "薄い":"light",
-  "普通":"moderate",
-  "やや濃い":"moderately dense",
-  "濃い":"dense",
-  "かなり濃い":"very dense"
- }[state.armpit]||"moderate";
- if(state.armpit==="なし")return "No visible armpit hair.";
- const area={
-  "狭い":"concentrated in a small central area of each natural armpit hollow",
-  "標準":"covering the central and lower portions of each natural armpit hollow",
-  "広い":"covering most of each natural armpit hollow",
-  "ワキ全体を覆う":"filling the full natural armpit hollow without extending unnaturally onto the chest or upper arm"
- }[state.armpitArea]||"covering most of each natural armpit hollow";
- const length={
-  "短い":"short",
-  "やや短い":"slightly short",
-  "標準":"natural medium-length",
-  "やや長い":"slightly long",
-  "長い":"long"
- }[state.armpitLength]||"natural medium-length";
- const texture={
-  "柔らかく細い":"fine, soft individual hairs",
-  "自然な一本毛":"clearly visible natural individual hairs",
-  "自然な毛束感":"natural variation between individual hairs and small loose clusters",
-  "やや硬く粗い":"coarser, slightly wiry natural hairs",
-  "はっきりした毛束感":"clearly visible natural clusters with varied spacing, not a solid dark patch"
- }[state.armpitTexture]||"natural variation between individual hairs and small loose clusters";
- const direction={
-  "中央にまとまる":"with most strands oriented toward the center",
-  "自然な放射状":"with a natural radial growth pattern",
-  "外側へ広がる":"with some strands naturally spreading outward",
-  "下向きに流れる":"with a gentle downward growth direction"
- }[state.armpitDirection]||"with a natural radial growth pattern";
- return `Armpit hair: ${density}, ${length}, ${area}, rendered as ${texture}, ${direction}. Preserve left-right symmetry in density and coverage while retaining small natural variation.`;
+ const density={"なし":"no visible","ごく薄い":"very sparse","薄い":"light","普通":"moderate","やや濃い":"moderately dense","濃い":"dense","かなり濃い":"very dense"}[state.armpit]||"moderate";
+ if(state.armpit==="なし")return "ARMPIT HAIR\nNo visible armpit hair.";
+ const area={"狭い":"concentrated in a small central area of each natural armpit hollow","標準":"covering the central and lower portions of each natural armpit hollow","広い":"covering most of each natural armpit hollow","ワキ全体を覆う":"filling the full natural armpit hollow without extending unnaturally onto the chest or upper arm"}[state.armpitArea]||"covering most of each natural armpit hollow";
+ const length={"短い":"short","やや短い":"slightly short","標準":"natural medium-length","やや長い":"slightly long","長い":"long"}[state.armpitLength]||"natural medium-length";
+ const texture={"柔らかく細い":"fine, soft individual strands","自然な一本毛":"clearly visible natural individual strands","自然な毛束感":"distinct individual strands mixed with small loose natural clusters","やや硬く粗い":"coarser, slightly wiry natural strands","はっきりした毛束感":"clearly separated small clusters made of visible individual hairs, never a solid dark patch"}[state.armpitTexture]||"distinct individual strands mixed with small loose natural clusters";
+ const direction={"中央にまとまる":"with most strands oriented toward the center","自然な放射状":"with a natural radial growth pattern from the deepest part of the armpit","外側へ広がる":"with strands naturally spreading outward from the center","下向きに流れる":"with a gentle downward growth direction following the skin folds"}[state.armpitDirection]||"with a natural radial growth pattern from the deepest part of the armpit";
+ const parting={"分け目なし":"without a visible parting","ごく弱い分け目":"with a very subtle natural parting","自然な分け目あり":"with a subtle natural parting following the upper-arm crease","腕の折り目に沿う明瞭な分け目":"with a clearly readable natural parting along the upper-arm crease, creating two slightly diverging groups","左右二方向へ分かれる":"with two distinct but natural diverging growth directions"}[state.armpitParting]||"with a subtle natural parting following the upper-arm crease";
+ const tips={"整い気味":"with relatively even tips","わずかにばらつく":"with slight variation in strand length and tip position","毛先に自然なばらつき":"with natural variation in strand length and tapered tips","長短差が大きい":"with clearly varied long and short strands","不規則で自然":"with irregular but natural strand lengths and scattered tapered tips"}[state.armpitTipVariation]||"with natural variation in strand length and tapered tips";
+ const gaps={"ほぼ隙間なし":"with minimal visible gaps between clusters","小さな隙間あり":"with small visible openings between clusters","自然な隙間":"with naturally irregular spacing and visible skin between clusters","隙間がやや多い":"with several visible gaps separating the clusters"}[state.armpitGapPattern]||"with small visible openings between clusters";
+ return `ARMPIT HAIR
+Density and area: ${density}, ${length}, ${area}.
+Strand rendering: ${texture}, ${tips}, ${gaps}.
+Growth flow: ${direction}, ${parting}.
+Render the hair as many distinct tapered strands and several small separated clusters rooted naturally in the armpit hollow. Preserve depth through overlapping strands, visible skin gaps, and root-to-tip tapering. Never render it as a single painted, fuzzy, rectangular, or solid black mass. Preserve near-symmetry in overall density and coverage while retaining small natural left-right differences.`;
 }
 function referenceModeEnglish(){
  if(state.referenceMode==="衣装デザイン資料")return "costume-design reference prioritizing garment silhouette, pattern pieces, seams, material behavior, color, and construction details";
@@ -891,9 +827,9 @@ function bodyHairSafetyCorrection(){
  const p=promptProfile();
  if(p.retry!=="安全表現")return "";
  return `SAFE-EXPRESSION BODY-HAIR PRESERVATION
-Treat the visible body-hair pattern as a neutral adult anatomical surface characteristic and costume-fit reference.
-Preserve the selected armpit-hair area, length, texture, Treasure Trail geometry, lower-abdomen distribution, groin-fold visibility, upper-inner-thigh continuity, and leg-hair density on exposed skin.
-Do not remove, airbrush, or substantially reduce selected body hair merely because the safe-expression profile is active.
+Visible adult body hair is a neutral anatomical surface feature in this technical character and costume-fit reference.
+Preserve the requested strand-level rendering, armpit parting and cluster separation, Treasure Trail core-line contrast, surrounding-hair level, transition geometry, lower-abdomen coverage, groin-fold visibility, upper-inner-thigh continuity, and leg-hair density on exposed skin.
+Do not simplify requested hair into a dark patch, faint skin texture, airbrushed skin, or hairless skin merely because the safe-expression profile is active.
 Maintain fully opaque secure garment coverage and avoid intimate anatomical emphasis.`;
 }
 function aiSpecificInstruction(){
@@ -1063,7 +999,7 @@ BMI：約${bmi.toFixed(1)}（${assessment.label}）
 【体毛】
 胸毛：${state.chestHair}
 腹毛：${state.abHair}
-ワキ毛：${state.armpit}・${state.armpitArea}・${state.armpitLength}・${state.armpitTexture}\nヘソ〜主分布：${state.trailBridgeWidth}・${state.trailBridgeDensity}・${state.trailBridgeContinuity}・${state.trailBridgeEnd}／ヘソ上 ${state.trailAbove}
+ワキ毛：${state.armpit}・${state.armpitArea}・${state.armpitLength}・${state.armpitTexture}・${state.armpitParting}\nヘソ〜主分布：${state.trailStyle}／${state.trailBridgeWidth}・${state.trailBridgeDensity}／周囲 ${state.trailSurroundingHair}／${state.trailTransitionZone}／ヘソ上 ${state.trailAbove}
 前面・下半身の量：${state.lowerHairDensity}
 開始位置：${state.lowerHairStart}
 横方向：${state.lowerHairHorizontal}
@@ -1118,6 +1054,7 @@ function generatePrompt(){
  const minimalBottom=["ふんどし(越中)","ふんどし(六尺)","ふんどし(もっこ)","ふんどし(黒猫)","ふんどし(割)","相撲まわし","締込み","ビルダーパンツ","ビキニ(スタンダード)","ビキニ(ローライズ)","ビキニ(ハイレグ)","ビキニ(スポーツ)","競泳パンツ(ビキニ)","競泳パンツ(ブーメラン)","競泳パンツ(クラシック)"].includes(state.bottom);
 
  const visibleHairLines=[];
+ visibleHairLines.push(`Render body hair as distinct natural strands and small separated clusters, never as painted darkness or uniform fuzzy texture.`);
  visibleHairLines.push(armpitHairEnglish());
  if(upperBare){
    visibleHairLines.push(`Chest hair: ${state.chestHair}. Abdominal hair: ${state.abHair}.`);
@@ -1258,6 +1195,13 @@ function applyAll(o){
  if(o&&o.lowerHairSpread==="標準")o.lowerHairSpread="陰毛周辺にまとまる";
  if(o&&!o.lowerHairStart)o.lowerHairStart="腰骨ラインから広がる";
  if(o&&o.lowerHairStart==="腰骨ライン付近から")o.lowerHairStart="へそから腰骨まではほぼ無し・腰骨ラインから濃くなる";
+ if(o&&!o.armpitParting)o.armpitParting="自然な分け目あり";
+ if(o&&!o.armpitTipVariation)o.armpitTipVariation="毛先に自然なばらつき";
+ if(o&&!o.armpitGapPattern)o.armpitGapPattern="小さな隙間あり";
+ if(o&&!o.trailStyle)o.trailStyle="濃い一本線";
+ if(o&&!o.trailSurroundingHair)o.trailSurroundingHair="周囲はごく薄い";
+ if(o&&!o.trailTransitionZone)o.trailTransitionZone="短く自然に移行";
+ if(o&&!o.lowerHairShape)o.lowerHairShape="横長の自然分布";
  if(o&&!o.armpitArea)o.armpitArea=["濃い","かなり濃い"].includes(o.armpit)?"広い":"標準";
  if(o&&!o.armpitLength)o.armpitLength="標準";
  if(o&&!o.armpitTexture)o.armpitTexture=["濃い","かなり濃い"].includes(o.armpit)?"自然な毛束感":"自然な一本毛";
@@ -1310,7 +1254,7 @@ function applyAll(o){
  if(o&&o.bottom==="ボクサーパンツ(ローライズ)"&&!o.bottomRise)o.bottomRise="ローライズ：腰骨・骨盤付近";
  Object.assign(state,o||{});$("settingLevel").value=state.settingLevel||"easy";$("changeMode").value=state.changeMode||"confirm";$("projectStatus").value=state.projectStatus||"作成途中";render()}
 function saveDraft(){ if(currentStep===10)generatePrompt();
- const data={id:Date.now(),savedAt:new Date().toISOString(),version:"2.0-beta19",currentStep,data:collectAll()};
+ const data={id:Date.now(),savedAt:new Date().toISOString(),version:"2.0-beta20",currentStep,data:collectAll()};
  safeSet(STORAGE_CURRENT,JSON.stringify(data));
  const lib=getLibrary();const idx=lib.findIndex(x=>x.data&&x.data.name===data.data.name&&x.data.projectStatus===data.data.projectStatus);
  if(idx>=0){data.id=lib[idx].id;lib[idx]=data}else lib.unshift(data);setLibrary(lib.slice(0,50));
@@ -1325,9 +1269,9 @@ function newProject(){
  $("displayStatus").textContent="未保存・新規作成";render();window.scrollTo({top:0,behavior:"smooth"});showToast("新規作成に切り替えました。");
 }
 function exportJSON(){ if(currentStep===10)generatePrompt();
- const data={app:"Character Fullbody Maker — Tatsuya Edition",version:"2.0-beta19",exportedAt:new Date().toISOString(),currentStep,data:collectAll()};
+ const data={app:"Character Fullbody Maker — Tatsuya Edition",version:"2.0-beta20",exportedAt:new Date().toISOString(),currentStep,data:collectAll()};
  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");
- a.href=url;a.download=(state.name.trim()||"character")+"_beta19.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ a.href=url;a.download=(state.name.trim()||"character")+"_beta20.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 function importJSON(file){const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);currentStep=d.currentStep||1;applyAll(d.data||d);showToast("JSONを読み込みました。")}catch(e){alert("JSONを読み込めませんでした。")}};r.readAsText(file)}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
@@ -1419,6 +1363,9 @@ function runConsistencyCheck(){
  if(state.trailBridgeWidth==="毛なし"&&state.trailBridgeContinuity!=="適用なし")issues.push({type:"warn",text:"Treasure Trailは「毛なし」ですが、連続性が設定されています。プロンプトでは毛なしを優先します。"});
  if(state.trailBridgeWidth==="毛なし"&&state.trailBridgeEnd!=="接続しない")issues.push({type:"warn",text:"Treasure Trailは「毛なし」ですが、主分布への接続方法が設定されています。"});
  if(state.armpit==="なし"&&state.armpitArea!=="標準")issues.push({type:"warn",text:"ワキ毛は「なし」ですが、面積が設定されています。"});
+ if(state.armpit==="なし"&&state.armpitParting!=="分け目なし")issues.push({type:"warn",text:"ワキ毛は「なし」ですが、分け目が設定されています。"});
+ if(state.trailStyle==="細い一本線＋周囲は無毛"&&state.trailSurroundingHair!=="周囲は無毛")issues.push({type:"info",text:"Treasure Trailスタイルは「周囲は無毛」ですが、周囲毛の個別設定が異なります。個別設定を優先してプロンプト化します。"});
+ if(state.trailStyle==="細い一本線＋周囲はごく薄い"&&!["周囲はごく薄い","周囲は薄い"].includes(state.trailSurroundingHair))issues.push({type:"info",text:"Treasure Trailスタイルと周囲毛の濃さが異なります。個別設定を優先します。"});
  if(state.lowerHairHorizontal==="左右腰骨間いっぱい"&&state.lowerHairVertical==="鼠径部・内もも上部まで広く"&&["ごく薄い","薄い"].includes(state.lowerHairDensity))issues.push({type:"info",text:"分布範囲は最大ですが、密度は薄めです。広範囲に薄く生える表現になります。"});
  if(state.trailBridgeWidth!=="毛なし"&&state.trailBridgeDensity==="適用なし")issues.push({type:"warn",text:"ヘソから主分布までの毛に太さがありますが、濃さが「適用なし」です。自然な濃さへの変更をおすすめします。"});
  if(state.lowerHairArea.includes("内もも")&&state.innerThighHair==="なし")issues.push({type:"warn",text:"体毛の広がりは内もも上部までですが、内ももの毛は「なし」です。"});
