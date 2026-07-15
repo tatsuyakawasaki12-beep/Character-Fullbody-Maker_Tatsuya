@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta 17</title>
+<title>Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta 17.1</title>
 <style>
 :root{--bg:#f4f7fb;--panel:#fff;--text:#182235;--muted:#718096;--line:#d9e2ef;--accent:#3563e9;--soft:#eef3ff;--danger:#b42318;--safe:#16794f;--safe-bg:#eefbf4}
 *{box-sizing:border-box}
@@ -50,7 +50,7 @@ body.level-detail .standard,body.level-detail .detail{display:block}
 <body class="level-easy">
 <header><div class="wrap">
 <h1>Character Fullbody Maker — Tatsuya Edition Ver.2.0</h1>
-<div class="sub">開発版 Beta 16：体毛3段階指定・脚幅固定・衣装別最適化・顔一貫性</div>
+<div class="sub">開発版 Beta 17.1：下腹部体毛3段階指定・脚毛4部位指定・見切れ防止強化・顔一貫性</div>
 </div></header>
 
 <main>
@@ -113,8 +113,8 @@ body.level-detail .standard,body.level-detail .detail{display:block}
 
 <script>
 "use strict";
-const STORAGE_CURRENT="cfm_beta17_current";
-const STORAGE_LIBRARY="cfm_beta17_library";
+const STORAGE_CURRENT="cfm_beta17_1_current";
+const STORAGE_LIBRARY="cfm_beta17_1_library";
 let currentStep=1;
 let toastTimer=null;
 
@@ -1136,7 +1136,7 @@ function applyAll(o){
  if(o&&o.bottom==="ボクサーパンツ(ローライズ)"&&!o.bottomRise)o.bottomRise="ローライズ：腰骨・骨盤付近";
  Object.assign(state,o||{});$("settingLevel").value=state.settingLevel||"easy";$("changeMode").value=state.changeMode||"confirm";$("projectStatus").value=state.projectStatus||"作成途中";render()}
 function saveDraft(){ if(currentStep===10)generatePrompt();
- const data={id:Date.now(),savedAt:new Date().toISOString(),version:"2.0-beta17",currentStep,data:collectAll()};
+ const data={id:Date.now(),savedAt:new Date().toISOString(),version:"2.0-beta17.1",currentStep,data:collectAll()};
  safeSet(STORAGE_CURRENT,JSON.stringify(data));
  const lib=getLibrary();const idx=lib.findIndex(x=>x.data&&x.data.name===data.data.name&&x.data.projectStatus===data.data.projectStatus);
  if(idx>=0){data.id=lib[idx].id;lib[idx]=data}else lib.unshift(data);setLibrary(lib.slice(0,50));
@@ -1151,9 +1151,9 @@ function newProject(){
  $("displayStatus").textContent="未保存・新規作成";render();window.scrollTo({top:0,behavior:"smooth"});showToast("新規作成に切り替えました。");
 }
 function exportJSON(){ if(currentStep===10)generatePrompt();
- const data={app:"Character Fullbody Maker — Tatsuya Edition",version:"2.0-beta17",exportedAt:new Date().toISOString(),currentStep,data:collectAll()};
+ const data={app:"Character Fullbody Maker — Tatsuya Edition",version:"2.0-beta17.1",exportedAt:new Date().toISOString(),currentStep,data:collectAll()};
  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");
- a.href=url;a.download=(state.name.trim()||"character")+"_beta17.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ a.href=url;a.download=(state.name.trim()||"character")+"_beta17_1.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 function importJSON(file){const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);currentStep=d.currentStep||1;applyAll(d.data||d);showToast("JSONを読み込みました。")}catch(e){alert("JSONを読み込めませんでした。")}};r.readAsText(file)}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
