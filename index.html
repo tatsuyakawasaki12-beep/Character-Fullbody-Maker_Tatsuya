@@ -50,6 +50,7 @@ body.level-detail .standard,body.level-detail .detail{display:block}
 <body class="level-easy">
 
 <!-- Beta20.3 Preview DEVELOPMENT NOTE
+Step 4: Hair and Skin UI, Japanese summary, and HAIR AND SKIN prompt structure organized.
 Step 3: Face UI, Japanese summary, and FACE prompt structure organized.
 Step 2: Character Identity UI and prompt structure organized.
 Armpit Hair: Density / Strand Count / Coverage / Hair Type / Flow / Parting independent.
@@ -60,7 +61,7 @@ Leg Hair: Density / Length / Texture / Distance Visibility independent.
 
 <header><div class="wrap">
 <h1>Character Fullbody Maker — Tatsuya Edition Ver.2.0</h1>
-<div class="sub">開発版 Beta 20.3 Preview：Step 3 Face 整理完了</div>
+<div class="sub">開発版 Beta 20.3 Preview：Step 4 Hair & Skin 整理完了</div>
 </div></header>
 
 <main>
@@ -204,25 +205,27 @@ function pageHtml(){
  </div>
  <div class="note"><strong>FACE の出力順：</strong>全体印象 → 顔型 → 額 → 頬骨 → 顎線 → まぶた → 目の形 → 目の大きさ → 目尻 → 眉 → 鼻筋 → 鼻先 → 唇 → 耳 → 表情</div>${navButtons()}`;
 
- if(currentStep===3)return `<h2 class="section-title">STEP 3　髪</h2><div class="lead">髪型・色・長さ・前髪・もみあげ・襟足・毛量・質感。</div><div class="grid">
- ${field("hairStyle","髪型",["ナチュラルショート","マッシュ","センターパート","アップバング","七三分け","ソフトモヒカン","ツーブロック","ウルフ","無造作"])}
+ if(currentStep===3)return `<h2 class="section-title">STEP 3　髪</h2><div class="lead">HAIR AND SKIN の出力順に合わせて、髪色・長さ・髪型・前髪・もみあげ・襟足・毛量・髪質を設定します。</div><div class="grid">
  ${field("hairColor","髪色",["自然な黒","黒","ダークブラウン","茶色","ライトブラウン","金髪","銀髪","グレー"])}
  ${field("hairLength","長さ",["坊主","ベリーショート","ショート","やや長めのショート","ミディアム","セミロング","ロング"],"standard")}
+ ${field("hairStyle","髪型",["ナチュラルショート","マッシュ","センターパート","アップバング","七三分け","ソフトモヒカン","ツーブロック","ウルフ","無造作"])}
  ${field("bangs","前髪",["なし","短い","眉上","眉にかかる","目にかかる","横へ流す","センター分け"],"standard")}
  ${field("sideburns","もみあげ",["短い","自然","やや長い","長い","薄い","濃い"],"detail")}
  ${field("nape","襟足",["短め","自然","やや長め","長い"],"detail")}
  ${field("hairVolume","毛量",["少ない","やや少ない","標準","多い","かなり多い"],"detail")}
  ${field("hairTexture","髪質",["直毛","やや直毛","自然なうねり","くせ毛","ウェーブ","柔らかい","硬い"],"detail")}
- </div>${navButtons()}`;
+ </div>
+ <div class="note"><strong>髪の出力順：</strong>髪色 → 長さ → 髪型 → 前髪 → もみあげ → 襟足 → 毛量 → 髪質</div>${navButtons()}`;
 
- if(currentStep===4)return `<h2 class="section-title">STEP 4　肌</h2><div class="lead">肌色・肌質・年齢感・しわ・シミ・髭。</div><div class="grid">
+ if(currentStep===4)return `<h2 class="section-title">STEP 4　肌</h2><div class="lead">HAIR AND SKIN の出力順に合わせて、肌色・肌質・見た目の年齢・しわ・シミ／そばかす・顔の髭を設定します。</div><div class="grid">
  ${field("skinTone","肌色",["色白","やや色白","標準的な日本人の肌色","健康的","小麦色","日焼け"])}
- ${field("ageLook","年齢感",["年齢相応","少し若く見える","かなり若く見える","少し大人びて見える"])}
  ${field("skinTexture","肌質",["自然","なめらか","毛穴の見えるリアルな肌","透明感","マット","軽い艶"],"standard")}
+ ${field("ageLook","見た目の年齢",["年齢相応","少し若く見える","かなり若く見える","少し大人びて見える"])}
  ${field("wrinkles","しわ",["なし","ごく少ない","少ない","自然","やや多い","多い"],"detail")}
  ${field("spots","シミ・そばかす",["なし","ごく少ない","少ない","自然","やや多い","多い"],"detail")}
- ${field("beard","髭",["なし","剃り跡なし","薄い剃り跡","無精ひげ","口髭","顎髭","短く整えた髭"],"standard")}
- </div>${navButtons()}`;
+ ${field("beard","顔の髭",["なし","剃り跡なし","薄い剃り跡","無精ひげ","口髭","顎髭","短く整えた髭"],"standard")}
+ </div>
+ <div class="note"><strong>肌の出力順：</strong>肌色 → 肌質 → 見た目の年齢 → しわ → シミ・そばかす → 顔の髭</div>${navButtons()}`;
 
  if(currentStep===5)return `<h2 class="section-title">STEP 5　身体</h2><div class="lead">体格・首・肩・胸・腹・腰・臀部・腕・手・脚。</div><div class="grid">
  ${field("bodyBuild","体格",["細身","やや細身","標準","引き締まった","細マッチョ","筋肉質","がっしり","水泳選手体型","ランナー体型","モデル体型"])}
@@ -1137,9 +1140,21 @@ BMI：約${bmi.toFixed(1)}（${assessment.label}）
 耳：${state.ears}
 表情：${state.expression}
 
-【髪・肌】
-髪：${state.hairColor}／${state.hairStyle}／${state.hairLength}
-肌：${state.skinTone}／${state.skinTexture}
+【Hair and Skin／髪・肌】
+髪色：${state.hairColor}
+髪の長さ：${state.hairLength}
+髪型：${state.hairStyle}
+前髪：${state.bangs}
+もみあげ：${state.sideburns}
+襟足：${state.nape}
+毛量：${state.hairVolume}
+髪質：${state.hairTexture}
+肌色：${state.skinTone}
+肌質：${state.skinTexture}
+見た目の年齢：${state.ageLook}
+しわ：${state.wrinkles}
+シミ・そばかす：${state.spots}
+顔の髭：${state.beard}
 
 【身体】
 肩幅：${state.shoulder}
@@ -1290,10 +1305,20 @@ Ears: ${state.ears}.
 Expression: ${state.expression}.
 
 HAIR AND SKIN
-Hair color: ${state.hairColor}. Hair length: ${state.hairLength}. Hairstyle: ${state.hairStyle}.
-Bangs: ${state.bangs}. Sideburns: ${state.sideburns}. Nape: ${state.nape}. Hair volume: ${state.hairVolume}. Hair texture: ${state.hairTexture}.
-Skin tone: ${state.skinTone}. Skin texture: ${state.skinTexture}. Apparent age: ${state.ageLook}.
-Wrinkles: ${state.wrinkles}. Spots or freckles: ${state.spots}. Facial hair: ${state.beard}.
+Hair color: ${state.hairColor}.
+Hair length: ${state.hairLength}.
+Hairstyle: ${state.hairStyle}.
+Bangs: ${state.bangs}.
+Sideburns: ${state.sideburns}.
+Nape: ${state.nape}.
+Hair volume: ${state.hairVolume}.
+Hair texture: ${state.hairTexture}.
+Skin tone: ${state.skinTone}.
+Skin texture: ${state.skinTexture}.
+Apparent age: ${state.ageLook}.
+Wrinkles: ${state.wrinkles}.
+Spots or freckles: ${state.spots}.
+Facial hair: ${state.beard}.
 
 BODY PROPORTIONS
 Head-to-body ratio: ${state.headRatio}. Leg length: ${state.inseam}. Foot size: ${state.shoeSize}.
