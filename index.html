@@ -50,7 +50,7 @@ body.level-detail .standard,body.level-detail .detail{display:block}
 <body class="level-easy">
 
 <!-- Beta20.3 Preview DEVELOPMENT NOTE
-Step 4: Hair and Skin UI, Japanese summary, and HAIR AND SKIN prompt structure organized.
+Step 5: Body Proportions UI, Japanese summary, and BODY PROPORTIONS prompt structure organized.
 Step 3: Face UI, Japanese summary, and FACE prompt structure organized.
 Step 2: Character Identity UI and prompt structure organized.
 Armpit Hair: Density / Strand Count / Coverage / Hair Type / Flow / Parting independent.
@@ -61,7 +61,7 @@ Leg Hair: Density / Length / Texture / Distance Visibility independent.
 
 <header><div class="wrap">
 <h1>Character Fullbody Maker — Tatsuya Edition Ver.2.0</h1>
-<div class="sub">開発版 Beta 20.3 Preview：Step 4 Hair & Skin 整理完了</div>
+<div class="sub">開発版 Beta 20.3 Preview：Step 5 Body Proportions 整理完了</div>
 </div></header>
 
 <main>
@@ -179,12 +179,8 @@ function pageHtml(){
  ${field("bodyBuild","体型",["細身","やや細身","標準","引き締まった","細マッチョ","筋肉質","がっしり","水泳選手体型","ランナー体型","モデル体型"],"wide")}
  <div class="wide section-subtitle standard">補助設定</div>
  ${field("preset","AIアシスト用・体型プリセット",["日本人標準・標準体型","日本人標準・引き締まった体型","モデル体型","細身","細マッチョ","水泳選手体型","ランナー体型","がっしり体型","自転車競技者体型"],"wide standard")}
- ${field("headRatio","頭身",["低め","標準","やや高い","モデル体型"],"standard")}
- ${field("shoeSize","足のサイズ",Array.from({length:17},(_,i)=>(22+i*.5).toFixed(1)+"cm"),"detail")}
- ${field("chestCirc","胸囲",["指定なし",...Array.from({length:51},(_,i)=>(75+i)+"cm")],"detail")}
- ${field("waistCirc","ウエスト",["指定なし",...Array.from({length:56},(_,i)=>(55+i)+"cm")],"detail")}
  </div>
- <div class="note"><strong>人物情報の優先順位：</strong>名前・年齢・性別・国籍・身長・体重・体型を Character Identity として固定します。「AIアシスト用・体型プリセット」は関連する身体項目の提案にのみ使用します。</div>${navButtons()}`;
+ <div class="note"><strong>人物情報の優先順位：</strong>名前・年齢・性別・国籍・身長・体重・体型を Character Identity として固定します。「AIアシスト用・体型プリセット」は関連する身体項目の提案にのみ使用します。頭身・寸法・部位別の体格は「身体」で設定します。</div>${navButtons()}`;
 
  if(currentStep===2)return `<h2 class="section-title">STEP 2　顔</h2><div class="lead">Character Core の FACE 順序に沿って、全体印象・輪郭・目・眉・鼻・口・耳・表情を設定します。</div><div class="grid">
  ${field("facePreset","全体印象",["爽やかな好青年","素朴で親しみやすい","端正なモデル系","精悍なスポーツ選手","落ち着いた大人","中性的な美青年","ワイルド"])}
@@ -227,8 +223,14 @@ function pageHtml(){
  </div>
  <div class="note"><strong>肌の出力順：</strong>肌色 → 肌質 → 見た目の年齢 → しわ → シミ・そばかす → 顔の髭</div>${navButtons()}`;
 
- if(currentStep===5)return `<h2 class="section-title">STEP 5　身体</h2><div class="lead">体格・首・肩・胸・腹・腰・臀部・腕・手・脚。</div><div class="grid">
- ${field("bodyBuild","体格",["細身","やや細身","標準","引き締まった","細マッチョ","筋肉質","がっしり","水泳選手体型","ランナー体型","モデル体型"])}
+ if(currentStep===5)return `<h2 class="section-title">STEP 5　身体</h2><div class="lead">Character Core の BODY PROPORTIONS 順序に沿って、全身比率・基準寸法・各部位の体格を設定します。</div><div class="grid">
+ <div class="wide section-subtitle">全身比率・基準寸法</div>
+ ${field("headRatio","頭身",["低め","標準","やや高い","モデル体型"],"standard")}
+ ${field("inseam","脚の長さ",["短め","標準","やや長め","長い","モデル体型の長い脚"],"standard")}
+ ${field("shoeSize","足のサイズ",Array.from({length:17},(_,i)=>(22+i*.5).toFixed(1)+"cm"),"detail")}
+ ${field("chestCirc","胸囲",["指定なし",...Array.from({length:51},(_,i)=>(75+i)+"cm")],"detail")}
+ ${field("waistCirc","ウエスト寸法",["指定なし",...Array.from({length:56},(_,i)=>(55+i)+"cm")],"detail")}
+ <div class="wide section-subtitle">部位別の体格</div>
  ${field("neck","首",["細め","標準","やや太め","筋肉質"],"standard")}
  ${field("shoulder","肩幅",["狭め","標準","やや広め","広い","水泳選手のように広い"])}
  ${field("chest","胸板",["薄い","標準","ほどよく厚い","厚い","筋肉質"],"standard")}
@@ -239,8 +241,9 @@ function pageHtml(){
  ${field("hands","手",["小さめ","標準","大きめ","骨張った"],"detail")}
  ${field("thighs","太もも",["細い","標準","引き締まった","筋肉質","太い"],"detail")}
  ${field("calves","ふくらはぎ",["細い","標準","引き締まった","筋肉質"],"detail")}
- ${field("legs","脚の長さ",["短め","標準","やや長め","長い","モデル体型の長い脚"],"detail")}
- </div>${navButtons()}`;
+ ${field("legs","脚全体",["細い","標準","引き締まった","筋肉質","太い"],"detail")}
+ </div>
+ <div class="note"><strong>BODY PROPORTIONS の出力順：</strong>頭身 → 脚の長さ → 足のサイズ → 胸囲 → ウエスト寸法 → 首 → 肩幅 → 胸板 → 腹部 → 腰回り → 臀部 → 腕 → 手 → 太もも → ふくらはぎ → 脚全体</div>${navButtons()}`;
 
  if(currentStep===6)return `<h2 class="section-title">STEP 6　体毛</h2>
 <div class="lead">体毛を「濃さ」だけでなく、面積・長さ・毛質・つながり・広がりとして設計します。画面では自然な日本語で選択し、内部では画像生成AI向けの技術的な英語へ変換します。</div><div class="grid">
@@ -1156,15 +1159,23 @@ BMI：約${bmi.toFixed(1)}（${assessment.label}）
 シミ・そばかす：${state.spots}
 顔の髭：${state.beard}
 
-【身体】
+【Body Proportions／身体比率】
+頭身：${state.headRatio}
+脚の長さ：${state.inseam}
+足のサイズ：${state.shoeSize}
+胸囲：${state.chestCirc}
+ウエスト寸法：${state.waistCirc}
+首：${state.neck}
 肩幅：${state.shoulder}
 胸板：${state.chest}
 腹部：${state.abdomen}
-腰：${state.waist}
+腰回り：${state.waist}
 臀部：${state.hip}
-脚の長さ：${state.inseam}
+腕：${state.arms}
+手：${state.hands}
 太もも：${state.thighs}
 ふくらはぎ：${state.calves}
+脚全体：${state.legs}
 
 【体毛】
 胸毛：${state.chestHair}
@@ -1321,11 +1332,22 @@ Spots or freckles: ${state.spots}.
 Facial hair: ${state.beard}.
 
 BODY PROPORTIONS
-Head-to-body ratio: ${state.headRatio}. Leg length: ${state.inseam}. Foot size: ${state.shoeSize}.
-Chest circumference: ${state.chestCirc}. Waist circumference: ${state.waistCirc}.
-Neck: ${state.neck}. Shoulder width: ${state.shoulder}. Chest: ${state.chest}. Abdomen: ${state.abdomen}.
-Waist: ${state.waist}. Hips and gluteal build: ${state.hip}. Arms: ${state.arms}. Hands: ${state.hands}.
-Thighs: ${state.thighs}. Calves: ${state.calves}. Overall legs: ${state.legs}.
+Head-to-body ratio: ${state.headRatio}.
+Leg length: ${state.inseam}.
+Foot size: ${state.shoeSize}.
+Chest circumference: ${state.chestCirc}.
+Waist circumference: ${state.waistCirc}.
+Neck: ${state.neck}.
+Shoulder width: ${state.shoulder}.
+Chest: ${state.chest}.
+Abdomen: ${state.abdomen}.
+Waist: ${state.waist}.
+Hips and gluteal build: ${state.hip}.
+Arms: ${state.arms}.
+Hands: ${state.hands}.
+Thighs: ${state.thighs}.
+Calves: ${state.calves}.
+Overall legs: ${state.legs}.
 
 VISIBLE BODY HAIR
 ${visibleHairLines.join("\n")}
