@@ -50,9 +50,10 @@ body.level-detail .standard,body.level-detail .detail{display:block}
 @media(max-width:720px){.controls,.grid{grid-template-columns:1fr}.wide{grid-column:auto}.steps{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
-<body class="level-easy" data-build-step="11" data-build-label="Beta 20.3 Preview Step 11">
+<body class="level-easy" data-build-step="12" data-build-label="Beta 20.3 Preview Step 12">
 
 <!-- Beta20.3 Preview DEVELOPMENT NOTE
+Step 12: Release-candidate hardening, progress accessibility, current-step semantics, modal keyboard dismissal, backdrop dismissal, and final regression verification completed.
 Step 11: Final integration, Chrome-oriented metadata, accessibility attributes, build labeling, and release-readiness verification completed.
 Step 10: Final prompt assembly, diagnostics, Japanese summary, AI-specific conversion, safe-expression retry, copy workflow, and final validation completed.
 Step 9: Background, lighting, floor, cast-shadow, information-display controls, prompt conversion, and validation completed.
@@ -70,7 +71,7 @@ Leg Hair: Density / Length / Texture / Distance Visibility independent.
 
 <header><div class="wrap">
 <h1>Character Fullbody Maker — Tatsuya Edition Ver.2.0</h1>
-<div class="sub">開発版 Beta 20.3 Preview：Step 11 最終統合・公開準備 完了</div>
+<div class="sub">開発版 Beta 20.3 Preview：Step 12 リリース候補・最終検証 完了</div>
 </div></header>
 
 <main>
@@ -87,7 +88,7 @@ Leg Hair: Density / Length / Texture / Distance Visibility independent.
 <section class="card">
 <div id="displayName" class="name">名称未設定</div>
 <div id="displayStatus" class="status">未保存</div>
-<div class="progress"><span id="progressBar"></span></div>
+<div class="progress" id="progressTrack" role="progressbar" aria-label="設定ステップの進行状況" aria-valuemin="1" aria-valuemax="10" aria-valuenow="1"><span id="progressBar"></span></div>
 <div class="steps" id="steps"></div>
 </section>
 
@@ -135,8 +136,8 @@ Leg Hair: Density / Length / Texture / Distance Visibility independent.
 "use strict";
 const STORAGE_CURRENT="cfm_beta20_3_preview_current";
 const STORAGE_LIBRARY="cfm_beta20_3_preview_library";
-const APP_BUILD_STEP=11;
-const APP_BUILD_LABEL="Beta 20.3 Preview Step 11";
+const APP_BUILD_STEP=12;
+const APP_BUILD_LABEL="Beta 20.3 Preview Step 12";
 let currentStep=1;
 let toastTimer=null;
 
@@ -172,7 +173,7 @@ function navButtons(){
 function renderSteps(){
  $("steps").innerHTML=stepNames.map((n,i)=>{
    const s=i+1,cls=s===currentStep?"active":s<currentStep?"done":"";
-   return `<button class="step ${cls}" data-step="${s}">${s} ${n}</button>`;
+   return `<button class="step ${cls}" data-step="${s}" ${s===currentStep?'aria-current="step"':""} aria-label="ステップ${s} ${n}">${s} ${n}</button>`;
  }).join("");
  $("steps").querySelectorAll("[data-step]").forEach(b=>b.addEventListener("click",()=>{
    savePageToState();currentStep=Number(b.dataset.step);render();window.scrollTo({top:0,behavior:"smooth"});
@@ -514,6 +515,8 @@ function refreshHeader(){$("displayName").textContent=state.name.trim()||"名称
 function render(){
  document.body.className="level-"+$("settingLevel").value;
  $("progressBar").style.width=(currentStep*10)+"%";
+ $("progressTrack").setAttribute("aria-valuenow",String(currentStep));
+ $("progressTrack").setAttribute("aria-valuetext",`ステップ${currentStep}／10`);
  renderSteps();
  $("page").innerHTML=pageHtml();
  bindPage();refreshHeader();
@@ -1849,6 +1852,10 @@ function runConsistencyCheck(){
  $("checkModal").classList.add("show");
 }
 
+function closeAllModals(){
+ document.querySelectorAll(".modal.show").forEach(modal=>modal.classList.remove("show"));
+}
+
 function bindGlobal(){
  $("settingLevel").addEventListener("change",()=>{state.settingLevel=$("settingLevel").value;render()});
  $("changeMode").addEventListener("change",()=>state.changeMode=$("changeMode").value);
@@ -1858,6 +1865,8 @@ function bindGlobal(){
  $("libraryClose").addEventListener("click",()=>$("libraryModal").classList.remove("show"));
  $("jsonExportBtn").addEventListener("click",exportJSON);
  $("jsonFile").addEventListener("change",e=>{if(e.target.files[0])importJSON(e.target.files[0]);e.target.value=""});
+ document.addEventListener("keydown",e=>{if(e.key==="Escape")closeAllModals()});
+ document.querySelectorAll(".modal").forEach(modal=>modal.addEventListener("click",e=>{if(e.target===modal)modal.classList.remove("show")}));
 }
 bindGlobal();loadCurrent();render();
 </script>
