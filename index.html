@@ -50,6 +50,7 @@ body.level-detail .standard,body.level-detail .detail{display:block}
 <body class="level-easy">
 
 <!-- Beta20.3 Preview DEVELOPMENT NOTE
+Step 7: Outfit UI, garment structure controls, prompt conversion, omission rules, and validation verified.
 Step 6: Body Hair redesign completed through Step 6D-3.
 Step 5: Body Proportions UI, Japanese summary, and BODY PROPORTIONS prompt structure organized.
 Step 3: Face UI, Japanese summary, and FACE prompt structure organized.
@@ -62,7 +63,7 @@ Leg Hair: Density / Length / Texture / Distance Visibility independent.
 
 <header><div class="wrap">
 <h1>Character Fullbody Maker — Tatsuya Edition Ver.2.0</h1>
-<div class="sub">開発版 Beta 20.3 Preview：Step 6 Body Hair 整理完了</div>
+<div class="sub">開発版 Beta 20.3 Preview：Step 7 衣装 完了</div>
 </div></header>
 
 <main>
@@ -247,7 +248,7 @@ function pageHtml(){
  <div class="note"><strong>BODY PROPORTIONS の出力順：</strong>頭身 → 脚の長さ → 足のサイズ → 胸囲 → ウエスト寸法 → 首 → 肩幅 → 胸板 → 腹部 → 腰回り → 臀部 → 腕 → 手 → 太もも → ふくらはぎ → 脚全体</div>${navButtons()}`;
 
  if(currentStep===6)return `<h2 class="section-title">STEP 6　体毛</h2>
-<div class="lead">Body Hair の大分類を Character Core 仕様の順番に整理します。Step6Bでは ARMPIT HAIR、Step6Cでは CHEST HAIR、Step6D-1では ABDOMINAL HAIR を5つの独立した性質で指定します。</div><div class="grid">
+<div class="lead">Body Hair の大分類を Character Core 仕様の順番に整理します。Step6Bでは ARMPIT HAIR、Step6Cでは CHEST HAIR、Step6Dでは ABDOMINAL HAIR を5つの独立した性質で指定します。</div><div class="grid">
 <div class="wide section-subtitle">VISIBLE BODY HAIR — 共通方針</div>
 <div class="wide help">体毛は黒い塊や均一なぼかしではなく、自然な一本毛と小さな毛束として描写します。前面・側面・背面で密度と分布の整合性を保ちます。</div>
 
@@ -345,7 +346,8 @@ ${field("buttockHair","臀部の毛",["なし","ごく薄い","薄い","普通",
  ${field("bottomMaterial","素材感",["自動","綿","伸縮性のある綿","競泳水着素材","光沢あり","マット","厚手布","薄手布"],"detail")}
  ${field("shoes","靴",["裸足","スニーカー(白)","スニーカー(黒)","革靴","ランニングシューズ","サンダル"],"standard")}
  ${field("accessory","小物",["なし","腕時計","スポーツウォッチ","眼鏡","サングラス","ネックレス","指輪","ピアス"],"detail")}
- </div>${navButtons()}`;
+ </div>
+ <div class="note"><strong>STEP 7 出力ルール：</strong>上半身裸の場合は上半身衣装の色・丈・フィット感・裾・脇ぐりを自動で除外します。下半身衣装は衣装名を基本形とし、股上・脚ぐり・脇幅・前面形状・背面形状・素材感の個別指定を優先して英語プロンプトへ反映します。</div>${navButtons()}`;
 
  if(currentStep===8)return `<h2 class="section-title">STEP 8　ポーズ</h2><div class="lead">上半身と下半身を分けて設定します。「姿勢」と「脚幅」は独立しており、脚幅の選択が優先されます。</div><div class="grid">
  ${field("outputType","出力タイプ",["正面・側面・背面の三面図","正面・側面の二面図","全身正面","全身側面","全身背面","キャラクター設定シート"])}
