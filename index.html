@@ -50,6 +50,7 @@ body.level-detail .standard,body.level-detail .detail{display:block}
 <body class="level-easy">
 
 <!-- Beta20.3 Preview DEVELOPMENT NOTE
+Step 3: Face UI, Japanese summary, and FACE prompt structure organized.
 Step 2: Character Identity UI and prompt structure organized.
 Armpit Hair: Density / Strand Count / Coverage / Hair Type / Flow / Parting independent.
 Treasure Trail: Upper endpoint / Core line / Surrounding hairs / Transition independent.
@@ -59,7 +60,7 @@ Leg Hair: Density / Length / Texture / Distance Visibility independent.
 
 <header><div class="wrap">
 <h1>Character Fullbody Maker — Tatsuya Edition Ver.2.0</h1>
-<div class="sub">開発版 Beta 20.3 Preview：Step 2 Character Identity 整理完了</div>
+<div class="sub">開発版 Beta 20.3 Preview：Step 3 Face 整理完了</div>
 </div></header>
 
 <main>
@@ -184,13 +185,12 @@ function pageHtml(){
  </div>
  <div class="note"><strong>人物情報の優先順位：</strong>名前・年齢・性別・国籍・身長・体重・体型を Character Identity として固定します。「AIアシスト用・体型プリセット」は関連する身体項目の提案にのみ使用します。</div>${navButtons()}`;
 
- if(currentStep===2)return `<h2 class="section-title">STEP 2　顔</h2><div class="lead">顔立ち・輪郭・目・眉・鼻・口を段階的に設定します。</div><div class="grid">
- ${field("facePreset","顔立ち",["爽やかな好青年","素朴で親しみやすい","端正なモデル系","精悍なスポーツ選手","落ち着いた大人","中性的な美青年","ワイルド"])}
- ${field("expression","表情",["自然","穏やか","真剣","自信がある","柔らかな微笑み","明るい笑顔"])}
+ if(currentStep===2)return `<h2 class="section-title">STEP 2　顔</h2><div class="lead">Character Core の FACE 順序に沿って、全体印象・輪郭・目・眉・鼻・口・耳・表情を設定します。</div><div class="grid">
+ ${field("facePreset","全体印象",["爽やかな好青年","素朴で親しみやすい","端正なモデル系","精悍なスポーツ選手","落ち着いた大人","中性的な美青年","ワイルド"])}
  ${field("faceShape","顔型",["卵型","丸顔","面長","逆三角形","ベース型","四角顔"],"standard")}
  ${field("forehead","額",["狭い","やや狭い","標準","やや広い","広い"],"detail")}
  ${field("cheekbones","頬骨",["控えめ","自然","やや高い","高い","しっかり"],"detail")}
- ${field("jaw","輪郭・顎線",["柔らかい","自然","ややシャープ","シャープ","角ばった","しっかり"],"standard")}
+ ${field("jaw","顎線",["柔らかい","自然","ややシャープ","シャープ","角ばった","しっかり"],"standard")}
  ${field("eyelid","まぶた",["一重","奥二重","末広二重","平行二重"],"standard")}
  ${field("eyeShape","目の形",["切れ長","細長い","アーモンド型","丸み","やや垂れ目","やや鋭い"],"standard")}
  ${field("eyeSize","目の大きさ",["小さめ","やや小さめ","標準","やや大きめ","大きめ"],"detail")}
@@ -200,7 +200,9 @@ function pageHtml(){
  ${field("noseTip","鼻先",["小さめ","標準","やや丸い","シャープ","やや下向き","やや上向き"],"detail")}
  ${field("lips","唇",["薄め","やや薄め","標準","やや厚め","厚め"],"detail")}
  ${field("ears","耳",["小さめ","標準","やや大きめ","耳たぶ厚め","耳たぶ薄め"],"detail")}
- </div>${navButtons()}`;
+ ${field("expression","表情",["自然","穏やか","真剣","自信がある","柔らかな微笑み","明るい笑顔"])}
+ </div>
+ <div class="note"><strong>FACE の出力順：</strong>全体印象 → 顔型 → 額 → 頬骨 → 顎線 → まぶた → 目の形 → 目の大きさ → 目尻 → 眉 → 鼻筋 → 鼻先 → 唇 → 耳 → 表情</div>${navButtons()}`;
 
  if(currentStep===3)return `<h2 class="section-title">STEP 3　髪</h2><div class="lead">髪型・色・長さ・前髪・もみあげ・襟足・毛量・質感。</div><div class="grid">
  ${field("hairStyle","髪型",["ナチュラルショート","マッシュ","センターパート","アップバング","七三分け","ソフトモヒカン","ツーブロック","ウルフ","無造作"])}
@@ -1118,11 +1120,26 @@ function japaneseSummary(){
 体型：${state.bodyBuild}
 BMI：約${bmi.toFixed(1)}（${assessment.label}）
 
-【顔・髪・肌】
-顔：${state.facePreset}／${state.faceShape}／${state.eyelid}／${state.eyeShape}
+【Face／顔】
+全体印象：${state.facePreset}
+顔型：${state.faceShape}
+額：${state.forehead}
+頬骨：${state.cheekbones}
+顎線：${state.jaw}
+まぶた：${state.eyelid}
+目の形：${state.eyeShape}
+目の大きさ：${state.eyeSize}
+目尻：${state.eyeCorner}
+眉：${state.brow}
+鼻筋：${state.nose}
+鼻先：${state.noseTip}
+唇：${state.lips}
+耳：${state.ears}
+表情：${state.expression}
+
+【髪・肌】
 髪：${state.hairColor}／${state.hairStyle}／${state.hairLength}
 肌：${state.skinTone}／${state.skinTexture}
-表情：${state.expression}
 
 【身体】
 肩幅：${state.shoulder}
@@ -1257,9 +1274,19 @@ Age: ${state.age}. Gender: ${state.gender}. Nationality: ${state.nationality}. H
 
 FACE
 Overall impression: ${state.facePreset}.
-Face shape: ${state.faceShape}. Forehead: ${state.forehead}. Cheekbones: ${state.cheekbones}. Jawline: ${state.jaw}.
-Eyelids: ${state.eyelid}. Eye shape: ${state.eyeShape}. Eye size: ${state.eyeSize}. Outer eye corners: ${state.eyeCorner}.
-Eyebrows: ${state.brow}. Nose bridge: ${state.nose}. Nose tip: ${state.noseTip}. Lips: ${state.lips}. Ears: ${state.ears}.
+Face shape: ${state.faceShape}.
+Forehead: ${state.forehead}.
+Cheekbones: ${state.cheekbones}.
+Jawline: ${state.jaw}.
+Eyelids: ${state.eyelid}.
+Eye shape: ${state.eyeShape}.
+Eye size: ${state.eyeSize}.
+Outer eye corners: ${state.eyeCorner}.
+Eyebrows: ${state.brow}.
+Nose bridge: ${state.nose}.
+Nose tip: ${state.noseTip}.
+Lips: ${state.lips}.
+Ears: ${state.ears}.
 Expression: ${state.expression}.
 
 HAIR AND SKIN
