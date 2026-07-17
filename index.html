@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta20.3 Preview</title>
+<title>Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta 20.3 Preview</title>
 <style>
 :root{--bg:#f4f7fb;--panel:#fff;--text:#182235;--muted:#718096;--line:#d9e2ef;--accent:#3563e9;--soft:#eef3ff;--danger:#b42318;--safe:#16794f;--safe-bg:#eefbf4}
 *{box-sizing:border-box}
@@ -50,6 +50,7 @@ body.level-detail .standard,body.level-detail .detail{display:block}
 <body class="level-easy">
 
 <!-- Beta20.3 Preview DEVELOPMENT NOTE
+Step 2: Character Identity UI and prompt structure organized.
 Armpit Hair: Density / Strand Count / Coverage / Hair Type / Flow / Parting independent.
 Treasure Trail: Upper endpoint / Core line / Surrounding hairs / Transition independent.
 Main Distribution: Start Height / Horizontal Spread / Vertical Spread / Density / Boundary / Inner-thigh connection independent.
@@ -58,7 +59,7 @@ Leg Hair: Density / Length / Texture / Distance Visibility independent.
 
 <header><div class="wrap">
 <h1>Character Fullbody Maker — Tatsuya Edition Ver.2.0</h1>
-<div class="sub">Beta20.3 Preview：Step1 基盤更新・既存設定互換を維持</div>
+<div class="sub">開発版 Beta 20.3 Preview：Step 2 Character Identity 整理完了</div>
 </div></header>
 
 <main>
@@ -140,7 +141,7 @@ const state={
  assistStrength:"自然",assistAdjustWeight:"提案のみ",assistLockNonBody:"固定する", trailBelow:"ヘソ下・細く自然",trailBridgeWidth:"細い",trailBridgeDensity:"濃い",trailBridgeContinuity:"途切れず連続",trailBridgeEnd:"腰骨ラインで主分布へ接続",trailStyle:"濃い一本線",trailUpperLimit:"へその下縁で厳密に止める",trailSurroundingHair:"周囲はごく薄い",trailTransitionZone:"短く自然に移行",trailAroundNavel:"ヘソを通過",trailAbove:"なし",trailChestLink:"胸毛とはつながらない", pubicDensity:"自然",groinHair:"自然",innerThighHair:"薄い",hairContinuity:"自然につながる",lowerHairSpread:"陰毛周辺にまとまる",lowerHairDensity:"自然",lowerHairConnection:"全体が自然につながる",lowerHairStart:"腰骨ラインから広がる",lowerHairArea:"左右腰骨間の下腹部・鼠径部・内もも上部へ広く",lowerHairHorizontal:"左右腰骨間いっぱい",lowerHairVertical:"鼠径部・内もも上部まで広く",lowerHairBoundary:"周囲へ自然にぼかす",lowerHairFlow:"境目なく自然に連続",lowerHairShape:"横長の自然分布", framingSafety:"自動で見切れ防止",framingPriority:"全身と余白を最優先",edgeClearance:"かなり広い",infoDisplay:"表示しない",infoLayout:"シンプル一行",infoPlacement:"上部の白余白",infoLanguage:"日本語",nameDisplayRule:"入力どおり表示",referenceMode:"人体・衣装構造資料",showProject:"表示しない",projectName:"Character Fullbody Maker",showVersion:"表示しない",sheetVersion:"2026.07",showSheetNo:"表示しない",sheetNo:"001",showCreator:"表示しない",creatorName:"Tatsuya",showTraits:"表示しない",showHair:"表示しない",showEyes:"表示しない",showOutfit:"表示しない",showPose:"表示しない",showNotes:"表示しない",targetAI:"ChatGPT画像生成",promptSensitivity:"バランス",safeRetryLevel:"通常",promptDetail:"標準（バランス）",autoCompile:"自動（推奨）",outputLanguage:"英語のみ", settingLevel:"easy",changeMode:"confirm",projectStatus:"作成途中"
 };
 const initial=JSON.parse(JSON.stringify(state));
-const stepNames=["基本情報","顔","髪","肌","身体","体毛","衣装","ポーズ","背景","完成"];
+const stepNames=["人物情報","顔","髪","肌","身体","体毛","衣装","ポーズ","背景","完成"];
 
 function $(id){return document.getElementById(id)}
 function showToast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove("show"),2200)}
@@ -165,20 +166,23 @@ function renderSteps(){
 }
 
 function pageHtml(){
- if(currentStep===1)return `<h2 class="section-title">STEP 1　基本情報</h2><div class="lead">名前・年齢・国籍・身長・体重。詳細では体格の基準値も設定できます。</div><div class="grid">
- ${inputField("name","キャラクター名")}
+ if(currentStep===1)return `<h2 class="section-title">STEP 1　人物情報</h2><div class="lead">キャラクターを同一人物として識別するための基本情報を設定します。名前は入力した文字列をそのまま保持し、プロンプトでも別名や表記を追加しません。</div><div class="grid">
+ <div class="wide section-subtitle">Character Identity</div>
+ ${inputField("name","キャラクター名（入力どおり保持）")}
  ${field("age","年齢",Array.from({length:63},(_,i)=>(18+i)+"歳"))}
  ${field("gender","性別",["男性","女性","中性的","指定なし"])}
  ${field("nationality","国籍",["日本","韓国","中国","台湾","タイ","フィリピン","ベトナム","英国","フランス","米国","指定なし"])}
  ${field("height","身長",Array.from({length:51},(_,i)=>(150+i)+"cm"))}
  ${field("weight","体重",Array.from({length:81},(_,i)=>(40+i)+"kg"))}
- ${field("preset","体型プリセット",["日本人標準・標準体型","日本人標準・引き締まった体型","モデル体型","細身","細マッチョ","水泳選手体型","ランナー体型","がっしり体型","自転車競技者体型"],"wide")}
-  ${field("headRatio","頭身",["低め","標準","やや高い","モデル体型"],"standard")}
+ ${field("bodyBuild","体型",["細身","やや細身","標準","引き締まった","細マッチョ","筋肉質","がっしり","水泳選手体型","ランナー体型","モデル体型"],"wide")}
+ <div class="wide section-subtitle standard">補助設定</div>
+ ${field("preset","AIアシスト用・体型プリセット",["日本人標準・標準体型","日本人標準・引き締まった体型","モデル体型","細身","細マッチョ","水泳選手体型","ランナー体型","がっしり体型","自転車競技者体型"],"wide standard")}
+ ${field("headRatio","頭身",["低め","標準","やや高い","モデル体型"],"standard")}
  ${field("shoeSize","足のサイズ",Array.from({length:17},(_,i)=>(22+i*.5).toFixed(1)+"cm"),"detail")}
  ${field("chestCirc","胸囲",["指定なし",...Array.from({length:51},(_,i)=>(75+i)+"cm")],"detail")}
  ${field("waistCirc","ウエスト",["指定なし",...Array.from({length:56},(_,i)=>(55+i)+"cm")],"detail")}
  </div>
- <div class="note">「AIアシスト」を使うと、年齢・身長・体重・体型プリセットから自然な基準値を提案します。</div>${navButtons()}`;
+ <div class="note"><strong>人物情報の優先順位：</strong>名前・年齢・性別・国籍・身長・体重・体型を Character Identity として固定します。「AIアシスト用・体型プリセット」は関連する身体項目の提案にのみ使用します。</div>${navButtons()}`;
 
  if(currentStep===2)return `<h2 class="section-title">STEP 2　顔</h2><div class="lead">顔立ち・輪郭・目・眉・鼻・口を段階的に設定します。</div><div class="grid">
  ${field("facePreset","顔立ち",["爽やかな好青年","素朴で親しみやすい","端正なモデル系","精悍なスポーツ選手","落ち着いた大人","中性的な美青年","ワイルド"])}
@@ -1104,14 +1108,15 @@ ${shape.jp}
 }
 function japaneseSummary(){
  const bmi=bodyMassIndex(),assessment=bmiAssessment(bmi);
- return `【基本情報】
+ return `【Character Identity／人物情報】
 名前：${state.name||"名称未設定"}
 年齢：${state.age}
+性別：${state.gender}
 国籍：${state.nationality}
 身長：${state.height}
 体重：${state.weight}
-BMI：約${bmi.toFixed(1)}（${assessment.label}）
 体型：${state.bodyBuild}
+BMI：約${bmi.toFixed(1)}（${assessment.label}）
 
 【顔・髪・肌】
 顔：${state.facePreset}／${state.faceShape}／${state.eyelid}／${state.eyeShape}
@@ -1248,7 +1253,7 @@ All garment terms below describe opaque fabric construction, pattern pieces, sea
 CHARACTER IDENTITY
 Name: "${state.name||"Unnamed character"}".
 Preserve the exact name string. Do not add kanji, aliases, pronunciation guides, or translated names.
-Age: ${state.age}. Nationality: ${state.nationality}. Height: ${state.height}. Weight: ${state.weight}. Body type: ${state.bodyBuild}.
+Age: ${state.age}. Gender: ${state.gender}. Nationality: ${state.nationality}. Height: ${state.height}. Weight: ${state.weight}. Body type: ${state.bodyBuild}.
 
 FACE
 Overall impression: ${state.facePreset}.
@@ -1484,6 +1489,11 @@ function runConsistencyCheck(){
  const issues=[];
  const h=parseNumber(state.height,0),w=parseNumber(state.weight,0),bmi=bodyMassIndex(),assessment=bmiAssessment(bmi),range=suggestedWeightRange();
  const chest=parseNumber(state.chestCirc,0),waist=parseNumber(state.waistCirc,0);
+
+ if(!state.name.trim())issues.push({type:"warn",text:"キャラクター名が未設定です。名前を入力すると、Character Identity と情報表示で同一の表記を保持できます。"});
+ else issues.push({type:"ok",text:`キャラクター名「${state.name}」を入力どおり保持します。`});
+ if(state.gender==="指定なし")issues.push({type:"info",text:"性別が「指定なし」です。生成結果の性別表現を固定したい場合は選択してください。"});
+ if(state.nationality==="指定なし")issues.push({type:"info",text:"国籍が「指定なし」です。外見上の文化・地域的特徴を固定したい場合は選択してください。"});
 
  if(!h||!w)issues.push({type:"warn",text:"身長または体重を読み取れません。"});
  else if(assessment.level==="critical")issues.push({type:"warn",text:`身長${state.height}・体重${state.weight}はBMI約${bmi.toFixed(1)}で「${assessment.label}」です。意図的な設定か確認してください。一般的な目安は約${range.low}〜${range.high}kgです。`});
