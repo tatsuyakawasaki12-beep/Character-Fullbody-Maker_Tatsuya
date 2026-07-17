@@ -3,6 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="application-name" content="Character Fullbody Maker — Tatsuya Edition">
+<meta name="description" content="Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta 20.3 Preview">
+<meta name="theme-color" content="#f4f7fb">
 <title>Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta 20.3 Preview</title>
 <style>
 :root{--bg:#f4f7fb;--panel:#fff;--text:#182235;--muted:#718096;--line:#d9e2ef;--accent:#3563e9;--soft:#eef3ff;--danger:#b42318;--safe:#16794f;--safe-bg:#eefbf4}
@@ -47,9 +50,10 @@ body.level-detail .standard,body.level-detail .detail{display:block}
 @media(max-width:720px){.controls,.grid{grid-template-columns:1fr}.wide{grid-column:auto}.steps{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
-<body class="level-easy">
+<body class="level-easy" data-build-step="11" data-build-label="Beta 20.3 Preview Step 11">
 
 <!-- Beta20.3 Preview DEVELOPMENT NOTE
+Step 11: Final integration, Chrome-oriented metadata, accessibility attributes, build labeling, and release-readiness verification completed.
 Step 10: Final prompt assembly, diagnostics, Japanese summary, AI-specific conversion, safe-expression retry, copy workflow, and final validation completed.
 Step 9: Background, lighting, floor, cast-shadow, information-display controls, prompt conversion, and validation completed.
 Step 8: Pose structure, camera controls, composition consistency, prompt conversion, and validation completed.
@@ -66,7 +70,7 @@ Leg Hair: Density / Length / Texture / Distance Visibility independent.
 
 <header><div class="wrap">
 <h1>Character Fullbody Maker — Tatsuya Edition Ver.2.0</h1>
-<div class="sub">開発版 Beta 20.3 Preview：Step 10 完成・最終出力 完了</div>
+<div class="sub">開発版 Beta 20.3 Preview：Step 11 最終統合・公開準備 完了</div>
 </div></header>
 
 <main>
@@ -97,8 +101,8 @@ Leg Hair: Density / Length / Texture / Distance Visibility independent.
 </section>
 </main>
 
-<div id="libraryModal" class="modal"><div class="modalbox">
-<h3 style="margin-top:0">キャラクターライブラリ</h3>
+<div id="libraryModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="libraryModalTitle"><div class="modalbox">
+<h3 id="libraryModalTitle" style="margin-top:0">キャラクターライブラリ</h3>
 <div class="lead">Chrome内の、このサイト専用領域に保存されています。</div>
 <div id="libraryList" class="list"></div>
 <div class="actions"><span></span><button id="libraryClose">閉じる</button></div>
@@ -106,15 +110,15 @@ Leg Hair: Density / Length / Texture / Distance Visibility independent.
 
 
 
-<div id="checkModal" class="modal"><div class="modalbox">
-<h3 style="margin-top:0">整合性チェック</h3>
+<div id="checkModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="checkModalTitle"><div class="modalbox">
+<h3 id="checkModalTitle" style="margin-top:0">整合性チェック</h3>
 <div class="lead">設定の矛盾や、生成時に不自然になりやすい組み合わせを確認します。</div>
 <div id="checkList" class="checklist"></div>
 <div class="actions"><span></span><button id="checkClose" class="primary">閉じる</button></div>
 </div></div>
 
-<div id="assistModal" class="modal"><div class="modalbox">
-<h3 style="margin-top:0">AIアシスト</h3>
+<div id="assistModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="assistModalTitle"><div class="modalbox">
+<h3 id="assistModalTitle" style="margin-top:0">AIアシスト</h3>
 <div class="lead">年齢・身長・体重・体型プリセットから、関連項目の候補を提案します。</div>
 <div class="grid">
 <div><label>調整強度</label><select id="assistStrength"><option>控えめ</option><option selected>自然</option><option>しっかり</option></select></div>
@@ -125,12 +129,14 @@ Leg Hair: Density / Length / Texture / Distance Visibility independent.
 <div class="actions"><button id="assistClose">閉じる</button><button id="assistApply" class="primary">提案を適用</button></div>
 </div></div>
 
-<div id="toast" class="toast"></div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
 
 <script>
 "use strict";
 const STORAGE_CURRENT="cfm_beta20_3_preview_current";
 const STORAGE_LIBRARY="cfm_beta20_3_preview_library";
+const APP_BUILD_STEP=11;
+const APP_BUILD_LABEL="Beta 20.3 Preview Step 11";
 let currentStep=1;
 let toastTimer=null;
 
