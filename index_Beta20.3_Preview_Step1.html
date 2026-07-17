@@ -1,0 +1,1540 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta 20.3 Preview</title>
+<style>
+:root{--bg:#f4f7fb;--panel:#fff;--text:#182235;--muted:#718096;--line:#d9e2ef;--accent:#3563e9;--soft:#eef3ff;--danger:#b42318;--safe:#16794f;--safe-bg:#eefbf4}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif}
+button,input,select,textarea{font:inherit}
+header{background:#fff;border-bottom:1px solid var(--line);padding:18px 16px}
+.wrap,main{max-width:980px;margin:auto}
+h1{margin:0;font-size:22px;line-height:1.3}.sub{margin-top:6px;color:var(--muted);font-size:13px}
+main{padding:16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 4px 18px rgba(15,23,42,.035);margin-bottom:16px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap}
+button,.filelabel{border:1px solid var(--line);background:#fff;color:var(--text);border-radius:12px;padding:11px 14px;font-weight:800;cursor:pointer}
+button.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+button.danger{color:var(--danger)}
+.name{font-size:24px;font-weight:900}.status{font-size:13px;color:var(--muted);margin-top:4px}
+.progress{height:10px;background:#e8eef7;border-radius:999px;overflow:hidden;margin-top:15px}.progress span{display:block;height:100%;background:var(--accent);transition:.2s}
+.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:14px}
+.step{border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center;font-size:12px;background:#fff;cursor:pointer}
+.step.active{border-color:var(--accent);background:var(--soft);font-weight:900}
+.step.done{background:#f6f9ff}
+.controls,.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.controls{grid-template-columns:repeat(3,minmax(0,1fr));margin-bottom:16px}
+label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+input,select,textarea{width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--text)}
+textarea{min-height:90px;resize:vertical}.wide{grid-column:1/-1}
+.section-title{font-size:22px;font-weight:900;margin:0 0 4px}.lead{font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.55}
+.standard,.detail{display:none}
+body.level-standard .standard{display:block}
+body.level-detail .standard,body.level-detail .detail{display:block}
+.note{background:var(--soft);border-radius:12px;padding:12px;font-size:13px;line-height:1.6;margin-top:14px}
+.actions{display:flex;justify-content:space-between;gap:10px;margin-top:18px}
+.output{min-height:320px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;line-height:1.55}
+.modal{position:fixed;inset:0;background:rgba(15,23,42,.48);display:none;place-items:center;padding:16px;z-index:50}
+.modal.show{display:grid}.modalbox{background:#fff;border-radius:18px;padding:18px;max-width:620px;width:100%;max-height:82vh;overflow:auto}
+.list{display:grid;gap:10px;margin-top:12px}.item{border:1px solid var(--line);border-radius:12px;padding:12px;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
+.itemname{font-weight:900}.meta{font-size:12px;color:var(--muted);margin-top:3px}
+.assist-grid{display:grid;gap:10px}.checklist{display:grid;gap:8px;margin-top:12px}.checkitem{border:1px solid var(--line);border-radius:12px;padding:10px;background:#fff}.checkitem.warn{border-color:#f0b429;background:#fffaf0}.checkitem.ok{border-color:#12b76a;background:#f0fff7}.mini{font-size:12px;color:var(--muted)}.assist-item{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff}.assist-item b{display:block;margin-bottom:4px}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);background:#182235;color:#fff;padding:12px 16px;border-radius:12px;font-size:13px;font-weight:750;opacity:0;pointer-events:none;transition:.22s;z-index:80;max-width:88%;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.safe-banner{display:none;margin:10px 0;padding:12px 14px;border-radius:12px;background:var(--safe-bg);color:var(--safe);font-weight:900;border:1px solid #9fdec0}.safe-active .safe-banner{display:block}.safe-active #promptStatus{background:var(--safe-bg);color:var(--safe);border:1px solid #9fdec0;font-weight:900}.safe-active #saferRetryBtn{background:var(--safe);color:#fff;border-color:var(--safe)}.safe-active #step10Panel{background:linear-gradient(180deg,#fff 0%,var(--safe-bg) 100%)}.conditional-hidden{display:none!important}
+@media(max-width:720px){.controls,.grid{grid-template-columns:1fr}.wide{grid-column:auto}.steps{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body class="level-easy">
+
+<!-- Beta20.3 Preview DEVELOPMENT NOTE
+Armpit Hair: Density / Strand Count / Coverage / Hair Type / Flow / Parting independent.
+Treasure Trail: Upper endpoint / Core line / Surrounding hairs / Transition independent.
+Main Distribution: Start Height / Horizontal Spread / Vertical Spread / Density / Boundary / Inner-thigh connection independent.
+Leg Hair: Density / Length / Texture / Distance Visibility independent.
+-->
+
+<header><div class="wrap">
+<h1>Character Fullbody Maker — Tatsuya Edition Ver.2.0</h1>
+<div class="sub">開発版 Beta 20.3 Preview：プレビュー版・コード整理・リリース準備</div>
+</div></header>
+
+<main>
+<section class="card">
+<div class="toolbar">
+<button id="newBtn">新規</button>
+<button id="saveBtn" class="primary">下書き保存</button>
+<button id="libraryBtn">ライブラリ</button><button id="assistBtn">AIアシスト</button><button id="checkBtn">整合性チェック</button>
+<button id="jsonExportBtn">JSON書出</button>
+<label class="filelabel">JSON読込<input id="jsonFile" type="file" accept=".json" hidden></label>
+</div>
+</section>
+
+<section class="card">
+<div id="displayName" class="name">名称未設定</div>
+<div id="displayStatus" class="status">未保存</div>
+<div class="progress"><span id="progressBar"></span></div>
+<div class="steps" id="steps"></div>
+</section>
+
+<section class="card">
+<div class="controls">
+<div><label>設定レベル</label><select id="settingLevel"><option value="easy">かんたん</option><option value="standard">標準</option><option value="detail">詳細</option></select></div>
+<div><label>変更方式</label><select id="changeMode"><option value="confirm">関連変更を確認してから適用</option><option value="natural">全体の整合性を保って自動調整</option><option value="only">指定箇所だけ変更</option></select></div>
+<div><label>保存状態</label><select id="projectStatus"><option>作成途中</option><option>完成</option><option>派生版</option></select></div>
+</div>
+<div id="page"></div>
+</section>
+</main>
+
+<div id="libraryModal" class="modal"><div class="modalbox">
+<h3 style="margin-top:0">キャラクターライブラリ</h3>
+<div class="lead">Chrome内の、このサイト専用領域に保存されています。</div>
+<div id="libraryList" class="list"></div>
+<div class="actions"><span></span><button id="libraryClose">閉じる</button></div>
+</div></div>
+
+
+
+<div id="checkModal" class="modal"><div class="modalbox">
+<h3 style="margin-top:0">整合性チェック</h3>
+<div class="lead">設定の矛盾や、生成時に不自然になりやすい組み合わせを確認します。</div>
+<div id="checkList" class="checklist"></div>
+<div class="actions"><span></span><button id="checkClose" class="primary">閉じる</button></div>
+</div></div>
+
+<div id="assistModal" class="modal"><div class="modalbox">
+<h3 style="margin-top:0">AIアシスト</h3>
+<div class="lead">年齢・身長・体重・体型プリセットから、関連項目の候補を提案します。</div>
+<div class="grid">
+<div><label>調整強度</label><select id="assistStrength"><option>控えめ</option><option selected>自然</option><option>しっかり</option></select></div>
+<div><label>体重調整</label><select id="assistAdjustWeight"><option>提案しない</option><option selected>提案のみ</option><option>体型に合わせて調整</option></select></div>
+<div class="wide"><label>体型以外の固定</label><select id="assistLockNonBody"><option selected>固定する</option><option>必要に応じて変更を許可</option></select></div>
+</div>
+<div id="assistSummary" class="assist-grid" style="margin-top:14px"></div>
+<div class="actions"><button id="assistClose">閉じる</button><button id="assistApply" class="primary">提案を適用</button></div>
+</div></div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+"use strict";
+const STORAGE_CURRENT="cfm_beta20_3_preview_current";
+const STORAGE_LIBRARY="cfm_beta20_3_preview_library";
+let currentStep=1;
+let toastTimer=null;
+
+const state={
+ name:"",age:"18歳",gender:"男性",nationality:"日本",height:"180cm",weight:"70kg",preset:"日本人標準・引き締まった体型",
+ facePreset:"精悍なスポーツ選手",expression:"明るい笑顔",faceShape:"卵型",forehead:"標準",cheekbones:"控えめ",jaw:"ややシャープ",eyelid:"一重",eyeShape:"切れ長",eyeSize:"標準",eyeCorner:"水平",brow:"自然な直線眉",nose:"鼻筋が通った",noseTip:"標準",lips:"標準",ears:"標準",
+ hairColor:"自然な黒",hairLength:"ショート",hairStyle:"ツーブロック",bangs:"短い",sideburns:"自然",nape:"短め",hairVolume:"標準",hairTexture:"直毛",
+ skinTone:"健康的",skinTexture:"自然",ageLook:"少し若く見える",wrinkles:"なし",spots:"なし",beard:"なし",
+ bodyBuild:"引き締まった",shoulder:"やや広め",neck:"標準",chest:"ほどよく厚い",abdomen:"薄く腹筋",waist:"やや細い",hip:"引き締まった",arms:"引き締まった",hands:"標準",thighs:"引き締まった",calves:"引き締まった",legs:"標準",inseam:"標準",headRatio:"標準",shoeSize:"27.0cm",chestCirc:"94cm",waistCirc:"74cm",
+ chestHair:"なし",abHair:"薄い",trail:"ヘソより下だけ・自然",armpit:"やや濃い",armpitStrandCount:"高い",armpitArea:"広い",armpitLength:"標準",armpitTexture:"自然な毛束感",armpitDirection:"自然な放射状",armpitParting:"自然な分け目あり",armpitTipVariation:"毛先に自然なばらつき",armpitGapPattern:"小さな隙間あり",armHair:"なし",handHair:"なし",thighHair:"やや濃い",lowerThighHair:"やや濃い",shinHair:"濃い",calfHair:"濃い",legHairDistribution:"脚全体に均一",kneeHairTransition:"膝周辺も自然につながる",legHairLength:"標準",legHairTexture:"自然な一本毛",shoulderBackHair:"なし",upperBackHair:"なし",lowerBackHair:"なし",waistBackHair:"ごく薄い",buttockHair:"薄い",
+ top:"上半身裸",topArmhole:"標準",bottom:"競泳パンツ(ビキニ)",topColor:"白",bottomColor:"水色",topFit:"ジャストフィット",topLength:"腰骨まで",topHem:"直線カット",bottomRise:"自動",bottomLegOpening:"自動",bottomSideWidth:"自動",bottomCoverage:"自動",bottomFrontShape:"自動",bottomBackShape:"自動",bottomMaterial:"自動",shoes:"裸足",accessory:"なし",
+ outputType:"正面・側面・背面の三面図",bodyPosture:"自然な直立",armsPose:"両手を頭の後ろで組む",legWidth:"肩幅程度に開く",legOffset:"左右を揃える",footDirection:"自然な外向き",framingMargin:"広め",gaze:"自然",
+ background:"グレー",lighting:"柔らかなスタジオ照明",camera:"余白を含む全身",style:"フォトリアル",quality:"細部まで鮮明",ratio:"自動（構図優先）",
+ extra:"",locked:"",negative:"余分な手足、不自然な手指、人物重複、顔の不一致、体型の不一致、衣装の左右差、文字化け、ロゴ、透かし",
+ assistStrength:"自然",assistAdjustWeight:"提案のみ",assistLockNonBody:"固定する", trailBelow:"ヘソ下・細く自然",trailBridgeWidth:"細い",trailBridgeDensity:"濃い",trailBridgeContinuity:"途切れず連続",trailBridgeEnd:"腰骨ラインで主分布へ接続",trailStyle:"濃い一本線",trailUpperLimit:"へその下縁で厳密に止める",trailSurroundingHair:"周囲はごく薄い",trailTransitionZone:"短く自然に移行",trailAroundNavel:"ヘソを通過",trailAbove:"なし",trailChestLink:"胸毛とはつながらない", pubicDensity:"自然",groinHair:"自然",innerThighHair:"薄い",hairContinuity:"自然につながる",lowerHairSpread:"陰毛周辺にまとまる",lowerHairDensity:"自然",lowerHairConnection:"全体が自然につながる",lowerHairStart:"腰骨ラインから広がる",lowerHairArea:"左右腰骨間の下腹部・鼠径部・内もも上部へ広く",lowerHairHorizontal:"左右腰骨間いっぱい",lowerHairVertical:"鼠径部・内もも上部まで広く",lowerHairBoundary:"周囲へ自然にぼかす",lowerHairFlow:"境目なく自然に連続",lowerHairShape:"横長の自然分布", framingSafety:"自動で見切れ防止",framingPriority:"全身と余白を最優先",edgeClearance:"かなり広い",infoDisplay:"表示しない",infoLayout:"シンプル一行",infoPlacement:"上部の白余白",infoLanguage:"日本語",nameDisplayRule:"入力どおり表示",referenceMode:"人体・衣装構造資料",showProject:"表示しない",projectName:"Character Fullbody Maker",showVersion:"表示しない",sheetVersion:"2026.07",showSheetNo:"表示しない",sheetNo:"001",showCreator:"表示しない",creatorName:"Tatsuya",showTraits:"表示しない",showHair:"表示しない",showEyes:"表示しない",showOutfit:"表示しない",showPose:"表示しない",showNotes:"表示しない",targetAI:"ChatGPT画像生成",promptSensitivity:"バランス",safeRetryLevel:"通常",promptDetail:"標準（バランス）",autoCompile:"自動（推奨）",outputLanguage:"英語のみ", settingLevel:"easy",changeMode:"confirm",projectStatus:"作成途中"
+};
+const initial=JSON.parse(JSON.stringify(state));
+const stepNames=["基本情報","顔","髪","肌","身体","体毛","衣装","ポーズ","背景","完成"];
+
+function $(id){return document.getElementById(id)}
+function showToast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove("show"),2200)}
+function options(arr,val){return arr.map(x=>`<option ${x===val?"selected":""}>${x}</option>`).join("")}
+function field(id,label,arr,cls=""){return `<div class="${cls}"><label>${label}</label><select id="${id}">${options(arr,state[id])}</select></div>`}
+function inputField(id,label,cls=""){return `<div class="${cls}"><label>${label}</label><input id="${id}" value="${state[id]||""}"></div>`}
+function textareaField(id,label,ph="",cls="wide"){return `<div class="${cls}"><label>${label}</label><textarea id="${id}" placeholder="${ph}">${state[id]||""}</textarea></div>`}
+function navButtons(){
+ return `<div class="actions">
+ <button id="prevBtn" ${currentStep===1?"disabled style='opacity:.45'":""}>◀ 前へ</button>
+ <button id="nextBtn" class="primary">${currentStep===10?"プロンプト更新":"次へ ▶"}</button>
+ </div>`;
+}
+function renderSteps(){
+ $("steps").innerHTML=stepNames.map((n,i)=>{
+   const s=i+1,cls=s===currentStep?"active":s<currentStep?"done":"";
+   return `<button class="step ${cls}" data-step="${s}">${s} ${n}</button>`;
+ }).join("");
+ $("steps").querySelectorAll("[data-step]").forEach(b=>b.addEventListener("click",()=>{
+   savePageToState();currentStep=Number(b.dataset.step);render();window.scrollTo({top:0,behavior:"smooth"});
+ }));
+}
+
+function pageHtml(){
+ if(currentStep===1)return `<h2 class="section-title">STEP 1　基本情報</h2><div class="lead">名前・年齢・国籍・身長・体重。詳細では体格の基準値も設定できます。</div><div class="grid">
+ ${inputField("name","キャラクター名")}
+ ${field("age","年齢",Array.from({length:63},(_,i)=>(18+i)+"歳"))}
+ ${field("gender","性別",["男性","女性","中性的","指定なし"])}
+ ${field("nationality","国籍",["日本","韓国","中国","台湾","タイ","フィリピン","ベトナム","英国","フランス","米国","指定なし"])}
+ ${field("height","身長",Array.from({length:51},(_,i)=>(150+i)+"cm"))}
+ ${field("weight","体重",Array.from({length:81},(_,i)=>(40+i)+"kg"))}
+ ${field("preset","体型プリセット",["日本人標準・標準体型","日本人標準・引き締まった体型","モデル体型","細身","細マッチョ","水泳選手体型","ランナー体型","がっしり体型","自転車競技者体型"],"wide")}
+  ${field("headRatio","頭身",["低め","標準","やや高い","モデル体型"],"standard")}
+ ${field("shoeSize","足のサイズ",Array.from({length:17},(_,i)=>(22+i*.5).toFixed(1)+"cm"),"detail")}
+ ${field("chestCirc","胸囲",["指定なし",...Array.from({length:51},(_,i)=>(75+i)+"cm")],"detail")}
+ ${field("waistCirc","ウエスト",["指定なし",...Array.from({length:56},(_,i)=>(55+i)+"cm")],"detail")}
+ </div>
+ <div class="note">「AIアシスト」を使うと、年齢・身長・体重・体型プリセットから自然な基準値を提案します。</div>${navButtons()}`;
+
+ if(currentStep===2)return `<h2 class="section-title">STEP 2　顔</h2><div class="lead">顔立ち・輪郭・目・眉・鼻・口を段階的に設定します。</div><div class="grid">
+ ${field("facePreset","顔立ち",["爽やかな好青年","素朴で親しみやすい","端正なモデル系","精悍なスポーツ選手","落ち着いた大人","中性的な美青年","ワイルド"])}
+ ${field("expression","表情",["自然","穏やか","真剣","自信がある","柔らかな微笑み","明るい笑顔"])}
+ ${field("faceShape","顔型",["卵型","丸顔","面長","逆三角形","ベース型","四角顔"],"standard")}
+ ${field("forehead","額",["狭い","やや狭い","標準","やや広い","広い"],"detail")}
+ ${field("cheekbones","頬骨",["控えめ","自然","やや高い","高い","しっかり"],"detail")}
+ ${field("jaw","輪郭・顎線",["柔らかい","自然","ややシャープ","シャープ","角ばった","しっかり"],"standard")}
+ ${field("eyelid","まぶた",["一重","奥二重","末広二重","平行二重"],"standard")}
+ ${field("eyeShape","目の形",["切れ長","細長い","アーモンド型","丸み","やや垂れ目","やや鋭い"],"standard")}
+ ${field("eyeSize","目の大きさ",["小さめ","やや小さめ","標準","やや大きめ","大きめ"],"detail")}
+ ${field("eyeCorner","目尻",["上がり気味","水平","下がり気味","自然"],"detail")}
+ ${field("brow","眉",["薄く直線的","自然な直線眉","太めで自然","緩やかなアーチ","やや上がり眉"],"detail")}
+ ${field("nose","鼻筋",["小ぶり","標準","やや大きめ","細め","幅広","鼻筋が通った"],"detail")}
+ ${field("noseTip","鼻先",["小さめ","標準","やや丸い","シャープ","やや下向き","やや上向き"],"detail")}
+ ${field("lips","唇",["薄め","やや薄め","標準","やや厚め","厚め"],"detail")}
+ ${field("ears","耳",["小さめ","標準","やや大きめ","耳たぶ厚め","耳たぶ薄め"],"detail")}
+ </div>${navButtons()}`;
+
+ if(currentStep===3)return `<h2 class="section-title">STEP 3　髪</h2><div class="lead">髪型・色・長さ・前髪・もみあげ・襟足・毛量・質感。</div><div class="grid">
+ ${field("hairStyle","髪型",["ナチュラルショート","マッシュ","センターパート","アップバング","七三分け","ソフトモヒカン","ツーブロック","ウルフ","無造作"])}
+ ${field("hairColor","髪色",["自然な黒","黒","ダークブラウン","茶色","ライトブラウン","金髪","銀髪","グレー"])}
+ ${field("hairLength","長さ",["坊主","ベリーショート","ショート","やや長めのショート","ミディアム","セミロング","ロング"],"standard")}
+ ${field("bangs","前髪",["なし","短い","眉上","眉にかかる","目にかかる","横へ流す","センター分け"],"standard")}
+ ${field("sideburns","もみあげ",["短い","自然","やや長い","長い","薄い","濃い"],"detail")}
+ ${field("nape","襟足",["短め","自然","やや長め","長い"],"detail")}
+ ${field("hairVolume","毛量",["少ない","やや少ない","標準","多い","かなり多い"],"detail")}
+ ${field("hairTexture","髪質",["直毛","やや直毛","自然なうねり","くせ毛","ウェーブ","柔らかい","硬い"],"detail")}
+ </div>${navButtons()}`;
+
+ if(currentStep===4)return `<h2 class="section-title">STEP 4　肌</h2><div class="lead">肌色・肌質・年齢感・しわ・シミ・髭。</div><div class="grid">
+ ${field("skinTone","肌色",["色白","やや色白","標準的な日本人の肌色","健康的","小麦色","日焼け"])}
+ ${field("ageLook","年齢感",["年齢相応","少し若く見える","かなり若く見える","少し大人びて見える"])}
+ ${field("skinTexture","肌質",["自然","なめらか","毛穴の見えるリアルな肌","透明感","マット","軽い艶"],"standard")}
+ ${field("wrinkles","しわ",["なし","ごく少ない","少ない","自然","やや多い","多い"],"detail")}
+ ${field("spots","シミ・そばかす",["なし","ごく少ない","少ない","自然","やや多い","多い"],"detail")}
+ ${field("beard","髭",["なし","剃り跡なし","薄い剃り跡","無精ひげ","口髭","顎髭","短く整えた髭"],"standard")}
+ </div>${navButtons()}`;
+
+ if(currentStep===5)return `<h2 class="section-title">STEP 5　身体</h2><div class="lead">体格・首・肩・胸・腹・腰・臀部・腕・手・脚。</div><div class="grid">
+ ${field("bodyBuild","体格",["細身","やや細身","標準","引き締まった","細マッチョ","筋肉質","がっしり","水泳選手体型","ランナー体型","モデル体型"])}
+ ${field("neck","首",["細め","標準","やや太め","筋肉質"],"standard")}
+ ${field("shoulder","肩幅",["狭め","標準","やや広め","広い","水泳選手のように広い"])}
+ ${field("chest","胸板",["薄い","標準","ほどよく厚い","厚い","筋肉質"],"standard")}
+ ${field("abdomen","腹部",["平坦","自然","軽く引き締まる","薄く腹筋","明確な腹筋","少し柔らかい"],"standard")}
+ ${field("waist","腰回り",["細い","やや細い","標準","やや太い"],"standard")}
+ ${field("hip","臀部",["小さめ","標準","引き締まった","丸み","筋肉質"],"detail")}
+ ${field("arms","腕",["細い","標準","引き締まった","筋肉質","太い"],"detail")}
+ ${field("hands","手",["小さめ","標準","大きめ","骨張った"],"detail")}
+ ${field("thighs","太もも",["細い","標準","引き締まった","筋肉質","太い"],"detail")}
+ ${field("calves","ふくらはぎ",["細い","標準","引き締まった","筋肉質"],"detail")}
+ ${field("legs","脚の長さ",["短め","標準","やや長め","長い","モデル体型の長い脚"],"detail")}
+ </div>${navButtons()}`;
+
+ if(currentStep===6)return `<h2 class="section-title">STEP 6　体毛</h2>
+<div class="lead">体毛を「濃さ」だけでなく、面積・長さ・毛質・つながり・広がりとして設計します。画面では自然な日本語で選択し、内部では画像生成AI向けの技術的な英語へ変換します。</div><div class="grid">
+${field("chestHair","胸毛",["なし","ごく薄い","薄い","普通","やや濃い","濃い"])}
+${field("abHair","腹毛",["なし","ごく薄い","薄い","普通","やや濃い","濃い"],"standard")}
+
+<div class="wide section-subtitle">ワキ毛 — 個人差・本物らしさ</div>
+${field("armpit","密度",["なし","ごく薄い","薄い","普通","やや濃い","濃い","かなり濃い"],"standard")}
+${field("armpitStrandCount","総毛量・毛の本数",["低い","やや低い","標準","高い","非常に高い"],"standard")}
+${field("armpitArea","面積",["狭い","標準","広い","ワキ全体を覆う"],"standard")}
+${field("armpitLength","長さ",["短い","やや短い","標準","やや長い","長い"],"standard")}
+${field("armpitTexture","毛質・毛束感",["柔らかく細い","自然な一本毛","自然な毛束感","やや硬く粗い","はっきりした毛束感"],"standard")}
+${field("armpitDirection","生える方向",["中央にまとまる","自然な放射状","外側へ広がる","下向きに流れる"],"standard")}
+${field("armpitParting","分け目・毛流れの分離",["分け目なし","ごく弱い分け目","自然な分け目あり","腕の折り目に沿う明瞭な分け目","左右二方向へ分かれる"],"standard")}
+${field("armpitTipVariation","毛先のばらつき",["整い気味","わずかにばらつく","毛先に自然なばらつき","長短差が大きい","不規則で自然"],"standard")}
+${field("armpitGapPattern","毛束間の隙間",["ほぼ隙間なし","小さな隙間あり","自然な隙間","隙間がやや多い"],"standard")}
+<div class="wide help">密度だけでなく、<strong>総毛量・面積・長さ・一本毛か毛束か・生える方向・分け目・毛先・毛束間の隙間</strong>を分けて指定します。黒い塊へ戻さず、自然な毛束感を保ったまま総毛量を増やせます。</div>
+
+<div class="wide section-subtitle">ヘソ周辺・ヘソ上（補助設定）</div>
+${field("trailAroundNavel","ヘソ周辺",["ヘソで止まる","ヘソを囲む","ヘソを通過","ヘソ周辺へ少し広がる"],"detail")}
+${field("trailAbove","ヘソ上の毛",["なし","ごく薄く続く","細く薄い","ヘソ上・細く自然","細く濃い","幅広で薄い","幅広で自然","腹全体へ自然に広がる"],"standard")}
+${field("trailChestLink","胸毛への連続",["胸毛とはつながらない","胸中央へごく薄く続く","胸中央へ細くつながる","胸毛へ自然につながる","胸全体へ広がる"],"detail")}
+
+<div class="wide section-subtitle">Treasure Trail — ヘソから主分布まで</div>
+${field("trailBridgeWidth","線の太さ",["毛なし","ごく細い","細い","自然な太さ","やや太い","幅広"],"standard")}
+${field("trailBridgeDensity","線の濃さ",["適用なし","ごく薄い","薄い","自然","濃い","非常に濃い"],"standard")}
+${field("trailBridgeContinuity","線の連続性",["適用なし","途切れず連続","途中で少し薄くなる","途中で一度途切れる","腰骨付近だけ現れる"],"standard")}
+${field("trailBridgeEnd","主分布への接続",["接続しない","腰骨ラインで急に広がる","腰骨ラインで自然に広がる","腰骨へ近づくほど徐々に広がる","そのまま同じ幅で終わる"],"standard")}
+${field("trailStyle","Treasure Trail スタイル",["濃い一本線","細い一本線＋周囲は無毛","細い一本線＋周囲はごく薄い","一本線から下で少し広がる","帯状","自然な不規則ライン"],"standard")}
+${field("trailUpperLimit","上端位置の固定",["へその下縁で厳密に止める","へその直下から開始","へそ周辺へ少しなじませる"],"standard")}
+${field("trailSurroundingHair","周囲の毛",["周囲は無毛","周囲はごく薄い","周囲は薄い","周囲は自然","周囲もやや濃い"],"standard")}
+${field("trailTransitionZone","主分布への移行帯",["移行帯なし","ごく短く急に移行","短く自然に移行","徐々に広がる","長く緩やかに移行"],"standard")}
+<div class="wide help">「へその下縁で厳密に止める」「濃い一本線＋周囲は無毛／薄毛」「腰骨ラインまで一定幅を保つ」を独立して設定できます。</div>
+
+<div class="wide section-subtitle">メイン分布 — 下腹部・鼠径部・内もも上部</div>
+${field("lowerHairStart","開始位置",["へそ直下から徐々に広がる","へそと腰骨の中間から広がる","腰骨ラインから広がる","腰骨ラインより下から広がる"],"standard")}
+${field("lowerHairHorizontal","横方向の広がり",["中央だけ","やや広い","左右腰骨間の内側","左右腰骨間いっぱい","腰骨の外側近くまで"],"standard")}
+${field("lowerHairVertical","下方向の広がり",["下腹部のみ","衣装周辺まで","鼠径部まで","鼠径部・内もも上部まで","鼠径部・内もも上部まで広く"],"standard")}
+${field("lowerHairFlow","全体形状",["中央から徐々に左右へ広がる","扇状に広がる","V字状に広がる","台形状に広がる","全範囲へほぼ均一","自然な不規則分布"],"standard")}
+${field("lowerHairShape","メイン分布の輪郭",["横長の自然分布","逆三角形","丸みのある台形","楕円形","中央密集・左右へ薄く","自然な左右非対称"],"standard")}
+${field("lowerHairBoundary","境界",["はっきり区切る","自然な境界","周囲へ自然にぼかす","境目なく連続"],"standard")}
+${field("lowerHairDensity","主分布部分の体毛量",["ごく薄い","薄い","自然","濃い","非常に濃い"],"standard")}
+<div class="wide help"><strong>最大範囲の組み合わせ：</strong>横方向「左右腰骨間いっぱい」＋下方向「鼠径部・内もも上部まで広く」。内部では、左右の腰骨間の下腹部全体から両側の鼠径部、内もも上部へ連続する分布として変換します。</div>
+
+<div class="wide section-subtitle">部位別の密度補助</div>
+${field("pubicDensity","衣装周辺に自然に見える中央部の密度",["ごく薄い","薄い","自然","やや濃い","濃い"],"standard")}
+${field("groinHair","鼠径部の毛",["なし","ごく薄い","薄い","自然","やや濃い","濃い"],"detail")}
+${field("innerThighHair","内もも上部の毛",["なし","ごく薄い","薄い","自然","やや濃い","濃い"],"detail")}
+
+<div class="wide section-subtitle">脚の体毛</div>
+${field("thighHair","太もも上部の毛",["なし","ごく薄い","薄い","普通","やや濃い","濃い","非常に濃い"],"standard")}
+${field("lowerThighHair","太もも下部の毛",["なし","ごく薄い","薄い","普通","やや濃い","濃い","非常に濃い"],"standard")}
+${field("shinHair","すね毛",["なし","ごく薄い","薄い","普通","やや濃い","濃い","非常に濃い"],"standard")}
+${field("calfHair","ふくらはぎの毛",["なし","ごく薄い","薄い","普通","やや濃い","濃い","非常に濃い"],"standard")}
+${field("legHairLength","脚毛の長さ",["短い","やや短い","標準","やや長い","長い"],"standard")}
+${field("legHairTexture","脚毛の見え方",["柔らかい肌テクスチャ","自然な一本毛","はっきり見える一本毛","軽い毛束感"],"standard")}
+${field("legHairDistribution","脚毛の分布",["部分的","脚全体に自然","脚全体に均一","外側が濃い","内側が濃い"],"standard")}
+${field("kneeHairTransition","膝周辺のつながり",["膝周辺は薄い","膝周辺も自然につながる","膝周辺も同じ密度","境目なく連続"],"standard")}
+
+<div class="wide section-subtitle">その他の体毛</div>
+${field("shoulderBackHair","背面：肩の毛",["なし","ごく薄い","薄い","普通","やや濃い","濃い"],"standard")}
+${field("upperBackHair","背面：上背の毛",["なし","ごく薄い","薄い","普通","やや濃い","濃い"],"standard")}
+${field("lowerBackHair","背面：下背の毛",["なし","ごく薄い","薄い","普通","やや濃い","濃い"],"detail")}
+${field("waistBackHair","背面：腰の毛",["なし","ごく薄い","薄い","普通","やや濃い","濃い"],"detail")}
+${field("buttockHair","背面：臀部の毛",["なし","ごく薄い","薄い","普通","やや濃い","濃い"],"detail")}
+${field("armHair","腕毛",["なし","ごく薄い","薄い","普通","やや濃い","濃い"],"standard")}
+${field("handHair","手の毛",["なし","ごく薄い","薄い","普通"],"detail")}
+</div>${navButtons()}`;
+
+ if(currentStep===7)return `<h2 class="section-title">STEP 7　衣装</h2><div class="lead">衣装の種類だけでなく、形状・フィット感・前面・背面・素材感を個別に指定します。</div><div class="grid">
+ ${field("referenceMode","資料モード",["衣装デザイン資料","人体・衣装構造資料"],"wide")}
+ <div class="note wide"><strong>資料モード：</strong><br>
+ ・<strong>衣装デザイン資料</strong>＝衣装のシルエット、パターン、素材、縫製構造を優先。シャツ・ジャケット・制服などに向きます。<br>
+ ・<strong>人体・衣装構造資料</strong>＝人体の骨格・筋肉・体毛と衣装のフィット関係を同時に優先。上半身裸、三面図、水着・下着などに向きます。</div>
+ ${field("top","上半身",["上半身裸","Tシャツ(無地)","Tシャツ(ノースリーブ)","シャツ(長袖)","シャツ(半袖)","ポロシャツ(半袖)","タンクトップ(インナー)","タンクトップ(レイヤード)","タンクトップ(ボディビル)","スポーツトップ(ノースリーブ)"])}
+ ${state.top==="上半身裸"?`<div class="note wide"><strong>上半身衣装なし：</strong>色・丈・フィット感・裾・脇ぐりは表示せず、AI送信用プロンプトにも出力しません。</div>`:`
+ ${field("topColor","上半身の衣装色",["白","黒","グレー","青","濃紺","水色","赤","緑","紫","ベージュ"])}
+ ${field("topFit","上半身衣装のフィット感",["コンプレッション","タイト","ジャストフィット","レギュラーフィット","ゆったり","オーバーサイズ"],"standard")}
+ ${field("topLength","上半身衣装の丈",["クロップド丈","短め","ジャスト丈","腰骨まで","ヒップ上部まで","ロング丈"],"standard")}
+ ${/タンクトップ|ノースリーブ/.test(state.top)?field("topArmhole","脇ぐり",["標準","やや深い","深い","ウエスト付近まで深い","非常に深い"],"standard"):""}
+ ${field("topHem","上半身衣装の裾",["身体に沿う","自然に垂れる","直線カット","ラウンドヘム","パンツの外へ出す","パンツへ入れる"],"detail")}` }
+ ${field("bottom","下半身",["ボクサーパンツ(ハイライズ)","ボクサーパンツ(ミッドライズ)","ボクサーパンツ(ローライズ)","ブリーフ(スタンダード)","トランクス(クラシック)","競泳パンツ(ビキニ)","競泳パンツ(ブーメラン)","競泳パンツ(クラシック)","競泳パンツ(ボクサー)","競泳パンツ(ハーフスパッツ)","競泳パンツ(ロングスパッツ)","ビキニ(スタンダード)","ビキニ(ローライズ)","ビキニ(ハイレグ)","ビキニ(スポーツ)","ビルダーパンツ","ふんどし(越中)","ふんどし(六尺)","ふんどし(もっこ)","ふんどし(黒猫)","ふんどし(割)","相撲まわし","締込み","デニムパンツ(ロング)","チノパン(ロング)","スラックス(ロング)","ショートパンツ","スポーツパンツ"])}
+ ${field("bottomColor","下半身の衣装色",["白","黒","グレー","青","濃紺","水色","赤","緑","紫","ベージュ"])}
+ ${field("bottomRise","股上",["自動","ハイライズ：へそ付近から上","ミッドライズ：へその少し下","ローライズ：腰骨・骨盤付近"],"standard")}
+ ${field("bottomLegOpening","脚ぐり",["自動","低い","標準","高い","非常に高い"],"standard")}
+ ${field("bottomSideWidth","脇幅",["自動","広い","標準","細い","非常に細い"],"detail")}
+ ${field("bottomCoverage","臀部の覆い",["自動","全面を覆う","標準","少なめ","Tバック状"],"detail")}
+ ${field("bottomFrontShape","前面形状",["自動","平坦","自然な立体","しっかり立体","縦長","横長","三角形"],"detail")}
+ ${field("bottomBackShape","背面形状",["自動","全面","標準","細い中央線","Tバック","布で広く覆う"],"detail")}
+ ${field("bottomMaterial","素材感",["自動","綿","伸縮性のある綿","競泳水着素材","光沢あり","マット","厚手布","薄手布"],"detail")}
+ ${field("shoes","靴",["裸足","スニーカー(白)","スニーカー(黒)","革靴","ランニングシューズ","サンダル"],"standard")}
+ ${field("accessory","小物",["なし","腕時計","スポーツウォッチ","眼鏡","サングラス","ネックレス","指輪","ピアス"],"detail")}
+ </div>${navButtons()}`;
+
+ if(currentStep===8)return `<h2 class="section-title">STEP 8　ポーズ</h2><div class="lead">上半身と下半身を分けて設定します。「姿勢」と「脚幅」は独立しており、脚幅の選択が優先されます。</div><div class="grid">
+ ${field("outputType","出力タイプ",["正面・側面・背面の三面図","正面・側面の二面図","全身正面","全身側面","全身背面","キャラクター設定シート"])}
+ <div class="wide section-subtitle">上半身</div>
+ ${field("bodyPosture","姿勢",["自然な直立","気をつけ","リラックスした直立","片脚重心","歩行"])}
+ ${field("armsPose","腕・手",["体側に自然に下ろす","両手を頭の後ろで組む","腕組み","腰に手","片手をポケット","両手を後ろで組む"],"standard")}
+ ${field("gaze","視線",["自然","カメラを見る","正面を見る","遠くを見る","横を見る"],"detail")}
+ <div class="wide section-subtitle">下半身</div>
+ ${field("legWidth","脚幅",["両脚を揃える","やや開く","肩幅程度に開く","肩幅より広く開く","大きく開く","非常に大きく開く"],"standard")}
+ ${field("legOffset","脚の前後位置",["左右を揃える","左脚を少し前","右脚を少し前","軽く前後にずらす","片脚重心"],"standard")}
+ ${field("footDirection","足先の向き",["正面","自然な外向き","やや外向き","大きく外向き","内向き"],"standard")}
+ ${field("framingSafety","見切れ防止",["自動で見切れ防止","頭頂と足先を必ず含める","手・肘・足を必ず含める","三面とも同じ余白","見切れ防止を使用しない"],"standard")}
+ ${field("framingMargin","構図の安全余白",["標準","広め","かなり広め"],"standard")}${field("framingPriority","構図の優先順位",["全身と余白を最優先","ポーズ再現を最優先","人物サイズを最優先","バランス"],"standard")}${field("edgeClearance","画像端からの距離",["標準","広い","かなり広い"],"standard")}
+ <div class="wide note"><strong>現在の組み合わせ：</strong>${state.bodyPosture}／${state.armsPose}／脚幅 ${state.legWidth}／${state.legOffset}／${state.footDirection}</div>
+ </div>${navButtons()}`;
+
+ if(currentStep===9)return `<h2 class="section-title">STEP 9　背景・カメラ・情報表示</h2><div class="lead">Character Sheet風・制作資料風は固定レイアウトで、設定値だけを表示します。</div><div class="grid">
+ ${field("background","背景",["グレー","白","黒","淡いベージュ","無地スタジオ","屋内スタジオ","シンプルな部屋","屋外","透明"])}
+ ${field("lighting","照明",["柔らかなスタジオ照明","均一な照明","自然光","曇天の柔らかな光","ややドラマチック","フラット"])}
+ ${field("camera","カメラ距離",["全身","余白を含む全身","膝上","腰上","胸上"],"standard")}
+ ${field("style","画風",["フォトリアル","写実的写真","セミリアル","モデル撮影風","キャラクター設定画","アニメ調","イラスト調"],"standard")}
+ ${field("quality","品質",["高解像度","非常に高解像度","細部まで鮮明","自然なディテール","過度なシャープ化なし"],"detail")}
+ ${field("ratio","画像比率",["自動（構図優先）","3:4","2:3","4:5","1:1","16:9"],"detail")}
+ ${field("infoDisplay","身体データ表示",["表示しない","最小表示：名前・年齢・身長・体重","標準表示：最小＋国籍・体型","詳細表示：標準＋胸囲・ウエスト・ヒップ・足サイズ・頭身"],"standard")}
+ ${field("infoLayout","情報レイアウト",["シンプル一行","横長・右側データ欄","人物のみ＋データ別シート","横長・下部データ欄","Character Sheet風","制作資料風","縦型プロフィール","表形式"],"standard")}
+ ${field("infoPlacement","情報表示位置",["上部の白余白","下部の白余白","左側の情報欄","右側の情報欄"],"detail")}
+ ${field("infoLanguage","情報表示言語",["日本語","英語"],"detail")}
+ ${field("nameDisplayRule","名前表示",["入力どおり表示","英字のみ","日本語のみ"],"detail")}
+ ${field("showTraits","特徴欄",["表示しない","設定値だけ表示"],"detail")}${field("showHair","Hair表示",["表示しない","表示する"],"detail")}${field("showEyes","Eyes表示",["表示しない","表示する"],"detail")}${field("showOutfit","Outfit表示",["表示しない","表示する"],"detail")}${field("showPose","Pose表示",["表示しない","表示する"],"detail")}${field("showNotes","Notes表示",["表示しない","表示する"],"detail")}
+ ${field("showProject","Project表示",["表示しない","表示する"],"detail")}
+ ${inputField("projectName","Project名","detail")}
+ ${field("showVersion","Version表示",["表示しない","表示する"],"detail")}
+ ${inputField("sheetVersion","Version","detail")}
+ ${field("showSheetNo","Sheet No.表示",["表示しない","表示する"],"detail")}
+ ${inputField("sheetNo","Sheet No.","detail")}
+ ${field("showCreator","Creator表示",["表示しない","表示する"],"detail")}
+ ${inputField("creatorName","Creator名","detail")}
+ </div>
+ <div class="note">Character Sheet／制作資料では、AIによる要約・推測・特徴文の創作を禁止し、入力済みの設定値だけを表示します。</div>${navButtons()}`;
+
+ return `<div id="step10Panel"><h2 class="section-title">STEP 10　完成</h2>
+ <div class="lead">画面上の日本語設定を、選択したAIが理解しやすい英語の構造設計表現へ変換します。</div>
+ <div class="grid">
+ ${field("targetAI","生成AI",["ChatGPT画像生成","Gemini画像生成"],"standard")}
+ ${field("promptSensitivity","衣装表現の変換強度",["安全優先","バランス","形状再現優先"],"standard")}
+ ${field("promptDetail","プロンプト詳細度",["簡潔（生成成功率重視）","標準（バランス）","詳細（再現性重視）"],"standard")}
+ ${field("autoCompile","一発生成アシスト",["自動（推奨）","設定をそのまま","成功率優先"],"standard")}
+ ${textareaField("extra","追加指定","日本語で入力できます","wide")}
+ ${textareaField("locked","変更禁止","日本語で入力できます","wide")}
+ ${textareaField("negative","避ける要素","日本語で入力できます","wide")}
+ </div>
+ <div class="help">安全優先：より中立的な衣装設計用語／バランス：安全性と形状再現の両立／形状再現優先：前後形状をより具体的に記述します。プロンプト詳細度では、設定値を保ちながら出力の長さと重複量を調整します。</div>
+
+ <h3>プロンプト診断</h3>
+ <div id="compileDiagnostics" class="transform-output"></div>
+
+ <h3>日本語設定サマリー</h3>
+ <div id="jpSummary" class="summary-output"></div>
+
+ <h3>AIへの変換内容</h3>
+ <div id="transformSummary" class="transform-output"></div>
+
+ <h3>AI送信用・英語プロンプト</h3>
+ <div class="safe-banner">✓ SAFE MODE：安全表現で再生成済み</div><div id="promptStatus" class="prompt-status">通常表現</div>
+ <textarea id="output" class="output"></textarea>
+ <div class="secondary-actions">
+   <button id="saferRetryBtn">安全表現で再生成</button>
+   <button id="normalPromptBtn">通常表現に戻す</button>
+ </div>
+ <div class="note">「安全表現で再生成」は、設定内容を削除するのではなく、同じ衣装をより中立的な構造設計用語で組み直します。「コピー」は現在表示中の英語プロンプトだけをコピーします。</div>
+ <div class="actions"><button id="prevBtn">◀ 前へ</button><button id="copyBtn" class="primary">英語プロンプトをコピー</button></div></div>`;
+}
+
+function applyConditionalUI(){
+ const hide=(id,yes)=>{const e=$(id);if(e&&e.parentElement)e.parentElement.classList.toggle("conditional-hidden",!!yes)};
+ const noTop=state.top==="上半身裸";
+ ["topColor","topFit","topLength","topHem","topArmhole"].forEach(id=>hide(id,noTop));
+ const tank=/タンクトップ|ノースリーブ/.test(state.top); hide("topArmhole",noTop||!tank);
+ const noInfo=state.infoDisplay==="表示しない"; ["infoLayout","infoPlacement","infoLanguage","nameDisplayRule","showTraits","showHair","showEyes","showOutfit","showPose","showNotes","showProject","projectName","showVersion","sheetVersion","showSheetNo","sheetNo","showCreator","creatorName"].forEach(id=>hide(id,noInfo));
+ const p=$("step10Panel"); if(p)p.classList.toggle("safe-active",state.safeRetryLevel==="安全表現");
+ const b=$("saferRetryBtn"); if(b)b.textContent=state.safeRetryLevel==="安全表現"?"✓ 安全表現で再生成済み":"安全表現で再生成";
+}
+
+function bindPage(){
+ document.querySelectorAll("#page input,#page select,#page textarea").forEach(el=>{
+   if(el.id==="output")return;
+   el.addEventListener("input",()=>{
+     state[el.id]=el.value;refreshHeader();applyConditionalUI();
+     if(currentStep===7 && el.id==="top"){savePageToState();render();return;}
+     if(currentStep===9 && el.id==="infoDisplay"){savePageToState();render();return;}
+     if(currentStep===10)generatePrompt();
+   });
+ });
+ if($("prevBtn"))$("prevBtn").addEventListener("click",()=>{savePageToState();if(currentStep>1){currentStep--;render();window.scrollTo({top:0,behavior:"smooth"})}});
+ if($("nextBtn"))$("nextBtn").addEventListener("click",()=>{savePageToState();if(currentStep<10){currentStep++;render();window.scrollTo({top:0,behavior:"smooth"})}else generatePrompt()});
+ if($("saferRetryBtn"))$("saferRetryBtn").addEventListener("click",()=>{
+   savePageToState();
+   state.safeRetryLevel="安全表現";
+   generatePrompt();
+   showToast("より中立的な構造設計表現で再生成しました。");
+ });
+ if($("normalPromptBtn"))$("normalPromptBtn").addEventListener("click",()=>{
+   savePageToState();
+   state.safeRetryLevel="通常";
+   generatePrompt();
+   showToast("通常の変換表現へ戻しました。");
+ });
+ if($("copyBtn"))$("copyBtn").addEventListener("click",async()=>{
+   savePageToState();
+   generatePrompt();
+   const latestText=$("output").value;
+   try{
+     await navigator.clipboard.writeText(latestText);
+     showToast("現在の設定から再生成した最新プロンプトをコピーしました。");
+   }catch(e){
+     $("output").focus();
+     $("output").select();
+     document.execCommand("copy");
+     showToast("最新プロンプトをコピーしました。");
+   }
+ });
+}
+function savePageToState(){document.querySelectorAll("#page input,#page select,#page textarea").forEach(el=>{if(el.id!=="output")state[el.id]=el.value})}
+function refreshHeader(){$("displayName").textContent=state.name.trim()||"名称未設定"}
+function render(){
+ document.body.className="level-"+$("settingLevel").value;
+ $("progressBar").style.width=(currentStep*10)+"%";
+ renderSteps();
+ $("page").innerHTML=pageHtml();
+ bindPage();refreshHeader();
+ if(currentStep===10)generatePrompt();
+}
+
+function parseNumber(value, fallback=0){
+ const n=parseFloat(String(value??"").replace(/[^\d.]/g,""));
+ return Number.isFinite(n)?n:fallback;
+}
+function bodyMassIndex(){
+ const h=parseNumber(state.height,180)/100,w=parseNumber(state.weight,70);
+ return h>0?w/(h*h):0;
+}
+function bmiAssessment(bmi){
+ if(bmi<13)return {level:"critical",label:"極端な低体重",text:"設定上、非常に低い体重です。意図的な設定か確認してください。"};
+ if(bmi<16)return {level:"warn",label:"著しい低体重",text:"身長に対して体重がかなり低い設定です。"};
+ if(bmi<18.5)return {level:"warn",label:"低体重",text:"細身の設定です。"};
+ if(bmi<25)return {level:"ok",label:"標準範囲",text:"身長と体重の組み合わせは一般的な範囲です。"};
+ if(bmi<30)return {level:"warn",label:"高め",text:"体重がやや高い設定です。体型指定との整合性を確認してください。"};
+ if(bmi<35)return {level:"warn",label:"かなり高め",text:"身長に対して体重がかなり高い設定です。"};
+ return {level:"critical",label:"極端に高い",text:"非常に高い体重設定です。意図的な設定か確認してください。"};
+}
+function suggestedWeightRange(){
+ const h=parseNumber(state.height,180)/100;
+ return {low:Math.round(18.5*h*h),mid:Math.round(22*h*h),high:Math.round(24.9*h*h)};
+}
+function promptProfile(){
+ return {
+   ai:state.targetAI,
+   sensitivity:state.promptSensitivity||"バランス",
+   retry:(typeof effectiveCompileProfile==="function"?effectiveCompileProfile().expression:(state.safeRetryLevel||"通常"))
+ };
+}
+function structuralTerm(level, safety, balanced, precise){
+ const p=promptProfile();
+ if(p.retry==="安全表現")return safety;
+ if(p.sensitivity==="安全優先")return safety;
+ if(p.sensitivity==="形状再現優先")return precise;
+ return balanced;
+}
+function topGarmentTranslation(value){
+ const common={
+  "上半身裸":{
+    safety:"no upper-body garment; the torso is shown only for neutral anatomy and costume-fit reference",
+    balanced:"no upper-body garment",
+    precise:"no upper-body garment; unobstructed torso for adult character turnaround reference",
+    jp:"上半身衣装なし。成人キャラクターの人体・衣装フィット確認用として指示"
+  },
+  "Tシャツ(無地)":{
+    safety:"a plain, opaque T-shirt with no text, logo, or graphic",
+    balanced:"a plain T-shirt with no text, logo, or graphic",
+    precise:"a plain opaque T-shirt with a conventional crew neckline and no text, logo, or graphic",
+    jp:"無地Tシャツとして、文字・ロゴ・柄を付けないよう指示"
+  },
+  "Tシャツ(ノースリーブ)":{
+    safety:"an opaque sleeveless T-shirt with a conventional neckline and full torso coverage",
+    balanced:"a sleeveless T-shirt retaining a conventional T-shirt neckline and torso shape",
+    precise:"a sleeveless T-shirt with a standard crew neckline, broad shoulder panels, and full torso coverage",
+    jp:"通常のTシャツ形状を残したノースリーブとして指示"
+  },
+  "シャツ(長袖)":{safety:"an opaque long-sleeved collared shirt",balanced:"a long-sleeved collared shirt",precise:"a structured long-sleeved collared shirt",jp:"長袖の襟付きシャツとして指示"},
+  "シャツ(半袖)":{safety:"an opaque short-sleeved collared shirt",balanced:"a short-sleeved collared shirt",precise:"a structured short-sleeved collared shirt",jp:"半袖の襟付きシャツとして指示"},
+  "ポロシャツ(半袖)":{safety:"an opaque short-sleeved polo shirt",balanced:"a short-sleeved polo shirt",precise:"a fitted short-sleeved polo shirt with a conventional collar and placket",jp:"半袖ポロシャツとして指示"},
+  "タンクトップ(インナー)":{
+    safety:"an opaque undershirt-style tank top with moderate arm openings and full abdominal coverage",
+    balanced:"an undershirt-style tank top with a moderately deep U-neck, regular back, straight hem, and enough length to cover the abdomen",
+    precise:"an undershirt-style tank top with a moderately deep U-neck, regular full back, moderate arm openings, straight hem, and full abdominal coverage",
+    jp:"インナー型タンクトップとして、腹部を覆う十分な丈と通常の背面を指示"
+  },
+  "タンクトップ(レイヤード)":{
+    safety:"an opaque layered tank top with a higher neckline, athletic back, and long rounded hem",
+    balanced:"a layered tank top with a higher U-neck, racerback, long length, and rounded hem",
+    precise:"a layered tank top with a high U-neck, racerback construction, extended length, and pronounced rounded hem",
+    jp:"レイヤード用タンクトップとして、詰まった首元・レーサーバック・長い丸裾を指示"
+  },
+  "タンクトップ(ボディビル)":{
+    safety:"an opaque bodybuilding training tank with narrow shoulder straps, large arm openings, an athletic narrow-back construction, and a long hem",
+    balanced:"a bodybuilding training tank with a deep front scoop, narrow shoulder straps, large arm openings, a narrow athletic back panel, and a long rounded hem",
+    precise:"a bodybuilding stringer-style training tank with a very deep front scoop, extremely narrow shoulder straps, arm openings extending toward the waist, a very narrow central athletic back panel, and a long rounded hem",
+    jp:"ボディビル用トレーニングタンクとして、深い前開き・細い肩紐・大きな脇口・細い背面パネルを構造的に指示"
+  },
+  "スポーツトップ(ノースリーブ)":{
+    safety:"an opaque sleeveless athletic top with full torso coverage",
+    balanced:"a sleeveless athletic top",
+    precise:"a fitted sleeveless athletic top with performance fabric and full torso coverage",
+    jp:"ノースリーブのスポーツトップとして指示"
+  }
+ };
+ const item=common[value]||{safety:value,balanced:value,precise:value,jp:`「${value}」を衣装名として指示`};
+ return {
+   en:structuralTerm(value,item.safety,item.balanced,item.precise),
+   jp:item.jp
+ };
+}
+function topFitDescription(){
+ const fitMap={"コンプレッション":"compression fit closely following the body","タイト":"tight fit","ジャストフィット":"true-to-size fitted silhouette","レギュラーフィット":"regular fit","ゆったり":"relaxed fit","オーバーサイズ":"oversized fit"};
+ const lengthMap={"クロップド丈":"cropped above the waist","短め":"slightly short","ジャスト丈":"standard length ending at the waistband","腰骨まで":"long enough to reach the hip bones and fully cover the abdomen","ヒップ上部まで":"extended to the upper hips","ロング丈":"longline length"};
+ const hemMap={"身体に沿う":"hem following the body","自然に垂れる":"hem hanging naturally","直線カット":"straight-cut hem","ラウンドヘム":"rounded hem","パンツの外へ出す":"worn untucked","パンツへ入れる":"tucked into the lower garment"};
+ return `${fitMap[state.topFit]||state.topFit}; ${lengthMap[state.topLength]||state.topLength}; ${hemMap[state.topHem]||state.topHem}`;
+}
+function bottomGarmentTranslation(value){
+ const ai=state.targetAI;
+ const items={
+  "ボクサーパンツ(ハイライズ)":{
+   safety:"opaque high-rise boxer briefs with a deep waistband at or above the navel and full front and rear coverage",
+   balanced:"high-rise boxer briefs with the waistband at or above the navel and a clearly deep rise",
+   precise:"high-rise boxer briefs with a broad waistband positioned at or above the navel, long rise depth, short fitted legs, and full rear coverage",
+   jp:"ハイライズのボクサーパンツとして、へそ付近以上の腰位置と深い股上を指示"
+  },
+  "ボクサーパンツ(ミッドライズ)":{
+   safety:"opaque mid-rise boxer briefs with a standard waistband slightly below the navel and full coverage",
+   balanced:"mid-rise boxer briefs with the waistband slightly below the navel and a conventional rise",
+   precise:"mid-rise boxer briefs with a waistband slightly below the navel, conventional rise depth, short fitted legs, and full rear coverage",
+   jp:"ミッドライズのボクサーパンツとして、へその少し下の腰位置を指示"
+  },
+  "ボクサーパンツ(ローライズ)":{
+   safety:"opaque low-rise boxer briefs with the waistband resting securely along the hip-bone line and full front and rear coverage",
+   balanced:"distinctly low-rise boxer briefs with the waistband resting on the hip-bone line, leaving a clear distance below the navel",
+   precise:"distinctly low-rise boxer briefs with a broad waistband placed on the hip-bone and pelvic line, a shallow rise, short fitted legs, and full rear coverage",
+   jp:"ローライズのボクサーパンツとして、腰骨ラインの低い腰位置と浅い股上を指示"
+  },
+  "ブリーフ(スタンダード)":{
+   safety:"opaque classic briefs with a conventional rise and full appropriate coverage",
+   balanced:"classic briefs with a conventional rise and standard leg openings",
+   precise:"classic briefs with a mid-rise waistband, standard side panels, standard leg openings, and full rear coverage",
+   jp:"標準的なブリーフとして、中程度の股上・標準脚ぐり・十分な背面被覆を指示"
+  },
+  "トランクス(クラシック)":{
+   safety:"opaque relaxed classic boxer shorts with full coverage",
+   balanced:"relaxed classic boxer shorts",
+   precise:"relaxed classic boxer shorts with a loose rectangular silhouette, short legs, and full coverage",
+   jp:"ゆったりしたクラシックトランクスとして指示"
+  },
+  "競泳パンツ(ビキニ)":{
+   safety:"opaque fitted competitive swim briefs with a conventional waist, standard leg openings, and full appropriate coverage",
+   balanced:"fitted competitive swim briefs with a conventional waist and standard leg openings",
+   precise:"fitted competitive swim briefs with a conventional waistband, standard side width, standard-cut leg openings, shaped front panel, and full rear coverage",
+   jp:"競泳用ビキニとして、標準腰位置・標準脚ぐり・競泳素材を指示"
+  },
+  "競泳パンツ(ブーメラン)":{
+   safety:"opaque compact competitive swim briefs with narrow side panels and high athletic leg openings",
+   balanced:"compact competitive swim briefs with narrow side panels and high-cut athletic leg openings",
+   precise:"compact competitive swim briefs with very narrow side panels, high athletic leg openings rising toward the hip bones, a shaped front panel, and secure rear coverage",
+   jp:"ブーメラン型競泳パンツとして、細い脇幅と高い競技用脚ぐりを指示"
+  },
+  "競泳パンツ(クラシック)":{
+   safety:"opaque classic competitive swim briefs with standard side width and secure coverage",
+   balanced:"classic competitive swim briefs with standard side width",
+   precise:"classic competitive swim briefs with a conventional waistband, standard side width, medium leg openings, shaped front panel, and full rear coverage",
+   jp:"クラシック型競泳パンツとして、標準的な脇幅と被覆を指示"
+  },
+  "競泳パンツ(ボクサー)":{
+   safety:"opaque fitted square-cut swim trunks covering the upper thighs",
+   balanced:"short fitted swim trunks covering the upper thighs",
+   precise:"fitted square-cut swim trunks with a conventional waistband, short legs covering the upper thighs, and full rear coverage",
+   jp:"ボクサー型競泳パンツとして、上部太ももまで覆う短い脚部を指示"
+  },
+  "競泳パンツ(ハーフスパッツ)":{
+   safety:"opaque fitted swim jammers ending above the knees",
+   balanced:"fitted swim jammers ending above the knees",
+   precise:"compression-fit swim jammers extending from the waist to just above the knees",
+   jp:"ハーフスパッツ型競泳パンツとして、膝上までの丈を指示"
+  },
+  "競泳パンツ(ロングスパッツ)":{
+   safety:"opaque long fitted swim leggings",
+   balanced:"long fitted swim leggings",
+   precise:"compression-fit long swim leggings extending from the waist to the ankles",
+   jp:"ロングスパッツ型競泳パンツとして、足首付近までの丈を指示"
+  },
+  "ビキニ(スタンダード)":{
+   safety:"opaque compact men's brief-style garment with a conventional waist, standard leg openings, and secure coverage",
+   balanced:"a compact men's bikini-style brief with a conventional waist and standard leg openings",
+   precise:"a compact men's bikini-style brief with a conventional waistband, standard side panels, standard leg openings, a shaped front panel, and standard rear coverage",
+   jp:"スタンダードビキニとして、標準腰位置・標準脚ぐり・標準被覆を指示"
+  },
+  "ビキニ(ローライズ)":{
+   safety:"opaque compact low-rise men's brief-style garment worn securely on the hip-bone line with low-to-standard leg openings",
+   balanced:"a distinctly low-rise compact men's brief-style garment worn on the hip-bone line, with a shallow rise and low-to-standard leg openings; not high-cut",
+   precise:"a distinctly low-rise compact men's bikini-style brief with the waistband on the hip-bone line, shallow front and back rise, narrow-to-standard side panels, low-to-standard leg openings, and secure rear coverage",
+   jp:"ローライズビキニとして、腰骨ライン・浅い股上・低めから標準の脚ぐりを指示"
+  },
+  "ビキニ(ハイレグ)":{
+   safety:"opaque compact men's brief-style garment with clearly elevated athletic leg openings and secure coverage",
+   balanced:"a compact men's brief-style garment with high athletic leg openings rising clearly toward the hip bones; not low-cut",
+   precise:"a high-leg compact men's bikini-style brief with leg openings rising clearly toward the hip bones, narrow side panels, conventional waistband height, shaped front panel, and secure rear coverage",
+   jp:"ハイレグビキニとして、腰骨方向へ明確に高く上がる脚ぐりを指示"
+  },
+  "ビキニ(スポーツ)":{
+   safety:"opaque fitted athletic brief-style garment with secure coverage",
+   balanced:"a fitted athletic men's brief-style garment with a conventional waist",
+   precise:"a fitted athletic men's bikini-style brief with performance fabric, conventional waistband, medium-high leg openings, and secure rear coverage",
+   jp:"スポーツビキニとして、運動用素材と安定した被覆を指示"
+  },
+  "ビルダーパンツ":{
+   safety:"opaque compact bodybuilding posing trunks with high athletic leg openings, a clearly shaped front garment panel, and secure front and rear coverage",
+   balanced:"compact bodybuilding posing trunks with a low-to-conventional waistband, high athletic leg openings designed to reveal the upper-thigh musculature, a clearly shaped opaque front panel, and a secure compact rear panel while maintaining appropriate coverage",
+   precise:"compact bodybuilding posing trunks with a low waistband, very high athletic leg openings, narrow side panels, a shaped opaque front panel, and a secure compact rear panel",
+   jp:"ビルダーパンツとして、筋肉確認用の高い脚ぐり・細い脇幅・不透明な前後パネルを指示"
+  },
+  "ふんどし(越中)":{
+   safety:"an opaque traditional Japanese wrapped-waist cloth garment with a waist cord, rectangular front apron, and broad rear cloth panel",
+   balanced:"a traditional Japanese wrapped-waist cloth garment in the Etchu construction, with a waist cord, rectangular front apron, and rear cloth panel covering the seat",
+   precise:"an Etchu-style traditional Japanese wrapped-waist garment with a separate waist cord, a rectangular front apron hanging from the waist, and a broad rear cloth panel providing appropriate coverage",
+   jp:"越中褌を、腰紐・長方形の前垂れ・広い背面布からなる伝統的な巻き布衣装として変換"
+  },
+  "ふんどし(六尺)":{
+   safety:"an opaque traditional Japanese wrapped-waist cloth garment made from a long narrow fabric strip, secured around the waist and arranged as a narrow central rear cloth section",
+   balanced:"a traditional Japanese wrapped-waist cloth garment made from one long narrow fabric strip, tightly secured around the waist, passed between the legs, and arranged as a narrow central rear cloth section with appropriate coverage",
+   precise:"a rokushaku-style traditional Japanese wrapped-waist garment made from one long narrow strip of opaque cloth, wrapped repeatedly around the waist, routed between the legs, tightened at the front, and forming a narrow central rear cloth section",
+   jp:"六尺褌を、一本の長い細幅布を腰へ巻き、脚の間を通して固定する伝統衣装として変換"
+  },
+  "ふんどし(もっこ)":{
+   safety:"an opaque traditional Japanese pouch-style wrapped garment with a supported front panel and broad rear coverage",
+   balanced:"a traditional Japanese mokko-style wrapped garment with a supported pouch-shaped front panel, waist ties, and a broad rear cloth panel",
+   precise:"a mokko-style traditional Japanese garment with side waist ties, a softly shaped front cloth panel, and a broad rear panel resembling simple brief construction",
+   jp:"もっこ褌を、紐で支える前面布と広い背面布を持つ伝統衣装として変換"
+  },
+  "ふんどし(黒猫)":{
+   safety:"an opaque traditional Japanese minimal wrapped-waist cloth garment with a small triangular front panel and a narrow central rear cloth section, maintaining appropriate coverage",
+   balanced:"a traditional Japanese minimal wrapped-waist cloth garment with a small triangular front panel, thin waist cords, and a narrow central rear cloth section, shown strictly as costume-construction reference",
+   precise:"a kuroneko-style traditional Japanese wrapped-waist garment with a compact triangular opaque front panel, very thin waist cords, and a narrow central rear cloth strip, while maintaining non-explicit appropriate coverage",
+   jp:"黒猫褌を、小さな三角形の前面布・細い腰紐・細い中央背面布からなる衣装構造として変換"
+  },
+  "ふんどし(割)":{
+   safety:"an opaque traditional Japanese wrapped cloth garment with separately arranged front and rear cloth sections and secure waist wrapping",
+   balanced:"a traditional Japanese wari-style wrapped cloth garment with securely wrapped waist fabric and clearly separated front and rear cloth sections",
+   precise:"a wari-style traditional Japanese wrapped garment with a secure layered waist wrap, a structured front cloth section, and a separately arranged rear cloth section",
+   jp:"割褌を、腰巻きと前後に分かれた布構造を持つ伝統衣装として変換"
+  },
+  "相撲まわし":{
+   safety:"an opaque traditional sumo training belt made from thick wrapped cloth with secure full construction",
+   balanced:"a traditional sumo mawashi made from a thick opaque cloth belt tightly and securely wrapped around the waist and lower torso",
+   precise:"a traditional sumo mawashi made from a long thick opaque cloth, repeatedly wrapped around the waist, secured through a central lower wrap, and finished with a firm rear knot structure",
+   jp:"相撲まわしを、厚い長布を腰へ複数回巻いて固定する競技衣装として変換"
+  },
+  "締込み":{
+   safety:"an opaque traditional festival wrapped-waist garment with secure waist wrapping and a narrow central rear cloth section",
+   balanced:"a traditional festival shimekomi constructed from opaque wrapped cloth, with a tightly secured waist band, structured front cloth, and narrow central rear section",
+   precise:"a traditional festival shimekomi made from opaque cloth tightly wrapped around the waist, with a compact structured front panel and a narrow central rear cloth section",
+   jp:"締込みを、強く固定した腰巻き・前面布・細い中央背面布からなる祭礼衣装として変換"
+  },
+  "デニムパンツ(ロング)":{safety:"opaque full-length denim jeans",balanced:"full-length denim jeans",precise:"full-length structured denim jeans with a conventional waistband and straight legs",jp:"ロングデニムパンツとして指示"},
+  "チノパン(ロング)":{safety:"opaque full-length chino trousers",balanced:"full-length chino trousers",precise:"full-length chino trousers with a conventional waistband and straight legs",jp:"ロングチノパンとして指示"},
+  "スラックス(ロング)":{safety:"opaque full-length tailored slacks",balanced:"full-length tailored slacks",precise:"full-length tailored slacks with pressed creases and a conventional waistband",jp:"ロングスラックスとして指示"},
+  "ショートパンツ":{safety:"opaque above-the-knee shorts with full coverage",balanced:"above-the-knee shorts",precise:"above-the-knee shorts with a conventional waistband, relaxed leg openings, and full coverage",jp:"膝上丈のショートパンツとして指示"},
+  "スポーツパンツ":{safety:"opaque athletic shorts or trousers with full coverage",balanced:"athletic shorts or trousers",precise:"performance-fabric athletic bottoms with a secure waistband and full coverage",jp:"スポーツパンツとして指示"}
+ };
+ const item=items[value]||{safety:value,balanced:value,precise:value,jp:`「${value}」を衣装名として指示`};
+ let en=structuralTerm(value,item.safety,item.balanced,item.precise);
+ if(ai==="Gemini画像生成"){
+   en=en.replace(/; /g,", ");
+ }
+ return {en,jp:item.jp};
+}
+function bottomShapeTranslation(){
+ const p=promptProfile();
+ const riseMap={
+  "自動":{en:"",jp:"股上は衣装既定値"},
+  "ハイライズ：へそ付近から上":{en:"high-rise waistband positioned at or above the navel",jp:"腰位置はへそ付近以上"},
+  "ミッドライズ：へその少し下":{en:"mid-rise waistband positioned slightly below the navel",jp:"腰位置はへその少し下"},
+  "ローライズ：腰骨・骨盤付近":{en:"low-rise waistband securely positioned along the hip-bone and pelvic line",jp:"腰位置は腰骨・骨盤ライン"}
+ };
+ const legMap={
+  "自動":{en:"",jp:"脚ぐりは衣装既定値"},
+  "低い":{en:"low-cut leg openings",jp:"脚ぐりは低い"},
+  "標準":{en:"standard-cut leg openings",jp:"脚ぐりは標準"},
+  "高い":{en:"high athletic leg openings",jp:"脚ぐりは高い"},
+  "非常に高い":{en:"very high athletic leg openings rising toward the hip bones",jp:"脚ぐりは非常に高い"}
+ };
+ const sideMap={
+  "自動":{en:"",jp:"脇幅は衣装既定値"},
+  "広い":{en:"wide side panels",jp:"脇幅は広い"},
+  "標準":{en:"standard-width side panels",jp:"脇幅は標準"},
+  "細い":{en:"narrow side panels",jp:"脇幅は細い"},
+  "非常に細い":{en:structuralTerm("side","slim side connections","very narrow side panels","extremely narrow side straps"),jp:"脇幅は非常に細い"}
+ };
+ const coverageMap={
+  "自動":{en:"",jp:"背面被覆は衣装既定値"},
+  "全面を覆う":{en:"full rear fabric coverage",jp:"臀部は全面を覆う"},
+  "標準":{en:"standard rear fabric coverage",jp:"臀部被覆は標準"},
+  "少なめ":{en:structuralTerm("coverage","compact but complete rear panel","reduced rear fabric coverage while maintaining appropriate coverage","small rear panel with reduced fabric area while maintaining non-explicit coverage"),jp:"臀部の布面積は少なめだが適切な被覆を維持"},
+  "Tバック状":{en:structuralTerm("coverage","narrow central rear cloth panel","narrow central rear panel with minimal side fabric","T-shaped narrow central rear panel with minimal side connections, maintaining non-explicit coverage"),jp:"Tバック状を、細い中央背面パネルと最小限の脇布からなる構造として変換"}
+ };
+ const frontMap={
+  "自動":{en:"",jp:"前面形状は衣装既定値"},
+  "平坦":{en:"flat opaque front garment panel",jp:"前面布は平坦"},
+  "自然な立体":{en:"naturally shaped opaque front garment panel for comfortable garment fit",jp:"前面布は自然な立体形状"},
+  "しっかり立体":{en:structuralTerm("front","clearly shaped opaque front garment panel for accurate fit","clearly contoured opaque front garment panel with structured shaping for accurate fit","strongly three-dimensionally contoured opaque front garment panel with structured seams for precise fit, without anatomical emphasis"),jp:"しっかり立体を、身体そのものではなく衣装の立体裁断・縫製構造として変換"},
+  "縦長":{en:"vertically elongated opaque front garment panel",jp:"前面布は縦長"},
+  "横長":{en:"horizontally wide opaque front garment panel",jp:"前面布は横長"},
+  "三角形":{en:"triangular opaque front garment panel",jp:"前面布は三角形"}
+ };
+ const backMap={
+  "自動":{en:"",jp:"背面形状は衣装既定値"},
+  "全面":{en:"broad full-coverage rear garment panel",jp:"背面布は全面型"},
+  "標準":{en:"standard rear garment panel",jp:"背面布は標準型"},
+  "細い中央線":{en:"narrow central rear cloth section",jp:"背面は細い中央布"},
+  "Tバック":{en:structuralTerm("back","narrow central rear cloth panel","narrow T-shaped central rear panel with minimal side fabric","T-shaped narrow central rear panel with very slim side connections, maintaining non-explicit coverage"),jp:"Tバックを、細い中央背面パネルと脇の接続布からなる衣装構造として変換"},
+  "布で広く覆う":{en:"broad rear cloth panel providing full coverage",jp:"背面を広い布で覆う"}
+ };
+ const materialMap={
+  "自動":{en:"",jp:"素材は衣装既定値"},
+  "綿":{en:"opaque cotton fabric",jp:"綿素材"},
+  "伸縮性のある綿":{en:"opaque stretch-cotton fabric",jp:"伸縮性のある綿素材"},
+  "競泳水着素材":{en:"opaque smooth competitive swimwear fabric",jp:"競泳水着素材"},
+  "光沢あり":{en:"opaque slightly glossy performance fabric",jp:"やや光沢のある素材"},
+  "マット":{en:"opaque matte fabric",jp:"マット素材"},
+  "厚手布":{en:"thick opaque woven cloth",jp:"厚手布"},
+  "薄手布":{en:"lightweight but fully opaque cloth",jp:"薄手だが不透明な布"}
+ };
+ const entries=[
+   riseMap[state.bottomRise]||riseMap["自動"],
+   legMap[state.bottomLegOpening]||legMap["自動"],
+   sideMap[state.bottomSideWidth]||sideMap["自動"],
+   coverageMap[state.bottomCoverage]||coverageMap["自動"],
+   frontMap[state.bottomFrontShape]||frontMap["自動"],
+   backMap[state.bottomBackShape]||backMap["自動"],
+   materialMap[state.bottomMaterial]||materialMap["自動"]
+ ];
+ return {
+   en:entries.map(x=>x.en).filter(Boolean).join("; "),
+   jp:entries.map(x=>x.jp).join("／")
+ };
+}
+function lowerHairEnglish(){
+ const density={"ごく薄い":"very sparse","薄い":"light","自然":"natural","濃い":"dense","非常に濃い":"very dense"}[state.lowerHairDensity]||"natural";
+ const widthMap={
+  "毛なし":"no visible connecting trail","ごく細い":"an extremely narrow central trail","細い":"a narrow central trail","自然な太さ":"a natural narrow-to-medium central trail","やや太い":"a moderately broad central trail","幅広":"a broad central strip"
+ };
+ const densityMap={
+  "適用なし":"","ごく薄い":"with very sparse individual hairs","薄い":"with light but visible individual hairs","自然":"with natural visible density","濃い":"with clearly dense visibility","非常に濃い":"with very dense and unmistakably visible natural hairs"
+ };
+ const continuityMap={
+  "適用なし":"","途切れず連続":"remaining continuously visible from its upper endpoint to the transition zone","途中で少し薄くなる":"becoming slightly lighter midway before becoming denser again","途中で一度途切れる":"with one natural interruption","腰骨付近だけ現れる":"appearing mainly near the hip-bone line"
+ };
+ const upperLimitMap={
+  "へその下縁で厳密に止める":"The upper endpoint is exactly at the lower rim of the navel. Begin immediately below the navel, never through it. No hair is visible above the navel or around its upper half. Do not cross the horizontal center of the navel.",
+  "へその直下から開始":"Begin immediately below the navel without entering the navel itself. No hair is visible above the navel.",
+  "へそ周辺へ少しなじませる":"Allow a minimal natural connection at the lower edge of the navel, but never extend above the navel."
+ };
+ const styleMap={
+  "濃い一本線":"Keep one clearly defined dense central line with nearly constant width.",
+  "細い一本線＋周囲は無毛":"Keep one narrow defined central line with visibly hair-free skin on both sides.",
+  "細い一本線＋周囲はごく薄い":"Keep one narrow defined central line with only occasional isolated fine hairs on both sides.",
+  "一本線から下で少し広がる":"Keep a defined central line that stays narrow until its lower end, then widens only slightly.",
+  "帯状":"Use a narrow vertical strip rather than a single line.",
+  "自然な不規則ライン":"Use a narrow natural line with subtle local irregularity."
+ };
+ const surroundMap={
+  "周囲は無毛":"Keep the surrounding lower-abdomen skin visibly hair-free until the transition zone.",
+  "周囲はごく薄い":"Allow only occasional isolated fine hairs on the surrounding skin.",
+  "周囲は薄い":"Allow light surrounding hairs that remain clearly less dense than the central trail.",
+  "周囲は自然":"Use a natural amount of surrounding hairs with the central trail still dominant.",
+  "周囲もやや濃い":"Use moderately dense surrounding hairs while retaining a readable central trail."
+ };
+ const transitionMap={
+  "移行帯なし":"Move directly from the trail into the main distribution only at the selected start line.",
+  "ごく短く急に移行":"Remain narrow until the selected start line, then use a very short distinct widening transition.",
+  "短く自然に移行":"Remain narrow until the selected start line, then use a short natural widening transition.",
+  "徐々に広がる":"Remain narrow above the selected start line, then gradually widen into the main distribution.",
+  "長く緩やかに移行":"Use a long gentle widening transition beginning only at the selected start line."
+ };
+ const endMap={
+  "接続しない":"End the trail before the main distribution.",
+  "腰骨ラインで急に広がる":"Remain narrow until the hip-bone line, then widen distinctly.",
+  "腰骨ラインで自然に広がる":"Remain narrow until the hip-bone line, then blend naturally into the broad distribution.",
+  "腰骨へ近づくほど徐々に広がる":"Keep the core line readable while widening only close to the hip-bone line.",
+  "そのまま同じ幅で終わる":"End at approximately the same width."
+ };
+ const startMap={
+  "へそ直下から徐々に広がる":"The main distribution begins immediately below the navel.",
+  "へそと腰骨の中間から広がる":"The main distribution begins midway between the navel and the bilateral anterior hip-bone line.",
+  "腰骨ラインから広がる":"The main broad distribution begins exactly at the bilateral anterior hip-bone line, not earlier.",
+  "腰骨ラインより下から広がる":"The main broad distribution begins below the bilateral anterior hip-bone line."
+ };
+ const horizontalMap={
+  "中央だけ":"Keep the horizontal coverage close to the central lower abdomen.",
+  "やや広い":"Extend moderately to both sides of the central lower abdomen.",
+  "左右腰骨間の内側":"Cover most of the lower abdomen inside the left and right hip-bone landmarks.",
+  "左右腰骨間いっぱい":"Cover the full lower abdomen from the left anterior hip-bone landmark to the right anterior hip-bone landmark.",
+  "腰骨の外側近くまで":"Extend broadly toward the outer edges of both hip-bone landmarks while remaining anatomically natural."
+ };
+ const verticalMap={
+  "下腹部のみ":"Keep the downward coverage within the visible lower abdomen.",
+  "衣装周辺まで":"Continue to the naturally visible skin immediately around the opaque garment edges.",
+  "鼠径部まで":"Extend continuously into both visible groin folds.",
+  "鼠径部・内もも上部まで":"Extend into both visible groin folds and the upper inner thighs.",
+  "鼠径部・内もも上部まで広く":"Extend widely through both visible groin folds and across the upper inner thighs."
+ };
+ const flowMap={
+  "中央から徐々に左右へ広がる":"Use a gradual center-to-side widening pattern.",
+  "扇状に広がる":"Use a broad fan-shaped distribution.",
+  "V字状に広がる":"Use a natural V-shaped distribution.",
+  "台形状に広がる":"Use a broad trapezoidal distribution.",
+  "全範囲へほぼ均一":"Keep the selected coverage area nearly uniform in density.",
+  "自然な不規則分布":"Use subtle natural irregularity rather than geometric perfection."
+ };
+ const shapeMap={
+  "横長の自然分布":"Use a broad horizontally oriented natural distribution.",
+  "逆三角形":"Use an inverted-triangle silhouette.",
+  "丸みのある台形":"Use a softly rounded trapezoidal silhouette.",
+  "楕円形":"Use a low oval silhouette.",
+  "中央密集・左右へ薄く":"Keep the center densest and feather gradually toward both sides.",
+  "自然な左右非対称":"Allow slight natural left-right asymmetry without changing the overall coverage."
+ };
+ const boundaryMap={
+  "はっきり区切る":"Keep a readable but anatomically plausible boundary.",
+  "自然な境界":"Use a natural boundary with small local variation.",
+  "周囲へ自然にぼかす":"Feather the density gradually toward the surrounding skin.",
+  "境目なく連続":"Blend continuously into all neighboring visible hair zones with no abrupt boundary."
+ };
+
+ let trail;
+ if(state.trailBridgeWidth==="毛なし"){
+  trail="TREASURE TRAIL\nBetween the navel and the main distribution, keep the skin visibly free of a continuous trail.";
+ }else{
+  trail=`TREASURE TRAIL
+Upper endpoint: ${upperLimitMap[state.trailUpperLimit]||upperLimitMap["へその下縁で厳密に止める"]}
+Core trail: ${widthMap[state.trailBridgeWidth]||widthMap["細い"]}, ${densityMap[state.trailBridgeDensity]||densityMap["濃い"]}, ${continuityMap[state.trailBridgeContinuity]||continuityMap["途切れず連続"]}.
+Style: ${styleMap[state.trailStyle]||styleMap["濃い一本線"]} ${surroundMap[state.trailSurroundingHair]||surroundMap["周囲はごく薄い"]}
+Transition: ${transitionMap[state.trailTransitionZone]||transitionMap["短く自然に移行"]} ${endMap[state.trailBridgeEnd]||endMap["腰骨ラインで自然に広がる"]}
+Priority order: upper stopping point first, central line second, transition third, surrounding hairs last.`;
+ }
+ const detail=`Visible garment-edge region density: ${state.pubicDensity}; visible groin-fold hair: ${state.groinHair}; visible upper-inner-thigh hair: ${state.innerThighHair}.`;
+ return `${trail}
+
+MAIN LOWER-ABDOMEN DISTRIBUTION
+Main-region density: ${density}. ${startMap[state.lowerHairStart]||startMap["腰骨ラインから広がる"]} ${horizontalMap[state.lowerHairHorizontal]||horizontalMap["左右腰骨間いっぱい"]} ${verticalMap[state.lowerHairVertical]||verticalMap["鼠径部・内もも上部まで広く"]} ${flowMap[state.lowerHairFlow]||flowMap["自然な不規則分布"]} ${shapeMap[state.lowerHairShape]||shapeMap["横長の自然分布"]} ${boundaryMap[state.lowerHairBoundary]||boundaryMap["周囲へ自然にぼかす"]} ${detail}
+Do not let the main distribution extend upward toward the navel or swallow the Treasure Trail. Blend only after the selected widening transition begins. Render only naturally visible body hair on exposed skin around the fully opaque garment; preserve appropriate coverage and avoid anatomical emphasis.`;
+}
+function armpitHairEnglish(){
+ const density={
+  "なし":"no visible","ごく薄い":"very sparse","薄い":"light","普通":"moderate","やや濃い":"moderately dense","濃い":"dense","かなり濃い":"very dense"
+ }[state.armpit]||"moderate";
+ if(state.armpit==="なし")return "ARMPIT HAIR\nNo visible armpit hair.";
+ const strandCount={
+  "低い":"a low total strand count",
+  "やや低い":"a slightly low total strand count",
+  "標準":"a natural total strand count",
+  "高い":"a high total strand count with many overlapping small clusters",
+  "非常に高い":"an extremely high total strand count with numerous overlapping small clusters"
+ }[state.armpitStrandCount]||"a high total strand count with many overlapping small clusters";
+ const area={
+  "狭い":"concentrated in a small central area of each natural armpit hollow",
+  "標準":"covering the central and lower portions of each natural armpit hollow",
+  "広い":"covering most of each natural armpit hollow",
+  "ワキ全体を覆う":"filling the full natural armpit hollow without extending unnaturally onto the chest or upper arm"
+ }[state.armpitArea]||"covering most of each natural armpit hollow";
+ const length={
+  "短い":"short","やや短い":"slightly short","標準":"natural medium-length","やや長い":"slightly long","長い":"long"
+ }[state.armpitLength]||"natural medium-length";
+ const texture={
+  "柔らかく細い":"fine, soft individual strands",
+  "自然な一本毛":"clearly visible natural individual strands",
+  "自然な毛束感":"distinct individual strands mixed with small loose natural clusters",
+  "やや硬く粗い":"coarser, slightly wiry natural strands",
+  "はっきりした毛束感":"clearly separated small clusters made of visible individual hairs, never a solid dark patch"
+ }[state.armpitTexture]||"distinct individual strands mixed with small loose natural clusters";
+ const direction={
+  "中央にまとまる":"with most strands oriented toward the center",
+  "自然な放射状":"with a natural radial growth pattern from the deepest part of the armpit",
+  "外側へ広がる":"with strands naturally spreading outward from the center",
+  "下向きに流れる":"with a gentle downward growth direction following the skin folds"
+ }[state.armpitDirection]||"with a natural radial growth pattern from the deepest part of the armpit";
+ const parting={
+  "分け目なし":"without a visible parting",
+  "ごく弱い分け目":"with a very subtle natural parting",
+  "自然な分け目あり":"with a shallow natural valley following the upper-arm crease, with hair radiating to both sides",
+  "腕の折り目に沿う明瞭な分け目":"with a clearly readable shallow natural valley along the upper-arm crease, creating two diverging growth groups",
+  "左右二方向へ分かれる":"with two distinct but natural diverging growth directions"
+ }[state.armpitParting]||"with a shallow natural valley following the upper-arm crease, with hair radiating to both sides";
+ const tips={
+  "整い気味":"with relatively even tips",
+  "わずかにばらつく":"with slight variation in strand length and tip position",
+  "毛先に自然なばらつき":"with natural variation in strand length and tapered tips",
+  "長短差が大きい":"with clearly varied long and short strands",
+  "不規則で自然":"with irregular but natural strand lengths and scattered tapered tips"
+ }[state.armpitTipVariation]||"with natural variation in strand length and tapered tips";
+ const gaps={
+  "ほぼ隙間なし":"with only tiny irregular skin gaps between clusters",
+  "小さな隙間あり":"with small irregular skin gaps between clusters",
+  "自然な隙間":"with naturally irregular spacing and visible skin between clusters",
+  "隙間がやや多い":"with several visible gaps separating the clusters"
+ }[state.armpitGapPattern]||"with small irregular skin gaps between clusters";
+ return `ARMPIT HAIR
+Overall density and coverage: ${density}, ${strandCount}, ${length}, ${area}.
+Strand rendering: ${texture}, ${tips}, ${gaps}.
+Growth flow: ${direction}, ${parting}.
+Preserve the natural strand-level rendering and separated cluster structure, but increase the total number of visible hairs enough that the armpit reads immediately as densely filled. Use many overlapping small clusters and a high overall strand count while retaining only small irregular skin gaps. Preserve depth through overlapping strands, visible root structure, and root-to-tip tapering. Never render the hair as one painted, fuzzy, rectangular, or solid black mass. Preserve near-symmetry in total density and coverage while retaining small natural left-right differences.`;
+}
+function referenceModeEnglish(){
+ if(state.referenceMode==="衣装デザイン資料")return "costume-design reference prioritizing garment silhouette, pattern pieces, seams, material behavior, color, and construction details";
+ return "combined anatomy-and-garment structure reference prioritizing natural body proportions, musculature, visible body-hair distribution, and the way the garment fits the body";
+}
+function legHairEnglish(){
+ const d={"なし":"no visible","ごく薄い":"very sparse","薄い":"light","普通":"moderate","やや濃い":"moderately dense","濃い":"dense","非常に濃い":"very dense"};
+ const dist={"部分的":"with naturally varied local density","脚全体に自然":"naturally distributed across the full thighs and lower legs","脚全体に均一":"evenly distributed across the full thighs and lower legs with no sparse sections","外側が濃い":"slightly denser on the outer thighs and outer lower legs","内側が濃い":"slightly denser on the inner thighs and inner lower legs"};
+ const knee={"膝周辺は薄い":"becoming lighter around the knees","膝周辺も自然につながる":"transitioning naturally across the knees","膝周辺も同じ密度":"maintaining similar density across the knees","境目なく連続":"forming a continuous distribution across the thighs, knees, shins, and calves"};
+ const length={"短い":"short","やや短い":"slightly short","標準":"natural medium-length","やや長い":"slightly long","長い":"long"}[state.legHairLength]||"natural medium-length";
+ const texture={"柔らかい肌テクスチャ":"subtle fine hairs","自然な一本毛":"clearly visible natural individual hairs","はっきり見える一本毛":"distinct individual natural hairs with readable direction","軽い毛束感":"individual hairs with occasional small natural clusters"}[state.legHairTexture]||"clearly visible natural individual hairs";
+ return `Leg hair: ${length}, rendered as ${texture}. Density by region: upper thighs ${d[state.thighHair]||state.thighHair}; lower thighs ${d[state.lowerThighHair]||state.lowerThighHair}; shins ${d[state.shinHair]||state.shinHair}; calves ${d[state.calfHair]||state.calfHair}; ${dist[state.legHairDistribution]||dist["脚全体に自然"]}; ${knee[state.kneeHairTransition]||knee["膝周辺も自然につながる"]}. Do not reduce dense selections to faint skin texture.`;
+}
+function bodyHairSafetyCorrection(){
+ const p=promptProfile();
+ if(p.retry!=="安全表現")return "";
+ return `SAFE-EXPRESSION BODY-HAIR PRESERVATION
+Visible adult body hair is a neutral anatomical surface feature in this technical character and costume-fit reference.
+Preserve the requested strand-level rendering, high total armpit-hair strand count, armpit parting and cluster separation, Treasure Trail upper stopping point, narrow core-line contrast, surrounding-hair level, transition geometry, lower-abdomen coverage, groin-fold visibility, upper-inner-thigh continuity, and leg-hair density on exposed skin.
+Do not simplify requested hair into a dark patch, faint skin texture, airbrushed skin, or hairless skin merely because the safe-expression profile is active.
+Do not widen the Treasure Trail merely to satisfy safety constraints. Preserve the requested narrow central line and exact upper endpoint below the navel.
+Maintain fully opaque secure garment coverage and avoid intimate anatomical emphasis.`;
+}
+function aiSpecificInstruction(){
+ const p=promptProfile();
+ if(state.targetAI==="Gemini画像生成"){
+  return `MODEL-SPECIFIC GUIDANCE FOR GEMINI
+This is a clean, non-sexual adult character-design, garment-construction, and orthographic turnaround reference.
+Interpret every garment property independently: waistband height, rise depth, leg-opening height, side-panel width, front-panel construction, rear-panel construction, material, fit, and length.
+Do not collapse distinct garment designs into one generic brief.
+Do not alter the face identity or body proportions between views.
+Use crisp, high-resolution rendering with clean garment seams and edges.
+Keep all selected garments opaque and appropriately covering.
+Information panels must use clear readable labels and only the supplied values.`;
+ }
+ return `MODEL-SPECIFIC GUIDANCE FOR CHATGPT IMAGE GENERATION
+Create a clean, non-sexual adult character turnaround and garment-construction reference.
+The subject is an adult and remains appropriately covered by the selected opaque garment.
+Treat terms such as narrow rear panel, wrapped-waist cloth, contoured front panel, and reduced fabric area strictly as garment-pattern and costume-construction instructions.
+Do not reinterpret garment construction as erotic content.
+Follow the selected waistband position, rise depth, leg-opening height, side-panel width, front-panel structure, rear-panel structure, material, fit, and length.
+Keep the same face, hair, body proportions, visible body-hair pattern, garment construction, and scale in every view.
+${p.retry==="安全表現"?"Use the most neutral technical costume-design interpretation and avoid unnecessary anatomical emphasis.":""}
+${bodyHairSafetyCorrection()}`;
+}
+
+function compileRisk(){
+ let score=0,reasons=[];
+ const minimal=["ビキニ(ローライズ)","ビキニ(ハイレグ)","ビルダーパンツ","競泳パンツ(ブーメラン)","ふんどし(六尺)","ふんどし(黒猫)","ふんどし(割)","締込み"].includes(state.bottom);
+ if(minimal){score+=2;reasons.push("布面積が小さい下半身衣装");}
+ if(["非常に高い"].includes(state.bottomLegOpening)){score+=1;reasons.push("非常に高い脚ぐり");}
+ if(["非常に細い"].includes(state.bottomSideWidth)){score+=1;reasons.push("非常に細い脇幅");}
+ if(["少なめ","Tバック状"].includes(state.bottomCoverage)){score+=2;reasons.push("背面被覆が少ない設定");}
+ if(["しっかり立体"].includes(state.bottomFrontShape)){score+=1;reasons.push("強い前面立体指定");}
+ if(state.legWidth==="非常に大きく開く"){score+=1;reasons.push("非常に大きい脚幅");}
+ if(state.lowerHairDensity==="非常に濃い" && /内もも/.test(state.lowerHairArea)){score+=1;reasons.push("下腹部から内ももまで非常に濃い体毛");}
+ return {score,reasons,level:score>=6?"高":score>=3?"中":"低"};
+}
+function effectiveCompileProfile(){
+ const risk=compileRisk();
+ let expression=state.safeRetryLevel||"通常";
+ let detail=state.promptDetail||"標準（バランス）";
+ if(state.autoCompile==="成功率優先"){expression="安全表現"; if(detail.startsWith("詳細"))detail="標準（バランス）";}
+ if(state.autoCompile==="自動（推奨）" && risk.score>=6){expression="安全表現"; if(detail.startsWith("詳細"))detail="標準（バランス）";}
+ return {risk,expression,detail};
+}
+function effectiveRatio(){
+ if(state.ratio!=="自動（構図優先）")return state.ratio;
+ const three=/三面図/.test(state.outputType);
+ const two=/二面図/.test(state.outputType);
+ if(three)return "16:9";
+ if(two)return "4:5";
+ return "3:4";
+}
+function framingEnglish(){
+ const veryWide=state.legWidth==="非常に大きく開く";
+ const wide=veryWide||state.legWidth==="大きく開く"||state.legWidth==="肩幅より広く開く";
+ const three=/三面図/.test(state.outputType);
+ let lines=[
+  "Include the full head, both elbows, both hands, and both feet with comfortable empty margins.",
+  "No body part may touch, approach, or cross any image edge.",
+  "Leave clearly visible empty background above the hair, below the soles of both feet, outside both elbows and hands, and outside both feet in every view.",
+  `Framing priority: ${state.framingPriority}.`,
+  `Required edge clearance: ${state.edgeClearance}.`
+ ];
+ if(three){
+  lines.push("Use one wide horizontal character-sheet canvas.");
+  lines.push("Place the front, side, and back views in a single left-to-right row; never stack the views vertically and never use a tall portrait composition for the three-view sheet.");
+  lines.push("Give each view an equal-width column and keep the same floor line, head height, character scale, and vertical alignment.");
+  lines.push("Reserve only a shallow horizontal information strip beneath the figures.");
+ }
+ if(wide){
+  lines.push("Maintain an unmistakably wide-legged stance.");
+  lines.push("Do not narrow the stance for realism or for a conventional standing pose.");
+  lines.push("Preserve the selected stance width consistently in the front, side, and back views.");
+  lines.push("Never reduce the stance width to fit the canvas; move the virtual camera farther away and reduce the character scale instead.");
+  lines.push("Use wider horizontal spacing between the three views.");
+ }
+ if(veryWide)lines.push("Place the feet unmistakably and substantially wider than shoulder width, with visible floor space outside both feet.");
+ lines.push("Do not crop any body part.");
+ return lines.join(" ");
+}
+function compileDiagnostics(){
+ const p=effectiveCompileProfile(),risk=p.risk;
+ const omissions=[];
+ if(state.top==="上半身裸")omissions.push("上半身衣装の色・丈・フィット感・裾・脇ぐり");
+ if(state.shoes==="裸足")omissions.push("靴の形状・色・素材");
+ if(state.accessory==="なし")omissions.push("小物の詳細");
+ if(state.infoDisplay==="表示しない")omissions.push("情報パネルのレイアウト・言語・項目");
+ const ratio=effectiveRatio();
+ return `【診断結果】\nリスク目安：${risk.level}（${risk.score}点）\n${risk.reasons.length?"判定要因："+risk.reasons.join("／"):"判定要因：特になし"}\n\n【一発生成アシスト】\n選択：${state.autoCompile||"自動（推奨）"}\n実際に使用する表現：${p.expression}\n実際に使用する詳細度：${p.detail}\n実際に使用する画像比率：${ratio}${state.ratio==="自動（構図優先）"?"（構図から自動決定）":""}\n\n【矛盾・不要項目の自動除去】\n${omissions.length?omissions.map(x=>"・"+x+"を出力しない").join("\n"):"・除去対象なし"}\n・同義の衣装形状指定は重複を整理\n・衣装名と個別形状が競合する場合は、個別形状を優先\n・見切れ防止は画像端に触れない余白指定へ強化`;
+}
+function transformationSummary(){
+ const top=topGarmentTranslation(state.top);
+ const bottom=bottomGarmentTranslation(state.bottom);
+ const shape=bottomShapeTranslation();
+ const compiled=effectiveCompileProfile();
+ const mode=compiled.expression==="安全表現"?"安全表現（自動または手動）":"通常表現";
+ const sensitivity=state.promptSensitivity||"バランス";
+ return `【変換モード】
+生成AI：${state.targetAI}
+衣装表現の変換強度：${sensitivity}
+プロンプト詳細度：${state.promptDetail||"標準（バランス）"}
+一発生成アシスト：${state.autoCompile||"自動（推奨）"}
+実際の出力詳細度：${compiled.detail}
+現在の出力：${mode}
+
+【上半身衣装】
+画面上の設定：${state.top}
+AIへの伝え方：${top.jp}
+英語構造表現：${top.en}
+${state.top==="上半身裸"?"最適化：衣装色・丈・フィット感・裾・脇ぐりをプロンプトから自動削除":"最適化：選択した衣装に必要な項目だけを出力"}
+
+【下半身衣装】
+画面上の設定：${state.bottom}
+AIへの伝え方：${bottom.jp}
+英語構造表現：${bottom.en}
+
+【下半身衣装の個別形状】
+${shape.jp}
+英語構造表現：${shape.en||"衣装既定形状を使用"}
+
+【体毛：3段階指定】
+「開始位置 → 分布範囲 → 分布方法」の順に英語へ変換します。
+量：${state.lowerHairDensity}
+開始位置：${state.lowerHairStart}
+横方向：${state.lowerHairHorizontal}
+下方向：${state.lowerHairVertical}
+全体形状：${state.lowerHairFlow}
+境界：${state.lowerHairBoundary}
+
+【共通方針】
+・成人の非性的なキャラクター制作資料として指示
+・衣装は不透明かつ適切な被覆を維持
+・身体そのものではなく、布・パネル・腰位置・脚ぐり・脇幅・縫製形状として記述
+・入力していない人物設定や測定値は追加しない
+・存在しない衣装や情報欄に関する不要項目は自動削除
+・重複指示を整理し、重要な設定を優先
+・画像端に身体が触れない余白と、脚幅に応じた横方向の構図を自動追加`;
+}
+function japaneseSummary(){
+ const bmi=bodyMassIndex(),assessment=bmiAssessment(bmi);
+ return `【基本情報】
+名前：${state.name||"名称未設定"}
+年齢：${state.age}
+国籍：${state.nationality}
+身長：${state.height}
+体重：${state.weight}
+BMI：約${bmi.toFixed(1)}（${assessment.label}）
+体型：${state.bodyBuild}
+
+【顔・髪・肌】
+顔：${state.facePreset}／${state.faceShape}／${state.eyelid}／${state.eyeShape}
+髪：${state.hairColor}／${state.hairStyle}／${state.hairLength}
+肌：${state.skinTone}／${state.skinTexture}
+表情：${state.expression}
+
+【身体】
+肩幅：${state.shoulder}
+胸板：${state.chest}
+腹部：${state.abdomen}
+腰：${state.waist}
+臀部：${state.hip}
+脚の長さ：${state.inseam}
+太もも：${state.thighs}
+ふくらはぎ：${state.calves}
+
+【体毛】
+胸毛：${state.chestHair}
+腹毛：${state.abHair}
+ワキ毛：${state.armpit}・総毛量 ${state.armpitStrandCount}・${state.armpitArea}・${state.armpitLength}・${state.armpitTexture}・${state.armpitParting}\nヘソ〜主分布：${state.trailUpperLimit}／${state.trailStyle}／${state.trailBridgeWidth}・${state.trailBridgeDensity}／周囲 ${state.trailSurroundingHair}／${state.trailTransitionZone}／ヘソ上 ${state.trailAbove}
+前面・下半身の量：${state.lowerHairDensity}
+開始位置：${state.lowerHairStart}
+横方向：${state.lowerHairHorizontal}
+下方向：${state.lowerHairVertical}
+全体形状：${state.lowerHairFlow}
+境界：${state.lowerHairBoundary}
+肩・背中・腰・臀部：${state.shoulderBackHair}／${state.upperBackHair}／${state.waistBackHair}／${state.buttockHair}
+
+【衣装】
+資料モード：${state.referenceMode}
+上半身：${state.top}・${state.topColor}
+フィット感：${state.topFit}
+丈：${state.topLength}
+裾：${state.topHem}
+下半身：${state.bottom}・${state.bottomColor}
+股上：${state.bottomRise}
+脚ぐり：${state.bottomLegOpening}
+脇幅：${state.bottomSideWidth}
+臀部の覆い：${state.bottomCoverage}
+前面形状：${state.bottomFrontShape}
+背面形状：${state.bottomBackShape}
+素材感：${state.bottomMaterial}
+
+【ポーズ・画面】
+${state.outputType}
+ポーズ：${state.bodyPosture}
+腕・手：${state.armsPose}
+背景：${state.background}
+画風：${state.style}
+情報表示：${state.infoDisplay}／${state.infoLayout}
+
+【生成AI】
+${state.targetAI}`;
+}
+
+function generatePrompt(){
+ if(!$("output"))return;
+ const topTranslation=topGarmentTranslation(state.top);
+ const topDesc=topTranslation.en;
+ const bottomTranslation=bottomGarmentTranslation(state.bottom);
+ const bottomDesc=bottomTranslation.en;
+ const bottomShapeData=bottomShapeTranslation();
+ const bottomShape=bottomShapeData.en;
+ const aiTune=aiSpecificInstruction();
+ const upperBare=state.top==="上半身裸";
+ const tankOrSleeveless=/タンクトップ|ノースリーブ/.test(state.top);
+ const infoOff=state.infoDisplay==="表示しない";
+ const compiled=effectiveCompileProfile();
+ const detail=compiled.detail;
+ const concise=detail.startsWith("簡潔");
+ const detailed=detail.startsWith("詳細");
+ const minimalBottom=["ふんどし(越中)","ふんどし(六尺)","ふんどし(もっこ)","ふんどし(黒猫)","ふんどし(割)","相撲まわし","締込み","ビルダーパンツ","ビキニ(スタンダード)","ビキニ(ローライズ)","ビキニ(ハイレグ)","ビキニ(スポーツ)","競泳パンツ(ビキニ)","競泳パンツ(ブーメラン)","競泳パンツ(クラシック)"].includes(state.bottom);
+
+ const visibleHairLines=[];
+ visibleHairLines.push(`Render body hair as distinct natural strands and small separated clusters, never as painted darkness or uniform fuzzy texture.`);
+ visibleHairLines.push(armpitHairEnglish());
+ if(upperBare){
+   visibleHairLines.push(`Chest hair: ${state.chestHair}. Abdominal hair: ${state.abHair}.`);
+   visibleHairLines.push(`Navel and upper-abdomen hair: around the navel ${state.trailAroundNavel}; above the navel ${state.trailAbove}; chest connection ${state.trailChestLink}.`);
+ }
+ visibleHairLines.push(`Arm hair: ${state.armHair}. Hand hair: ${state.handHair}.`);
+ visibleHairLines.push(legHairEnglish());
+ if(minimalBottom)visibleHairLines.push(`${lowerHairEnglish()}.`);
+ if(!concise || [state.shoulderBackHair,state.upperBackHair,state.lowerBackHair,state.waistBackHair,state.buttockHair].some(v=>v!=="なし")){
+   visibleHairLines.push(`Rear body hair: shoulders ${state.shoulderBackHair}, upper back ${state.upperBackHair}, lower back ${state.lowerBackHair}, waist ${state.waistBackHair}, buttocks ${state.buttockHair}.`);
+ }
+
+ const costumeLines=[`COSTUME`,`Reference context: ${referenceModeEnglish()}. This is an adult character-design and costume-construction reference.`];
+ if(upperBare){
+   costumeLines.push(`Upper garment: no upper-body garment.`);
+   costumeLines.push(`Upper-garment construction: ${topDesc}.`);
+ }else{
+   costumeLines.push(`Upper garment: ${state.top}, color ${state.topColor}.`);
+   if(tankOrSleeveless)costumeLines.push(`Armhole depth: ${state.topArmhole}.`);
+   costumeLines.push(`Upper-garment construction: ${topDesc}.`);
+   costumeLines.push(`Upper-garment fit and length: ${topFitDescription()}.`);
+ }
+ costumeLines.push(`Lower garment: ${state.bottom}, color ${state.bottomColor}.`);
+ costumeLines.push(`Lower-garment construction: ${bottomDesc}.`);
+ if(bottomShape)costumeLines.push(`Additional lower-garment geometry: ${bottomShape}.`);
+ costumeLines.push(`The lower garment must be opaque, securely constructed, and appropriately covering. Keep the subject appropriately covered by the selected garment. Do not replace the selected garment with a generic brief.`);
+ costumeLines.push(`Footwear: ${state.shoes}. Accessories: ${state.accessory}.`);
+
+ let infoSection;
+ if(infoOff){
+   infoSection=`INFORMATION PANEL\nDo not display an information panel or any character data text.`;
+ }else{
+   infoSection=`INFORMATION PANEL
+Display mode: ${state.infoDisplay}. Layout: ${state.infoLayout}. Position: ${state.infoPlacement}. Language: ${state.infoLanguage}. Prioritize natural human proportions and generous spacing; never compress or elongate the character to make room for the data panel.
+Use only the supplied setting values. Do not invent summaries, personality descriptions, aliases, or additional measurements.
+Project: ${state.showProject==="表示する"?state.projectName:"do not display"}.
+Version: ${state.showVersion==="表示する"?state.sheetVersion:"do not display"}.
+Sheet number: ${state.showSheetNo==="表示する"?state.sheetNo:"do not display"}.
+Creator: ${state.showCreator==="表示する"?state.creatorName:"do not display"}.
+Hair: ${state.showHair==="表示する"?`${state.hairColor}, ${state.hairStyle}`:"do not display"}.
+Eyes: ${state.showEyes==="表示する"?`${state.eyelid}, ${state.eyeShape}`:"do not display"}.
+Outfit: ${state.showOutfit==="表示する"?`${state.top} / ${state.bottom}`:"do not display"}.
+Pose: ${state.showPose==="表示する"?`${state.bodyPosture}, ${state.armsPose}, ${state.legWidth}`:"do not display"}.
+Notes: ${state.showNotes==="表示する"?"display only supplied setting values":"do not display"}.
+If a value is unavailable, display an em dash.`;
+ }
+
+ const conversionProfile=concise?"":`PROMPT CONVERSION PROFILE
+Target model: ${state.targetAI}.
+Garment-language mode: ${state.promptSensitivity}.
+Expression version: ${compiled.expression}.
+All garment terms below describe opaque fabric construction, pattern pieces, seam layout, fit, and coverage for a non-sexual adult costume reference.\n\n`;
+ const modelGuidance=concise?"":`\n\n${aiTune}`;
+ const extraConsistency=detailed?`\nMaintain matching garment seam placement, body-hair boundaries, and limb spacing across all three views.`:"";
+
+ const prompt=`Create one clean, non-sexual adult male character turnaround sheet showing front, side, and back views of the same person.
+
+CHARACTER IDENTITY
+Name: "${state.name||"Unnamed character"}".
+Preserve the exact name string. Do not add kanji, aliases, pronunciation guides, or translated names.
+Age: ${state.age}. Nationality: ${state.nationality}. Height: ${state.height}. Weight: ${state.weight}. Body type: ${state.bodyBuild}.
+
+FACE
+Overall impression: ${state.facePreset}.
+Face shape: ${state.faceShape}. Forehead: ${state.forehead}. Cheekbones: ${state.cheekbones}. Jawline: ${state.jaw}.
+Eyelids: ${state.eyelid}. Eye shape: ${state.eyeShape}. Eye size: ${state.eyeSize}. Outer eye corners: ${state.eyeCorner}.
+Eyebrows: ${state.brow}. Nose bridge: ${state.nose}. Nose tip: ${state.noseTip}. Lips: ${state.lips}. Ears: ${state.ears}.
+Expression: ${state.expression}.
+
+HAIR AND SKIN
+Hair color: ${state.hairColor}. Hair length: ${state.hairLength}. Hairstyle: ${state.hairStyle}.
+Bangs: ${state.bangs}. Sideburns: ${state.sideburns}. Nape: ${state.nape}. Hair volume: ${state.hairVolume}. Hair texture: ${state.hairTexture}.
+Skin tone: ${state.skinTone}. Skin texture: ${state.skinTexture}. Apparent age: ${state.ageLook}.
+Wrinkles: ${state.wrinkles}. Spots or freckles: ${state.spots}. Facial hair: ${state.beard}.
+
+BODY PROPORTIONS
+Head-to-body ratio: ${state.headRatio}. Leg length: ${state.inseam}. Foot size: ${state.shoeSize}.
+Chest circumference: ${state.chestCirc}. Waist circumference: ${state.waistCirc}.
+Neck: ${state.neck}. Shoulder width: ${state.shoulder}. Chest: ${state.chest}. Abdomen: ${state.abdomen}.
+Waist: ${state.waist}. Hips and gluteal build: ${state.hip}. Arms: ${state.arms}. Hands: ${state.hands}.
+Thighs: ${state.thighs}. Calves: ${state.calves}. Overall legs: ${state.legs}.
+
+VISIBLE BODY HAIR
+${visibleHairLines.join("\n")}
+Keep body hair realistic and consistent across all views. Do not expose or emphasize intimate anatomy.
+
+${conversionProfile}${costumeLines.join("\n")}
+
+POSE AND COMPOSITION
+Output type: ${state.outputType}.
+Body posture: ${state.bodyPosture}. Arms and hands: ${state.armsPose}. Leg stance width: ${state.legWidth}. Fore-aft leg placement: ${state.legOffset}. Foot direction: ${state.footDirection}. Gaze: ${state.gaze}.
+Framing rule: ${state.framingSafety}. Safety margin: ${state.framingMargin}. ${framingEnglish()}
+Background: ${state.background}. Lighting: ${state.lighting}. Camera framing: ${state.camera}.
+Visual style: ${state.style}. Quality: ${state.quality}. Aspect ratio: ${effectiveRatio()}.
+
+TURNAROUND CONSISTENCY
+The front, side, and back views must depict the exact same adult character.
+Keep the face, hairstyle, body proportions, visible body-hair pattern, body-hair density, garment construction, garment color, pose logic, and scale strictly consistent. Preserve the selected armpit-hair area, length, texture and growth direction; Treasure Trail width, density, continuity and connection; lower-abdomen horizontal and downward coverage; boundary softness; and leg-hair length, texture and regional density across all applicable views.
+Maintain the same athletic masculine facial structure in all views, with identical forehead slope, brow line, eyelid type, eye angle, nose bridge and tip, lips, jawline, chin, ears, hairstyle silhouette, and apparent age. Keep lean facial features, calm focused eyes, and natural proportions.${extraConsistency}
+
+${infoSection}${modelGuidance}
+
+ADDITIONAL REQUESTS
+${state.extra||"None."}
+
+LOCKED ELEMENTS
+${state.locked||"None."}
+
+AVOID
+${state.negative||"extra limbs, malformed hands, inconsistent face, inconsistent body shape, inconsistent garment geometry, unreadable text, logos, watermarks"}`;
+
+ $("output").value=prompt.replace(/\n{3,}/g,"\n\n").trim();
+ if($("jpSummary"))$("jpSummary").textContent=japaneseSummary();
+ if($("transformSummary"))$("transformSummary").textContent=transformationSummary();
+ if($("promptStatus"))$("promptStatus").textContent=state.safeRetryLevel==="安全表現"?"✓ 安全表現で再生成済み":"通常表現"; applyConditionalUI();
+}
+function safeGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
+function safeSet(k,v){try{localStorage.setItem(k,v);return true}catch(e){return false}}
+function getLibrary(){try{return JSON.parse(safeGet(STORAGE_LIBRARY)||"[]")}catch(e){return []}}
+function setLibrary(x){safeSet(STORAGE_LIBRARY,JSON.stringify(x))}
+function collectAll(){savePageToState();state.settingLevel=$("settingLevel").value;state.changeMode=$("changeMode").value;state.projectStatus=$("projectStatus").value;return JSON.parse(JSON.stringify(state))}
+function applyAll(o){
+ if(o&&o.color&&!o.topColor&&!o.bottomColor){o.topColor=o.color;o.bottomColor=o.color}
+ const rename={
+  "上半身裸":"上半身裸","白い無地Tシャツ":"Tシャツ(無地)","黒い無地Tシャツ":"Tシャツ(無地)",
+  "ボクサーブリーフ":"ボクサーパンツ(ローライズ)","競泳ビキニ":"競泳パンツ(ビキニ)",
+  "ローライズビキニ":"ビキニ(ローライズ)","ハイレグビキニ":"ビキニ(ハイレグ)",
+  "ビキニ":"ビキニ(スタンダード)","スポーツビキニ":"ビキニ(スポーツ)",
+  "越中褌（えっちゅうふんどし）":"ふんどし(越中)","六尺褌（ろくしゃくふんどし）":"ふんどし(六尺)",
+  "もっこ褌（もっこふんどし）":"ふんどし(もっこ)","黒猫褌（くろねこふんどし）":"ふんどし(黒猫)",
+  "割褌（わりふんどし）":"ふんどし(割)"
+ };
+ if(o&&rename[o.top])o.top=rename[o.top];
+ if(o&&rename[o.bottom])o.bottom=rename[o.bottom];
+ if(o&&o.referenceMode==="通常衣装")o.referenceMode="衣装デザイン資料";
+ if(o&&o.referenceMode==="人体資料用 Nude Reference")o.referenceMode="人体・衣装構造資料";
+ if(o&&o.outputLanguage==="日本語")o.outputLanguage="英語のみ";
+ if(o&&o.lowerHairSpread==="標準")o.lowerHairSpread="陰毛周辺にまとまる";
+ if(o&&!o.lowerHairStart)o.lowerHairStart="腰骨ラインから広がる";
+ if(o&&o.lowerHairStart==="腰骨ライン付近から")o.lowerHairStart="へそから腰骨まではほぼ無し・腰骨ラインから濃くなる";
+ if(o&&!o.armpitStrandCount)o.armpitStrandCount="高い";
+ if(o&&!o.armpitParting)o.armpitParting="自然な分け目あり";
+ if(o&&!o.armpitTipVariation)o.armpitTipVariation="毛先に自然なばらつき";
+ if(o&&!o.armpitGapPattern)o.armpitGapPattern="小さな隙間あり";
+ if(o&&!o.trailUpperLimit)o.trailUpperLimit="へその下縁で厳密に止める";
+ if(o&&!o.trailStyle)o.trailStyle="濃い一本線";
+ if(o&&!o.trailSurroundingHair)o.trailSurroundingHair="周囲はごく薄い";
+ if(o&&!o.trailTransitionZone)o.trailTransitionZone="短く自然に移行";
+ if(o&&!o.lowerHairShape)o.lowerHairShape="横長の自然分布";
+ if(o&&!o.armpitArea)o.armpitArea=["濃い","かなり濃い"].includes(o.armpit)?"広い":"標準";
+ if(o&&!o.armpitLength)o.armpitLength="標準";
+ if(o&&!o.armpitTexture)o.armpitTexture=["濃い","かなり濃い"].includes(o.armpit)?"自然な毛束感":"自然な一本毛";
+ if(o&&!o.armpitDirection)o.armpitDirection="自然な放射状";
+ if(o&&!o.legHairLength)o.legHairLength="標準";
+ if(o&&!o.legHairTexture)o.legHairTexture="自然な一本毛";
+ if(o&&!o.trailBridgeContinuity)o.trailBridgeContinuity=o.trailBridgeWidth==="毛なし"?"適用なし":"途切れず連続";
+ if(o&&!o.trailBridgeEnd)o.trailBridgeEnd=o.trailBridgeWidth==="毛なし"?"接続しない":"腰骨ラインで自然に広がる";
+ if(o&&!o.lowerHairHorizontal){
+  const a=o.lowerHairArea||"";
+  o.lowerHairHorizontal=a.includes("左右腰骨間")?"左右腰骨間いっぱい":a.includes("骨盤")?"左右腰骨間の内側":a.includes("中央")||a.includes("陰毛")?"中央だけ":"やや広い";
+ }
+ if(o&&!o.lowerHairVertical){
+  const a=o.lowerHairArea||"";
+  o.lowerHairVertical=a.includes("内もも")?(a.includes("広く")?"鼠径部・内もも上部まで広く":"鼠径部・内もも上部まで"):a.includes("鼠径部")?"鼠径部まで":a.includes("陰毛")?"衣装周辺まで":"下腹部のみ";
+ }
+ if(o&&!o.lowerHairBoundary)o.lowerHairBoundary=(o.lowerHairFlow||"").includes("境目なく")?"境目なく連続":"周囲へ自然にぼかす";
+ if(o&&!o.trailBridgeWidth){
+  const t=o.trailBelow||"";
+  o.trailBridgeWidth=t.includes("幅広")?"幅広":t.includes("なし")?"毛なし":t.includes("細")?"細い":"自然な太さ";
+ }
+ if(o&&!o.trailBridgeDensity){
+  const t=o.trailBelow||"";
+  o.trailBridgeDensity=o.trailBridgeWidth==="毛なし"?"適用なし":t.includes("濃い")?"濃い":t.includes("薄")||t.includes("ごく薄")?"薄い":"自然";
+ }
+ if(o&&o.lowerHairStart==="へそ直下から徐々に濃くなる")o.lowerHairStart="へそ直下から徐々に広がる";
+ if(o&&o.lowerHairStart==="へそと腰骨の中間から濃くなる")o.lowerHairStart="へそと腰骨の中間から広がる";
+ if(o&&o.lowerHairStart==="へそから腰骨まではほぼ無し・腰骨ラインから濃くなる")o.lowerHairStart="腰骨ラインから広がる";
+ if(o&&o.lowerHairStart==="腰骨ラインより下から濃くなる")o.lowerHairStart="腰骨ラインより下から広がる";
+ if(o&&o.lowerHairArea==="左右の腰骨間から内もも上部へ広く")o.lowerHairArea="左右腰骨間の下腹部・鼠径部・内もも上部へ広く";
+ if(o&&o.lowerHairArea==="骨盤側の下腹部・鼠径部・内もも上部")o.lowerHairArea="左右腰骨間の下腹部・鼠径部・内もも上部";
+ if(o&&["部位ごとに分かれる","下へ向かって徐々に濃くなる","一部だけ自然につながる","全体が自然につながる"].includes(o.lowerHairFlow))o.lowerHairFlow="中央から徐々に左右へ広がる";
+ if(o&&!o.lowerThighHair)o.lowerThighHair=o.thighHair||"やや濃い";
+ if(o&&!o.calfHair)o.calfHair=o.shinHair||"濃い";
+ if(o&&!o.legHairDistribution)o.legHairDistribution="脚全体に自然";
+ if(o&&!o.kneeHairTransition)o.kneeHairTransition="膝周辺も自然につながる";
+ if(o&&!o.framingPriority)o.framingPriority="全身と余白を最優先";
+ if(o&&!o.edgeClearance)o.edgeClearance="かなり広い";
+ if(o&&!o.lowerHairArea)o.lowerHairArea=o.lowerHairSpread&&o.lowerHairSpread.includes("内もも")?"骨盤側の下腹部・鼠径部・内もも上部":o.lowerHairSpread&&o.lowerHairSpread.includes("鼠径部")?"骨盤側の下腹部・鼠径部まで":"陰毛周辺のみ";
+ if(o&&!o.lowerHairFlow)o.lowerHairFlow=o.lowerHairConnection==="境目なく連続して広がる"?"境目なく自然に連続":o.lowerHairConnection||"全体が自然につながる";
+ if(o&&!o.bodyPosture)o.bodyPosture=o.pose||"自然な直立";
+ if(o&&!o.legWidth)o.legWidth=o.legsPose||"肩幅程度に開く";
+ if(o&&!o.legOffset)o.legOffset="左右を揃える";
+ if(o&&!o.footDirection)o.footDirection="自然な外向き";
+ if(o&&!o.lowerHairConnection)o.lowerHairConnection="全体が自然につながる";
+ if(o&&!o.promptSensitivity)o.promptSensitivity="バランス";
+ if(o&&!o.safeRetryLevel)o.safeRetryLevel="通常";
+ if(o&&!o.promptDetail)o.promptDetail="標準（バランス）";
+ if(o&&!o.autoCompile)o.autoCompile="自動（推奨）";
+ if(o&&o.bottom==="ボクサーパンツ(ローライズ)"&&!o.bottomRise)o.bottomRise="ローライズ：腰骨・骨盤付近";
+ Object.assign(state,o||{});$("settingLevel").value=state.settingLevel||"easy";$("changeMode").value=state.changeMode||"confirm";$("projectStatus").value=state.projectStatus||"作成途中";render()}
+function saveDraft(){ if(currentStep===10)generatePrompt();
+ const data={id:Date.now(),savedAt:new Date().toISOString(),version:"2.0-beta20.1",currentStep,data:collectAll()};
+ safeSet(STORAGE_CURRENT,JSON.stringify(data));
+ const lib=getLibrary();const idx=lib.findIndex(x=>x.data&&x.data.name===data.data.name&&x.data.projectStatus===data.data.projectStatus);
+ if(idx>=0){data.id=lib[idx].id;lib[idx]=data}else lib.unshift(data);setLibrary(lib.slice(0,50));
+ $("displayStatus").textContent="Chrome内に保存済み："+new Date().toLocaleString("ja-JP");showToast("下書きを保存しました。");
+}
+function loadCurrent(){const raw=safeGet(STORAGE_CURRENT);if(!raw)return;try{const d=JSON.parse(raw);currentStep=d.currentStep||1;applyAll(d.data);$("displayStatus").textContent="保存済みデータを再開"}catch(e){}}
+function newProject(){
+ if(!confirm("新しいキャラクターを作成しますか？\n現在の未保存入力は消去されますが、ライブラリは残ります。"))return;
+ try{localStorage.removeItem(STORAGE_CURRENT)}catch(e){}
+ Object.keys(state).forEach(k=>delete state[k]);Object.assign(state,JSON.parse(JSON.stringify(initial)));
+ currentStep=1;$("settingLevel").value="easy";$("changeMode").value="confirm";$("projectStatus").value="作成途中";
+ $("displayStatus").textContent="未保存・新規作成";render();window.scrollTo({top:0,behavior:"smooth"});showToast("新規作成に切り替えました。");
+}
+function exportJSON(){ if(currentStep===10)generatePrompt();
+ const data={app:"Character Fullbody Maker — Tatsuya Edition",version:"2.0-beta20.1",exportedAt:new Date().toISOString(),currentStep,data:collectAll()};
+ const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=url;a.download=(state.name.trim()||"character")+"_beta20_1.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+function importJSON(file){const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);currentStep=d.currentStep||1;applyAll(d.data||d);showToast("JSONを読み込みました。")}catch(e){alert("JSONを読み込めませんでした。")}};r.readAsText(file)}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
+function renderLibrary(){
+ const list=getLibrary(),root=$("libraryList");
+ if(!list.length){root.innerHTML='<div class="note">保存されたキャラクターはありません。</div>';return}
+ root.innerHTML=list.map(x=>`<div class="item"><div><div class="itemname">${escapeHtml(x.data.name||"名称未設定")}</div><div class="meta">${escapeHtml(x.data.projectStatus||"作成途中")}・${new Date(x.savedAt).toLocaleString("ja-JP")}</div></div><div><button data-load="${x.id}">読込</button> <button class="danger" data-delete="${x.id}">削除</button></div></div>`).join("");
+ root.querySelectorAll("[data-load]").forEach(b=>b.addEventListener("click",()=>{const x=getLibrary().find(v=>v.id===Number(b.dataset.load));if(!x)return;currentStep=x.currentStep||1;applyAll(x.data);safeSet(STORAGE_CURRENT,JSON.stringify(x));$("libraryModal").classList.remove("show");$("displayStatus").textContent="ライブラリから読込"}));
+ root.querySelectorAll("[data-delete]").forEach(b=>b.addEventListener("click",()=>{if(!confirm("削除しますか？"))return;setLibrary(getLibrary().filter(x=>x.id!==Number(b.dataset.delete)));renderLibrary()}));
+}
+
+function calcAssist(){
+ const h=parseNumber(state.height,180),w=parseNumber(state.weight,70),age=parseNumber(state.age,18);
+ const hm=h/100,bmi=hm>0?w/(hm*hm):0,assessment=bmiAssessment(bmi),range=suggestedWeightRange();
+ const strength=$("assistStrength")?$("assistStrength").value:(state.assistStrength||"自然");
+ const weightMode=$("assistAdjustWeight")?$("assistAdjustWeight").value:(state.assistAdjustWeight||"提案のみ");
+ const p=state.preset,s={};
+ s.bmiInfo=`BMI ${bmi.toFixed(1)}：${assessment.label}`;
+ s.bmiComment=assessment.text;
+ s.standardWeightGuide=`一般的な目安 ${range.low}〜${range.high}kg、中央値 約${range.mid}kg`;
+ s.shoeSize=(h>=188?"28.0":h>=180?"27.0":h>=170?"26.5":"25.5")+"cm";
+ s.inseam=h>=185?(strength==="しっかり"?"長い":"やや長め"):h<=160?"やや短め":"標準";
+ s.headRatio=h>=185?(strength==="しっかり"?"モデル体型":"やや高い"):"標準";
+ s.chestCirc=(bmi<16?82:bmi<19?86:bmi<22?92:bmi<25?97:bmi<28?102:108)+"cm";
+ s.waistCirc=(bmi<16?62:bmi<19?68:bmi<22?72:bmi<25?78:bmi<28?84:92)+"cm";
+ s.wrinkles=age<30?"なし":age<45?"ごく少ない":age<60?"少ない":"自然";
+ s.spots=age<35?"なし":age<50?"ごく少ない":"少ない";
+
+ let targetBmi=22;
+ if(p==="モデル体型")targetBmi=21;
+ if(p==="細身")targetBmi=19;
+ if(p==="細マッチョ")targetBmi=23;
+ if(p==="水泳選手体型")targetBmi=24;
+ if(p==="ランナー体型")targetBmi=20;
+ if(p==="がっしり体型")targetBmi=27;
+ if(p==="自転車競技者体型")targetBmi=22;
+ const targetWeight=Math.round(targetBmi*hm*hm);
+
+ if(weightMode==="体型に合わせて調整")s.weight=targetWeight+"kg";
+ if(weightMode==="提案のみ")s.weightSuggestion=targetWeight+"kg";
+ if(bmi<16||bmi>=35)s.strongWarning="現在の身長・体重は極端な組み合わせです。意図的な設定か確認してください。";
+ if(["がっしり体型","細マッチョ","水泳選手体型"].includes(p)&&bmi<18.5)s.bodyMismatch="選択した体型に対して体重が低すぎる可能性があります。";
+ if(["細身","モデル体型","ランナー体型"].includes(p)&&bmi>=28)s.bodyMismatch="選択した体型に対して体重が高すぎる可能性があります。";
+
+ if(p==="モデル体型")Object.assign(s,{bodyBuild:"モデル体型",shoulder:strength==="控えめ"?"標準":"やや広め",chest:"標準",abdomen:"平坦",waist:"細い",hip:"引き締まった",arms:"細い",hands:"標準",thighs:"細い",calves:"細い",legs:strength==="しっかり"?"モデル体型の長い脚":"長い"});
+ if(p==="細身")Object.assign(s,{bodyBuild:"細身",shoulder:"標準",chest:"薄い",abdomen:"平坦",waist:"細い",hip:"小さめ",arms:"細い",thighs:"細い",calves:"細い"});
+ if(p==="細マッチョ")Object.assign(s,{bodyBuild:"細マッチョ",shoulder:"やや広め",chest:strength==="控えめ"?"標準":"ほどよく厚い",abdomen:strength==="しっかり"?"明確な腹筋":"薄く腹筋",waist:"細い",hip:"引き締まった",arms:strength==="控えめ"?"引き締まった":"筋肉質",thighs:"引き締まった",calves:"引き締まった"});
+ if(p==="水泳選手体型")Object.assign(s,{bodyBuild:"水泳選手体型",shoulder:strength==="控えめ"?"やや広め":"水泳選手のように広い",neck:"やや太め",chest:strength==="しっかり"?"筋肉質":"ほどよく厚い",abdomen:"薄く腹筋",waist:"やや細い",arms:strength==="控えめ"?"引き締まった":"筋肉質",thighs:"引き締まった",calves:"引き締まった",legs:"やや長め"});
+ if(p==="ランナー体型")Object.assign(s,{bodyBuild:"ランナー体型",shoulder:"標準",chest:"標準",abdomen:"軽く引き締まる",waist:"細い",arms:"細い",thighs:"引き締まった",calves:"引き締まった",legs:"やや長め"});
+ if(p==="がっしり体型")Object.assign(s,{bodyBuild:"がっしり",shoulder:strength==="控えめ"?"やや広め":"広い",neck:"やや太め",chest:strength==="しっかり"?"厚い":"ほどよく厚い",abdomen:"自然",waist:"標準",hip:"筋肉質",arms:strength==="控えめ"?"筋肉質":"太い",hands:"大きめ",thighs:strength==="控えめ"?"筋肉質":"太い",calves:"筋肉質"});
+ if(p==="自転車競技者体型")Object.assign(s,{bodyBuild:"引き締まった",shoulder:"標準",chest:"標準",abdomen:"軽く引き締まる",waist:"やや細い",arms:"細い",thighs:strength==="控えめ"?"引き締まった":"筋肉質",calves:strength==="しっかり"?"筋肉質":"引き締まった",legs:"やや長め"});
+ return s;
+}
+function showAssist(){
+ savePageToState();
+ $("assistStrength").value=state.assistStrength||"自然";
+ $("assistAdjustWeight").value=state.assistAdjustWeight||"提案のみ";
+ $("assistLockNonBody").value=state.assistLockNonBody||"固定する";
+ const refresh=()=>{
+   const s=calcAssist();
+   $("assistSummary").innerHTML=Object.entries(s).map(([k,v])=>{const label=k==="weightSuggestion"?"推奨体重":k;const before=k==="weightSuggestion"?state.weight:(state[k]||"未設定");return `<div class="assist-item"><b>${label}</b>${before} → ${v}</div>`;}).join("");
+   $("assistApply").onclick=()=>{
+     state.assistStrength=$("assistStrength").value;state.assistAdjustWeight=$("assistAdjustWeight").value;state.assistLockNonBody=$("assistLockNonBody").value;
+     const result=calcAssist();["weightSuggestion","bmiInfo","bmiComment","standardWeightGuide","strongWarning","bodyMismatch"].forEach(k=>delete result[k]);
+     if($("changeMode").value==="only"){showToast("変更方式が『指定箇所だけ』のため、AIアシストは適用しませんでした。");$("assistModal").classList.remove("show");return;}
+     Object.assign(state,result);$("assistModal").classList.remove("show");render();showToast("AIアシストの提案を適用しました。体型以外は固定しています。");
+   };
+ };
+ ["assistStrength","assistAdjustWeight","assistLockNonBody"].forEach(id=>$(id).onchange=refresh);refresh();$("assistModal").classList.add("show");
+}
+
+
+function runConsistencyCheck(){
+ savePageToState();
+ const issues=[];
+ const h=parseNumber(state.height,0),w=parseNumber(state.weight,0),bmi=bodyMassIndex(),assessment=bmiAssessment(bmi),range=suggestedWeightRange();
+ const chest=parseNumber(state.chestCirc,0),waist=parseNumber(state.waistCirc,0);
+
+ if(!h||!w)issues.push({type:"warn",text:"身長または体重を読み取れません。"});
+ else if(assessment.level==="critical")issues.push({type:"warn",text:`身長${state.height}・体重${state.weight}はBMI約${bmi.toFixed(1)}で「${assessment.label}」です。意図的な設定か確認してください。一般的な目安は約${range.low}〜${range.high}kgです。`});
+ else if(assessment.level==="warn")issues.push({type:"warn",text:`BMI約${bmi.toFixed(1)}で「${assessment.label}」です。体型設定との整合性を確認してください。`});
+ else issues.push({type:"ok",text:`身長と体重：BMI約${bmi.toFixed(1)}で標準的な範囲です。`});
+ if(["がっしり体型","細マッチョ","水泳選手体型"].includes(state.preset)&&bmi<18.5)issues.push({type:"warn",text:"選択した体型に対して体重が低く、見た目との整合性が取りにくい可能性があります。"});
+ if(["細身","モデル体型","ランナー体型"].includes(state.preset)&&bmi>=28)issues.push({type:"warn",text:"選択した体型に対して体重が高く、見た目との整合性が取りにくい可能性があります。"});
+
+ if(chest&&waist&&chest-waist>35)issues.push({type:"warn",text:"胸囲とウエストの差がかなり大きく、体型が極端に見える可能性があります。"});
+ if(state.trailChestLink.includes("つながる")&&state.chestHair==="なし")issues.push({type:"warn",text:"Treasure Trailが胸毛へつながる設定ですが、胸毛は「なし」です。"});
+ if(state.trailBridgeWidth==="毛なし"&&state.trailBridgeDensity!=="適用なし")issues.push({type:"warn",text:"ヘソから主分布までの毛は「毛なし」ですが、濃さが設定されています。プロンプトでは毛なしを優先します。"});
+ if(state.trailBridgeWidth==="毛なし"&&state.trailBridgeContinuity!=="適用なし")issues.push({type:"warn",text:"Treasure Trailは「毛なし」ですが、連続性が設定されています。プロンプトでは毛なしを優先します。"});
+ if(state.trailBridgeWidth==="毛なし"&&state.trailBridgeEnd!=="接続しない")issues.push({type:"warn",text:"Treasure Trailは「毛なし」ですが、主分布への接続方法が設定されています。"});
+ if(state.armpit==="なし"&&state.armpitArea!=="標準")issues.push({type:"warn",text:"ワキ毛は「なし」ですが、面積が設定されています。"});
+ if(state.armpit==="なし"&&state.armpitParting!=="分け目なし")issues.push({type:"warn",text:"ワキ毛は「なし」ですが、分け目が設定されています。"});
+ if(state.armpit==="なし"&&state.armpitStrandCount!=="低い")issues.push({type:"warn",text:"ワキ毛は「なし」ですが、総毛量が設定されています。"});
+ if(state.trailStyle==="細い一本線＋周囲は無毛"&&state.trailSurroundingHair!=="周囲は無毛")issues.push({type:"info",text:"Treasure Trailスタイルは「周囲は無毛」ですが、周囲毛の個別設定が異なります。個別設定を優先してプロンプト化します。"});
+ if(state.trailStyle==="細い一本線＋周囲はごく薄い"&&!["周囲はごく薄い","周囲は薄い"].includes(state.trailSurroundingHair))issues.push({type:"info",text:"Treasure Trailスタイルと周囲毛の濃さが異なります。個別設定を優先します。"});
+ if(state.lowerHairHorizontal==="左右腰骨間いっぱい"&&state.lowerHairVertical==="鼠径部・内もも上部まで広く"&&["ごく薄い","薄い"].includes(state.lowerHairDensity))issues.push({type:"info",text:"分布範囲は最大ですが、密度は薄めです。広範囲に薄く生える表現になります。"});
+ if(state.trailBridgeWidth!=="毛なし"&&state.trailBridgeDensity==="適用なし")issues.push({type:"warn",text:"ヘソから主分布までの毛に太さがありますが、濃さが「適用なし」です。自然な濃さへの変更をおすすめします。"});
+ if(state.lowerHairArea.includes("内もも")&&state.innerThighHair==="なし")issues.push({type:"warn",text:"体毛の広がりは内もも上部までですが、内ももの毛は「なし」です。"});
+ if(state.lowerHairArea.includes("鼠径部")&&state.groinHair==="なし")issues.push({type:"warn",text:"体毛の広がりは鼠径部までですが、鼠径部の毛は「なし」です。"});
+ if(["濃い","非常に濃い"].includes(state.thighHair)&&["なし","ごく薄い"].includes(state.lowerThighHair))issues.push({type:"warn",text:"太もも上部は濃い設定ですが、太もも下部が非常に薄く、脚毛の連続性が弱くなる可能性があります。"});
+ if(["濃い","非常に濃い"].includes(state.shinHair)&&["なし","ごく薄い"].includes(state.calfHair))issues.push({type:"warn",text:"すね毛は濃い設定ですが、ふくらはぎが非常に薄く、正面と背面で密度差が大きくなる可能性があります。"});
+ if(state.armsPose==="両手を頭の後ろで組む"&&state.framingSafety==="見切れ防止を使用しない")issues.push({type:"warn",text:"両手を頭の後ろで組むポーズは横幅が広がるため、見切れ防止を推奨します。"});
+ if(state.infoDisplay!=="表示しない"&&state.background==="透明")issues.push({type:"warn",text:"透明背景では、情報表示欄が不安定になる可能性があります。"});
+ if(state.bottom==="ビキニ(ローライズ)"&&state.bottomRise.startsWith("ハイライズ"))issues.push({type:"warn",text:"ビキニ（ローライズ）にハイライズの股上が指定されています。"});
+ if(state.bottom==="ビキニ(ハイレグ)"&&state.bottomLegOpening==="低い")issues.push({type:"warn",text:"ビキニ（ハイレグ）に低い脚ぐりが指定されています。"});
+ if(state.bottom==="ボクサーパンツ(ローライズ)"&&!["自動","ローライズ：腰骨・骨盤付近"].includes(state.bottomRise))issues.push({type:"warn",text:"ボクサーパンツ（ローライズ）ですが、股上がローライズに設定されていません。"});
+ if(state.top==="タンクトップ(インナー)"&&["クロップド丈","短め"].includes(state.topLength))issues.push({type:"warn",text:"タンクトップ（インナー）の丈が短いため、腹部が露出する可能性があります。"});
+ if(state.bottomCoverage==="Tバック状"&&state.bottomBackShape==="全面")issues.push({type:"warn",text:"臀部の覆いは「Tバック状」ですが、背面形状は「全面」です。どちらを優先するか確認してください。"});
+ if(state.bottomBackShape==="Tバック"&&state.bottomCoverage==="全面を覆う")issues.push({type:"warn",text:"背面形状は「Tバック」ですが、臀部の覆いは「全面を覆う」です。設定が矛盾しています。"});
+ if(state.bottomFrontShape==="しっかり立体"&&state.bottomMaterial==="薄手布")issues.push({type:"warn",text:"立体的な前面形状に薄手布を組み合わせています。形状を安定させる場合は伸縮素材または厚みのある素材が適しています。"});
+ if(["ふんどし(六尺)","ふんどし(黒猫)","締込み"].includes(state.bottom)&&state.bottomMaterial==="競泳水着素材")issues.push({type:"warn",text:"伝統的な巻き布衣装に競泳水着素材が指定されています。意図的な組み合わせか確認してください。"});
+ if(!issues.length)issues.push({type:"ok",text:"大きな矛盾は見つかりませんでした。"});
+
+ $("checkList").innerHTML=issues.map(x=>`<div class="checkitem ${x.type}">${x.text}</div>`).join("");
+ $("checkModal").classList.add("show");
+}
+
+function bindGlobal(){
+ $("settingLevel").addEventListener("change",()=>{state.settingLevel=$("settingLevel").value;render()});
+ $("changeMode").addEventListener("change",()=>state.changeMode=$("changeMode").value);
+ $("projectStatus").addEventListener("change",()=>state.projectStatus=$("projectStatus").value);
+ $("newBtn").addEventListener("click",newProject);$("saveBtn").addEventListener("click",saveDraft);$("assistBtn").addEventListener("click",showAssist);$("assistClose").addEventListener("click",()=>$("assistModal").classList.remove("show"));$("checkBtn").addEventListener("click",runConsistencyCheck);$("checkClose").addEventListener("click",()=>$("checkModal").classList.remove("show"));
+ $("libraryBtn").addEventListener("click",()=>{renderLibrary();$("libraryModal").classList.add("show")});
+ $("libraryClose").addEventListener("click",()=>$("libraryModal").classList.remove("show"));
+ $("jsonExportBtn").addEventListener("click",exportJSON);
+ $("jsonFile").addEventListener("change",e=>{if(e.target.files[0])importJSON(e.target.files[0]);e.target.value=""});
+}
+bindGlobal();loadCurrent();render();
+</script>
+</body>
+</html>
