@@ -50,6 +50,7 @@ body.level-detail .standard,body.level-detail .detail{display:block}
 <body class="level-easy">
 
 <!-- Beta20.3 Preview DEVELOPMENT NOTE
+Step 9: Background, lighting, floor, cast-shadow, information-display controls, prompt conversion, and validation completed.
 Step 8: Pose structure, camera controls, composition consistency, prompt conversion, and validation completed.
 Step 7: Outfit UI, garment structure controls, prompt conversion, omission rules, and validation verified.
 Step 6: Body Hair redesign completed through Step 6D-3.
@@ -64,7 +65,7 @@ Leg Hair: Density / Length / Texture / Distance Visibility independent.
 
 <header><div class="wrap">
 <h1>Character Fullbody Maker — Tatsuya Edition Ver.2.0</h1>
-<div class="sub">開発版 Beta 20.3 Preview：Step 8 ポーズ・カメラ 完了</div>
+<div class="sub">開発版 Beta 20.3 Preview：Step 9 背景・照明・情報表示 完了</div>
 </div></header>
 
 <main>
@@ -142,7 +143,7 @@ const state={
  top:"上半身裸",topArmhole:"標準",bottom:"競泳パンツ(ビキニ)",topColor:"白",bottomColor:"水色",topFit:"ジャストフィット",topLength:"腰骨まで",topHem:"直線カット",bottomRise:"自動",bottomLegOpening:"自動",bottomSideWidth:"自動",bottomCoverage:"自動",bottomFrontShape:"自動",bottomBackShape:"自動",bottomMaterial:"自動",shoes:"裸足",accessory:"なし",
  outputType:"正面・側面・背面の三面図",basePose:"自然な直立",armPosition:"両腕を上げる",handPosition:"頭の後ろで組む",headDirection:"正面",weightBalance:"左右均等",bodyPosture:"自然な直立",armsPose:"両手を頭の後ろで組む",legWidth:"肩幅程度に開く",legOffset:"左右を揃える",footDirection:"自然な外向き",framingMargin:"広め",gaze:"自然",
  cameraAngle:"目線の高さ",cameraDistance:"余白を含む全身",focalLength:"標準（50mm相当）",cameraPerspective:"正投影に近い",subjectScale:"三面とも同一",viewSpacing:"等間隔",
- background:"グレー",lighting:"柔らかなスタジオ照明",camera:"余白を含む全身",style:"フォトリアル",quality:"細部まで鮮明",ratio:"自動（構図優先）",
+ background:"グレー",backgroundType:"無地スタジオ",backgroundColor:"グレー",floorTreatment:"床面を自然に表示",castShadow:"薄い接地影",lighting:"柔らかなスタジオ照明",lightDirection:"正面斜め上",lightIntensity:"標準",shadowSoftness:"柔らかい",camera:"余白を含む全身",style:"フォトリアル",quality:"細部まで鮮明",ratio:"自動（構図優先）",
  extra:"",locked:"",negative:"余分な手足、不自然な手指、人物重複、顔の不一致、体型の不一致、衣装の左右差、文字化け、ロゴ、透かし",
  assistStrength:"自然",assistAdjustWeight:"提案のみ",assistLockNonBody:"固定する", trailBelow:"ヘソ下・細く自然",trailBridgeWidth:"細い",trailBridgeDensity:"濃い",trailBridgeContinuity:"途切れず連続",trailBridgeEnd:"腰骨ラインで主分布へ接続",trailStyle:"濃い一本線",trailUpperLimit:"へその下縁で厳密に止める",trailSurroundingHair:"周囲はごく薄い",trailTransitionZone:"短く自然に移行",trailAroundNavel:"ヘソを通過",trailAbove:"なし",trailChestLink:"胸毛とはつながらない", pubicDensity:"自然",groinHair:"自然",innerThighHair:"薄い",hairContinuity:"自然につながる",lowerHairSpread:"陰毛周辺にまとまる",lowerHairDensity:"自然",lowerHairConnection:"全体が自然につながる",lowerHairStart:"腰骨ラインから広がる",lowerHairArea:"左右腰骨間の下腹部・鼠径部・内もも上部へ広く",lowerHairHorizontal:"左右腰骨間いっぱい",lowerHairVertical:"鼠径部・内もも上部まで広く",lowerHairBoundary:"周囲へ自然にぼかす",lowerHairFlow:"境目なく自然に連続",lowerHairShape:"横長の自然分布", framingSafety:"自動で見切れ防止",framingPriority:"全身と余白を最優先",edgeClearance:"かなり広い",infoDisplay:"表示しない",infoLayout:"シンプル一行",infoPlacement:"上部の白余白",infoLanguage:"日本語",nameDisplayRule:"入力どおり表示",referenceMode:"人体・衣装構造資料",showProject:"表示しない",projectName:"Character Fullbody Maker",showVersion:"表示しない",sheetVersion:"2026.07",showSheetNo:"表示しない",sheetNo:"001",showCreator:"表示しない",creatorName:"Tatsuya",showTraits:"表示しない",showHair:"表示しない",showEyes:"表示しない",showOutfit:"表示しない",showPose:"表示しない",showNotes:"表示しない",targetAI:"ChatGPT画像生成",promptSensitivity:"バランス",safeRetryLevel:"通常",promptDetail:"標準（バランス）",autoCompile:"自動（推奨）",outputLanguage:"英語のみ", settingLevel:"easy",changeMode:"confirm",projectStatus:"作成途中"
 };
@@ -378,13 +379,23 @@ ${field("buttockHair","臀部の毛",["なし","ごく薄い","薄い","普通",
  <div class="wide note"><strong>現在のカメラ構成：</strong>${state.cameraAngle}／${state.cameraDistance}／${state.focalLength}／${state.cameraPerspective}／人物スケール ${state.subjectScale}／間隔 ${state.viewSpacing}</div>
  </div><div class="note"><strong>STEP 8-2 整合性ルール：</strong>Front・Side・Backで同一の基本姿勢とカメラ条件を維持します。三面図では正投影に近い視点、同一人物スケール、等間隔配置を優先し、ポーズや手足が画像端で切れないようにします。</div>${navButtons()}`;
 
- if(currentStep===9)return `<h2 class="section-title">STEP 9　背景・カメラ・情報表示</h2><div class="lead">Character Sheet風・制作資料風は固定レイアウトで、設定値だけを表示します。</div><div class="grid">
- ${field("background","背景",["グレー","白","黒","淡いベージュ","無地スタジオ","屋内スタジオ","シンプルな部屋","屋外","透明"])}
- ${field("lighting","照明",["柔らかなスタジオ照明","均一な照明","自然光","曇天の柔らかな光","ややドラマチック","フラット"])}
- <div class="wide note"><strong>カメラ設定：</strong>Step8で設定します。現在：${state.cameraAngle}／${state.cameraDistance}／${state.focalLength}／${state.cameraPerspective}</div>
+ if(currentStep===9)return `<h2 class="section-title">STEP 9　背景・ライティング・情報表示</h2><div class="lead">背景、接地、光の方向と強さ、設定シート上の情報表示を整理します。カメラ条件はStep8の設定を引き継ぎます。</div><div class="grid">
+ <div class="wide section-subtitle">背景と接地</div>
+ ${field("backgroundType","Background Type／背景タイプ",["無地スタジオ","屋内スタジオ","シンプルな部屋","屋外","透明"],"standard")}
+ ${field("backgroundColor","Background Color／背景色",["グレー","白","黒","淡いベージュ","淡いブルー","自動"],"standard")}
+ ${field("floorTreatment","Floor／床面",["床面を自然に表示","共有グラウンドラインのみ","床面なし","背景と連続","自動"],"detail")}
+ ${field("castShadow","Cast Shadow／接地影",["影なし","ごく薄い接地影","薄い接地影","自然な接地影","明確な接地影"],"detail")}
+ <div class="wide section-subtitle">ライティング</div>
+ ${field("lighting","Lighting Style／照明スタイル",["柔らかなスタジオ照明","均一な照明","自然光","曇天の柔らかな光","ややドラマチック","フラット"],"standard")}
+ ${field("lightDirection","Light Direction／光の方向",["正面斜め上","正面","左斜め上","右斜め上","真上","均一"],"standard")}
+ ${field("lightIntensity","Light Intensity／光の強さ",["弱い","やや弱い","標準","やや強い","強い"],"detail")}
+ ${field("shadowSoftness","Shadow Softness／影の柔らかさ",["影なし","非常に柔らかい","柔らかい","自然","やや硬い"],"detail")}
+ <div class="wide note"><strong>カメラ設定：</strong>Step8の設定を維持します。現在：${state.cameraAngle}／${state.cameraDistance}／${state.focalLength}／${state.cameraPerspective}</div>
+ <div class="wide section-subtitle">画面品質</div>
  ${field("style","画風",["フォトリアル","写実的写真","セミリアル","モデル撮影風","キャラクター設定画","アニメ調","イラスト調"],"standard")}
  ${field("quality","品質",["高解像度","非常に高解像度","細部まで鮮明","自然なディテール","過度なシャープ化なし"],"detail")}
  ${field("ratio","画像比率",["自動（構図優先）","3:4","2:3","4:5","1:1","16:9"],"detail")}
+ <div class="wide section-subtitle">情報表示</div>
  ${field("infoDisplay","身体データ表示",["表示しない","最小表示：名前・年齢・身長・体重","標準表示：最小＋国籍・体型","詳細表示：標準＋胸囲・ウエスト・ヒップ・足サイズ・頭身"],"standard")}
  ${field("infoLayout","情報レイアウト",["シンプル一行","横長・右側データ欄","人物のみ＋データ別シート","横長・下部データ欄","Character Sheet風","制作資料風","縦型プロフィール","表形式"],"standard")}
  ${field("infoPlacement","情報表示位置",["上部の白余白","下部の白余白","左側の情報欄","右側の情報欄"],"detail")}
@@ -400,7 +411,7 @@ ${field("buttockHair","臀部の毛",["なし","ごく薄い","薄い","普通",
  ${field("showCreator","Creator表示",["表示しない","表示する"],"detail")}
  ${inputField("creatorName","Creator名","detail")}
  </div>
- <div class="note">Character Sheet／制作資料では、AIによる要約・推測・特徴文の創作を禁止し、入力済みの設定値だけを表示します。</div>${navButtons()}`;
+ <div class="note"><strong>STEP 9 出力ルール：</strong>背景・床・接地影・照明は全ビューで共通にします。Character Sheet／制作資料では、入力済みの設定値だけを表示し、AIによる要約・推測・特徴文の創作を禁止します。</div>${navButtons()}`;
 
  return `<div id="step10Panel"><h2 class="section-title">STEP 10　完成</h2>
  <div class="lead">画面上の日本語設定を、選択したAIが理解しやすい英語の構造設計表現へ変換します。</div>
@@ -1351,9 +1362,16 @@ Focal Length／焦点距離：${state.focalLength}
 Perspective／遠近感：${state.cameraPerspective}
 人物スケール：${state.subjectScale}
 人物間隔：${state.viewSpacing}
-背景：${state.background}
+背景タイプ：${state.backgroundType}
+背景色：${state.backgroundColor}
+床面：${state.floorTreatment}
+接地影：${state.castShadow}
+照明：${state.lighting}
+光の方向：${state.lightDirection}
+光の強さ：${state.lightIntensity}
+影の柔らかさ：${state.shadowSoftness}
 画風：${state.style}
-情報表示：${state.infoDisplay}／${state.infoLayout}
+情報表示：${state.infoDisplay}／${state.infoLayout}／${state.infoPlacement}
 
 【生成AI】
 ${state.targetAI}`;
@@ -1508,12 +1526,15 @@ Output type: ${state.outputType}.
 Base pose: ${state.basePose}. Arm position: ${state.armPosition}. Hand position: ${state.handPosition}. Head direction: ${state.headDirection}. Weight balance: ${state.weightBalance}. Leg stance width: ${state.legWidth}. Fore-aft leg placement: ${state.legOffset}. Foot direction: ${state.footDirection}. Gaze: ${state.gaze}.
 Framing rule: ${state.framingSafety}. Safety margin: ${state.framingMargin}. ${framingEnglish()}
 Camera angle: ${state.cameraAngle}. Camera distance: ${state.cameraDistance}. Focal length: ${state.focalLength}. Perspective: ${state.cameraPerspective}. Subject scale: ${state.subjectScale}. View spacing: ${state.viewSpacing}.
-Background: ${state.background}. Lighting: ${state.lighting}.
+BACKGROUND AND LIGHTING
+Background type: ${state.backgroundType}. Background color: ${state.backgroundColor}. Floor treatment: ${state.floorTreatment}. Cast shadow: ${state.castShadow}.
+Lighting style: ${state.lighting}. Light direction: ${state.lightDirection}. Light intensity: ${state.lightIntensity}. Shadow softness: ${state.shadowSoftness}.
+Use the same background, floor line, cast-shadow treatment, light direction, light intensity, and shadow softness across every requested view.
 Visual style: ${state.style}. Quality: ${state.quality}. Aspect ratio: ${effectiveRatio()}.
 
 TURNAROUND CONSISTENCY
 The front, side, and back views must depict the exact same adult character.
-Keep the face, hairstyle, body proportions, visible body-hair pattern, body-hair density, garment construction, garment color, pose logic, and scale strictly consistent. Preserve the selected base pose, arm position, hand position, head direction, weight balance, leg stance, and foot placement as one coherent pose across every requested view; interpret left and right from the character’s own perspective. Preserve the selected camera angle, camera distance, focal length, perspective, subject scale, and view spacing across all requested views; for turnaround sheets, prioritize an orthographic-like presentation with matched scale and spacing. Preserve the selected armpit-hair overall density, coverage, rendering, growth flow, and symmetry; chest-hair overall density, coverage, pattern, rendering, and symmetry across the front and side views wherever visible; abdominal-hair overall density, coverage, pattern, rendering, and symmetry across the front and side views wherever visible; Treasure Trail width, density, continuity and connection; lower-abdomen horizontal and downward coverage; boundary softness; and leg-hair length, texture and regional density across all applicable views.
+Keep the face, hairstyle, body proportions, visible body-hair pattern, body-hair density, garment construction, garment color, pose logic, and scale strictly consistent. Preserve the selected base pose, arm position, hand position, head direction, weight balance, leg stance, and foot placement as one coherent pose across every requested view; interpret left and right from the character’s own perspective. Preserve the selected camera angle, camera distance, focal length, perspective, subject scale, and view spacing across all requested views; for turnaround sheets, prioritize an orthographic-like presentation with matched scale and spacing. Preserve the selected background type, background color, floor treatment, cast-shadow treatment, lighting style, light direction, light intensity, and shadow softness across all requested views. Preserve the selected armpit-hair overall density, coverage, rendering, growth flow, and symmetry; chest-hair overall density, coverage, pattern, rendering, and symmetry across the front and side views wherever visible; abdominal-hair overall density, coverage, pattern, rendering, and symmetry across the front and side views wherever visible; Treasure Trail width, density, continuity and connection; lower-abdomen horizontal and downward coverage; boundary softness; and leg-hair length, texture and regional density across all applicable views.
 Maintain the same athletic masculine facial structure in all views, with identical forehead slope, brow line, eyelid type, eye angle, nose bridge and tip, lips, jawline, chin, ears, hairstyle silhouette, and apparent age. Keep lean facial features, calm focused eyes, and natural proportions.${extraConsistency}
 
 ${infoSection}${modelGuidance}
@@ -1801,7 +1822,12 @@ function runConsistencyCheck(){
  if(state.outputType.includes("二面図")&&state.subjectScale==="三面とも同一")issues.push({type:"info",text:"二面図では、人物スケールを「二面とも同一」にすると設定内容が明確になります。"});
  if(["膝上","腰上","胸上"].includes(state.cameraDistance)&&["正面・側面・背面の三面図","正面・側面の二面図"].includes(state.outputType))issues.push({type:"warn",text:"複数面の全身資料に対してカメラ距離が近く、足先まで収まらない可能性があります。"});
  if(state.focalLength==="広角（35mm相当）"&&state.cameraPerspective==="強い遠近感")issues.push({type:"info",text:"広角と強い遠近感の組み合わせは、手足や頭身が誇張される可能性があります。"});
- if(state.infoDisplay!=="表示しない"&&state.background==="透明")issues.push({type:"warn",text:"透明背景では、情報表示欄が不安定になる可能性があります。"});
+ if(state.infoDisplay!=="表示しない"&&state.backgroundType==="透明")issues.push({type:"warn",text:"透明背景では、情報表示欄が不安定になる可能性があります。"});
+ if(state.backgroundType==="透明"&&state.backgroundColor!=="自動")issues.push({type:"info",text:"背景タイプが「透明」のため、背景色は出力上で使用されない可能性があります。"});
+ if(state.floorTreatment==="床面なし"&&state.castShadow!=="影なし")issues.push({type:"warn",text:"床面は「なし」ですが、接地影が指定されています。影なし、または床面ありを推奨します。"});
+ if(state.shadowSoftness==="影なし"&&state.castShadow!=="影なし")issues.push({type:"warn",text:"影の柔らかさは「影なし」ですが、接地影が指定されています。"});
+ if(state.lightDirection==="均一"&&state.lighting==="ややドラマチック")issues.push({type:"info",text:"均一な光方向とドラマチックな照明は意図が異なります。どちらを優先するか確認してください。"});
+ if(state.infoDisplay==="表示しない"&&[state.showProject,state.showVersion,state.showSheetNo,state.showCreator,state.showTraits,state.showHair,state.showEyes,state.showOutfit,state.showPose,state.showNotes].some(v=>v!=="表示しない"))issues.push({type:"info",text:"身体データ表示が「表示しない」のため、個別の情報表示設定も出力されません。"});
  if(state.bottom==="ビキニ(ローライズ)"&&state.bottomRise.startsWith("ハイライズ"))issues.push({type:"warn",text:"ビキニ（ローライズ）にハイライズの股上が指定されています。"});
  if(state.bottom==="ビキニ(ハイレグ)"&&state.bottomLegOpening==="低い")issues.push({type:"warn",text:"ビキニ（ハイレグ）に低い脚ぐりが指定されています。"});
  if(state.bottom==="ボクサーパンツ(ローライズ)"&&!["自動","ローライズ：腰骨・骨盤付近"].includes(state.bottomRise))issues.push({type:"warn",text:"ボクサーパンツ（ローライズ）ですが、股上がローライズに設定されていません。"});
