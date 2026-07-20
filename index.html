@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="application-name" content="Character Fullbody Maker — Tatsuya Edition">
-<meta name="description" content="Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta 20.3 Preview">
+<meta name="description" content="Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta20.3 Phase1 Step1">
 <meta name="theme-color" content="#f4f7fb">
-<title>Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta 20.3 Preview</title>
+<title>Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta20.3 Phase1 Step1</title>
 <style>
 :root{--bg:#f4f7fb;--panel:#fff;--text:#182235;--muted:#718096;--line:#d9e2ef;--accent:#3563e9;--soft:#eef3ff;--danger:#b42318;--safe:#16794f;--safe-bg:#eefbf4}
 *{box-sizing:border-box}
@@ -50,9 +50,10 @@ body.level-detail .standard,body.level-detail .detail{display:block}
 @media(max-width:720px){.controls,.grid{grid-template-columns:1fr}.wide{grid-column:auto}.steps{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
-<body class="level-easy" data-build-step="12" data-build-label="Beta 20.3 Preview Step 12">
+<body class="level-easy" data-build-phase="1" data-build-step="1" data-build-label="Beta20.3 Phase1 Step1">
 
-<!-- Beta20.3 Preview DEVELOPMENT NOTE
+<!-- Beta20.3 Phase1 DEVELOPMENT NOTE
+Phase1 Step1: Phase baseline established from Preview Step12; existing settings, saved data, JSON compatibility, prompt generation, accessibility, and Chrome behavior preserved.
 Step 12: Release-candidate hardening, progress accessibility, current-step semantics, modal keyboard dismissal, backdrop dismissal, and final regression verification completed.
 Step 11: Final integration, Chrome-oriented metadata, accessibility attributes, build labeling, and release-readiness verification completed.
 Step 10: Final prompt assembly, diagnostics, Japanese summary, AI-specific conversion, safe-expression retry, copy workflow, and final validation completed.
@@ -71,7 +72,7 @@ Leg Hair: Density / Length / Texture / Distance Visibility independent.
 
 <header><div class="wrap">
 <h1>Character Fullbody Maker — Tatsuya Edition Ver.2.0</h1>
-<div class="sub">開発版 Beta 20.3 Preview：Step 12 リリース候補・最終検証 完了</div>
+<div class="sub">開発版 Beta20.3 Phase1：Step1 基盤移行・既存設定互換 完了</div>
 </div></header>
 
 <main>
@@ -136,8 +137,10 @@ Leg Hair: Density / Length / Texture / Distance Visibility independent.
 "use strict";
 const STORAGE_CURRENT="cfm_beta20_3_preview_current";
 const STORAGE_LIBRARY="cfm_beta20_3_preview_library";
-const APP_BUILD_STEP=12;
-const APP_BUILD_LABEL="Beta 20.3 Preview Step 12";
+const STORAGE_COMPATIBILITY="Preview Step12 storage keys retained";
+const APP_BUILD_PHASE=1;
+const APP_BUILD_STEP=1;
+const APP_BUILD_LABEL="Beta20.3 Phase1 Step1";
 let currentStep=1;
 let toastTimer=null;
 
