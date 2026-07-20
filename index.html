@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="application-name" content="Character Fullbody Maker — Tatsuya Edition">
-<meta name="description" content="Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta20.3 Phase1 Step3">
+<meta name="description" content="Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta20.3 Phase1 Step4">
 <meta name="theme-color" content="#f4f7fb">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta20.3 Phase1 Step3</title>
+<title>Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta20.3 Phase1 Step4</title>
 <style>
 :root{--bg:#f4f7fb;--panel:#fff;--text:#182235;--muted:#718096;--line:#d9e2ef;--accent:#3563e9;--soft:#eef3ff;--danger:#b42318;--safe:#16794f;--safe-bg:#eefbf4}
 *{box-sizing:border-box}
@@ -17,7 +17,7 @@ body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,B
 button,input,select,textarea{font:inherit}
 header{background:#fff;border-bottom:1px solid var(--line);padding:18px 16px}
 .wrap,main{max-width:980px;margin:auto}
-h1{margin:0;font-size:22px;line-height:1.3}.sub{margin-top:6px;color:var(--muted);font-size:13px}.build-badge{display:inline-block;margin-top:10px;padding:5px 9px;border:1px solid var(--line);border-radius:999px;background:var(--soft);color:var(--accent);font-size:11px;font-weight:900;letter-spacing:.02em}.build-info{display:grid;gap:8px;margin-top:12px}.build-row{display:grid;grid-template-columns:130px 1fr;gap:10px;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:#fff}.build-key{font-weight:900}.build-value{overflow-wrap:anywhere}.update-help{font-size:12px;color:var(--muted);line-height:1.6;margin-top:10px}
+h1{margin:0;font-size:22px;line-height:1.3}.sub{margin-top:6px;color:var(--muted);font-size:13px}.build-badge{display:inline-block;margin-top:10px;padding:5px 9px;border:1px solid var(--line);border-radius:999px;background:var(--soft);color:var(--accent);font-size:11px;font-weight:900;letter-spacing:.02em}.build-info{display:grid;gap:8px;margin-top:12px}.build-row{display:grid;grid-template-columns:130px 1fr;gap:10px;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:#fff}.build-key{font-weight:900}.build-value{overflow-wrap:anywhere}.update-help{font-size:12px;color:var(--muted);line-height:1.6;margin-top:10px}.verify-box{margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:12px;background:#fff;line-height:1.55;font-size:13px}.verify-box.ok{border-color:#12b76a;background:#f0fff7;color:#11633f}.verify-box.warn{border-color:#f0b429;background:#fffaf0;color:#7a4b00}.verify-box.error{border-color:#f97066;background:#fff3f2;color:#912018}.verify-title{font-weight:900;margin-bottom:4px}
 main{padding:16px}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 4px 18px rgba(15,23,42,.035);margin-bottom:16px}
 .toolbar{display:flex;gap:8px;flex-wrap:wrap}
@@ -53,9 +53,10 @@ body.level-detail .standard,body.level-detail .detail{display:block}
 @media(max-width:720px){.controls,.grid{grid-template-columns:1fr}.wide{grid-column:auto}.steps{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
-<body class="level-easy" data-build-phase="1" data-build-step="3" data-build-label="Beta20.3 Phase1 Step3">
+<body class="level-easy" data-build-phase="1" data-build-step="4" data-build-label="Beta20.3 Phase1 Step4">
 
 <!-- Beta20.3 Phase1 DEVELOPMENT NOTE
+Phase1 Step4: Live GitHub Pages build verification, fetched-build comparison, deployment-status display, and cache-bypassed verification added.
 Phase1 Step3: In-app update diagnostics, forced latest reload, build-information copy workflow, and deployment verification support added.
 Phase1 Step2: Release visibility, build identification, and browser cache-refresh safeguards added while preserving all Phase1 Step1 behavior.
 Phase1 Step1: Phase baseline established from Preview Step12; existing settings, saved data, JSON compatibility, prompt generation, accessibility, and Chrome behavior preserved.
@@ -77,8 +78,8 @@ Leg Hair: Density / Length / Texture / Distance Visibility independent.
 
 <header><div class="wrap">
 <h1>Character Fullbody Maker — Tatsuya Edition Ver.2.0</h1>
-<div class="sub">開発版 Beta20.3 Phase1：Step3 更新診断・最新版再読込 完了</div>
-<div class="build-badge" aria-label="現在のビルド">Build: Beta20.3 Phase1 Step3</div>
+<div class="sub">開発版 Beta20.3 Phase1：Step4 公開版照合・反映確認 完了</div>
+<div class="build-badge" aria-label="現在のビルド">Build: Beta20.3 Phase1 Step4</div>
 </div></header>
 
 <main>
@@ -142,8 +143,9 @@ Leg Hair: Density / Length / Texture / Distance Visibility independent.
 <h3 id="updateModalTitle" style="margin-top:0">更新確認</h3>
 <div class="lead">現在読み込まれているビルドと公開ページの情報を確認できます。</div>
 <div id="buildInfo" class="build-info"></div>
+<div id="verifyResult" class="verify-box"><div class="verify-title">公開版の照合</div><div>「公開版を照合」を押すと、GitHub Pages上の最新HTMLをキャッシュを避けて取得し、現在のビルドと比較します。</div></div>
 <div class="update-help">画面が古いままの場合は「最新版を再読込」を使用します。URLへ一時的な更新番号を付け、ブラウザの古いキャッシュを避けて読み込み直します。</div>
-<div class="actions"><button id="updateClose">閉じる</button><span style="display:flex;gap:8px;flex-wrap:wrap"><button id="copyBuildBtn">情報をコピー</button><button id="forceReloadBtn" class="primary">最新版を再読込</button></span></div>
+<div class="actions"><button id="updateClose">閉じる</button><span style="display:flex;gap:8px;flex-wrap:wrap"><button id="copyBuildBtn">情報をコピー</button><button id="verifyBuildBtn">公開版を照合</button><button id="forceReloadBtn" class="primary">最新版を再読込</button></span></div>
 </div></div>
 
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
@@ -154,8 +156,8 @@ const STORAGE_CURRENT="cfm_beta20_3_preview_current";
 const STORAGE_LIBRARY="cfm_beta20_3_preview_library";
 const STORAGE_COMPATIBILITY="Preview Step12 storage keys retained";
 const APP_BUILD_PHASE=1;
-const APP_BUILD_STEP=3;
-const APP_BUILD_LABEL="Beta20.3 Phase1 Step3";
+const APP_BUILD_STEP=4;
+const APP_BUILD_LABEL="Beta20.3 Phase1 Step4";
 let currentStep=1;
 let toastTimer=null;
 console.info(`[Character Fullbody Maker] ${APP_BUILD_LABEL}`);
@@ -173,6 +175,33 @@ function openUpdateModal(){renderBuildInfo();$("updateModal").classList.add("sho
 function closeUpdateModal(){$("updateModal").classList.remove("show");}
 async function copyBuildInfo(){const text=buildDiagnosticText();try{await navigator.clipboard.writeText(text);showToast("更新情報をコピーしました")}catch{const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();showToast("更新情報をコピーしました")}}
 function forceLatestReload(){const url=new URL(location.href);url.searchParams.set("build",`${APP_BUILD_PHASE}-${APP_BUILD_STEP}-${Date.now()}`);location.replace(url.toString());}
+
+async function verifyPublishedBuild(){
+ const box=$("verifyResult");
+ box.className="verify-box";
+ box.innerHTML='<div class="verify-title">公開版を確認中</div><div>GitHub Pagesから最新HTMLを取得しています…</div>';
+ const url=new URL(location.href);
+ url.search="";
+ url.hash="";
+ url.searchParams.set("verify",Date.now().toString());
+ try{
+  const response=await fetch(url.toString(),{cache:"no-store"});
+  if(!response.ok)throw new Error(`HTTP ${response.status}`);
+  const text=await response.text();
+  const doc=new DOMParser().parseFromString(text,"text/html");
+  const remoteLabel=doc.body?.dataset?.buildLabel||"ビルド情報なし";
+  const remoteStep=doc.body?.dataset?.buildStep||"不明";
+  const same=remoteLabel===APP_BUILD_LABEL;
+  box.className=`verify-box ${same?"ok":"warn"}`;
+  box.innerHTML=same
+   ?`<div class="verify-title">公開版は最新です</div><div>公開中：${remoteLabel}</div><div>現在表示：${APP_BUILD_LABEL}</div>`
+   :`<div class="verify-title">公開版と現在表示が一致しません</div><div>公開中：${remoteLabel}（Step ${remoteStep}）</div><div>現在表示：${APP_BUILD_LABEL}</div><div>GitHub Pagesの反映待ち、公開先の違い、またはキャッシュの可能性があります。</div>`;
+ }catch(error){
+  box.className="verify-box error";
+  box.innerHTML=`<div class="verify-title">公開版を確認できませんでした</div><div>${error.message}</div><div>通信状態またはGitHub Pagesの公開状態を確認してください。</div>`;
+ }
+}
+
 
 
 const state={
@@ -1906,6 +1935,7 @@ bindGlobal();loadCurrent();
 $("updateBtn").addEventListener("click",openUpdateModal);
 $("updateClose").addEventListener("click",closeUpdateModal);
 $("copyBuildBtn").addEventListener("click",copyBuildInfo);
+$("verifyBuildBtn").addEventListener("click",verifyPublishedBuild);
 $("forceReloadBtn").addEventListener("click",forceLatestReload);
 $("updateModal").addEventListener("click",e=>{if(e.target===$("updateModal"))closeUpdateModal()});
 
