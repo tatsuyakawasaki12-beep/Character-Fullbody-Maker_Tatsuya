@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="application-name" content="Character Fullbody Maker — Tatsuya Edition">
-<meta name="description" content="Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta20.3 Phase1 Step4">
+<meta name="description" content="Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta20.3 Phase1 Step5">
 <meta name="theme-color" content="#f4f7fb">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta20.3 Phase1 Step4</title>
+<title>Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta20.3 Phase1 Step5</title>
 <style>
 :root{--bg:#f4f7fb;--panel:#fff;--text:#182235;--muted:#718096;--line:#d9e2ef;--accent:#3563e9;--soft:#eef3ff;--danger:#b42318;--safe:#16794f;--safe-bg:#eefbf4}
 *{box-sizing:border-box}
@@ -17,7 +17,7 @@ body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,B
 button,input,select,textarea{font:inherit}
 header{background:#fff;border-bottom:1px solid var(--line);padding:18px 16px}
 .wrap,main{max-width:980px;margin:auto}
-h1{margin:0;font-size:22px;line-height:1.3}.sub{margin-top:6px;color:var(--muted);font-size:13px}.build-badge{display:inline-block;margin-top:10px;padding:5px 9px;border:1px solid var(--line);border-radius:999px;background:var(--soft);color:var(--accent);font-size:11px;font-weight:900;letter-spacing:.02em}.build-info{display:grid;gap:8px;margin-top:12px}.build-row{display:grid;grid-template-columns:130px 1fr;gap:10px;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:#fff}.build-key{font-weight:900}.build-value{overflow-wrap:anywhere}.update-help{font-size:12px;color:var(--muted);line-height:1.6;margin-top:10px}.verify-box{margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:12px;background:#fff;line-height:1.55;font-size:13px}.verify-box.ok{border-color:#12b76a;background:#f0fff7;color:#11633f}.verify-box.warn{border-color:#f0b429;background:#fffaf0;color:#7a4b00}.verify-box.error{border-color:#f97066;background:#fff3f2;color:#912018}.verify-title{font-weight:900;margin-bottom:4px}
+h1{margin:0;font-size:22px;line-height:1.3}.sub{margin-top:6px;color:var(--muted);font-size:13px}.build-badge{display:inline-block;margin-top:10px;padding:5px 9px;border:1px solid var(--line);border-radius:999px;background:var(--soft);color:var(--accent);font-size:11px;font-weight:900;letter-spacing:.02em}.build-info{display:grid;gap:8px;margin-top:12px}.build-row{display:grid;grid-template-columns:130px 1fr;gap:10px;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:#fff}.build-key{font-weight:900}.build-value{overflow-wrap:anywhere}.update-help{font-size:12px;color:var(--muted);line-height:1.6;margin-top:10px}.verify-box{margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:12px;background:#fff;line-height:1.55;font-size:13px}.verify-box.ok{border-color:#12b76a;background:#f0fff7;color:#11633f}.verify-box.warn{border-color:#f0b429;background:#fffaf0;color:#7a4b00}.verify-box.error{border-color:#f97066;background:#fff3f2;color:#912018}.verify-title{font-weight:900;margin-bottom:4px}.selftest-list{display:grid;gap:8px;margin-top:12px}.selftest-item{display:grid;grid-template-columns:24px 1fr;gap:8px;align-items:start;padding:10px;border:1px solid var(--line);border-radius:10px;background:#fff}.selftest-item.ok{border-color:#12b76a;background:#f0fff7}.selftest-item.warn{border-color:#f0b429;background:#fffaf0}.selftest-mark{font-weight:900;text-align:center}.fingerprint{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;overflow-wrap:anywhere}
 main{padding:16px}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 4px 18px rgba(15,23,42,.035);margin-bottom:16px}
 .toolbar{display:flex;gap:8px;flex-wrap:wrap}
@@ -53,9 +53,10 @@ body.level-detail .standard,body.level-detail .detail{display:block}
 @media(max-width:720px){.controls,.grid{grid-template-columns:1fr}.wide{grid-column:auto}.steps{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
-<body class="level-easy" data-build-phase="1" data-build-step="4" data-build-label="Beta20.3 Phase1 Step4">
+<body class="level-easy" data-build-phase="1" data-build-step="5" data-build-label="Beta20.3 Phase1 Step5">
 
 <!-- Beta20.3 Phase1 DEVELOPMENT NOTE
+Phase1 Step5: In-app self-test, required-element verification, storage availability check, build fingerprint display, and diagnostic copy support added.
 Phase1 Step4: Live GitHub Pages build verification, fetched-build comparison, deployment-status display, and cache-bypassed verification added.
 Phase1 Step3: In-app update diagnostics, forced latest reload, build-information copy workflow, and deployment verification support added.
 Phase1 Step2: Release visibility, build identification, and browser cache-refresh safeguards added while preserving all Phase1 Step1 behavior.
@@ -78,8 +79,9 @@ Leg Hair: Density / Length / Texture / Distance Visibility independent.
 
 <header><div class="wrap">
 <h1>Character Fullbody Maker — Tatsuya Edition Ver.2.0</h1>
-<div class="sub">開発版 Beta20.3 Phase1：Step4 公開版照合・反映確認 完了</div>
-<div class="build-badge" aria-label="現在のビルド">Build: Beta20.3 Phase1 Step4</div>
+<div class="sub">開発版 Beta20.3 Phase1：Step5 自己診断・ビルド識別 完了</div>
+<div class="build-badge" aria-label="現在のビルド">Build: Beta20.3 Phase1 Step5</div>
+<div class="sub fingerprint" id="buildFingerprint">Fingerprint: calculating…</div>
 </div></header>
 
 <main>
@@ -87,7 +89,7 @@ Leg Hair: Density / Length / Texture / Distance Visibility independent.
 <div class="toolbar">
 <button id="newBtn">新規</button>
 <button id="saveBtn" class="primary">下書き保存</button>
-<button id="libraryBtn">ライブラリ</button><button id="assistBtn">AIアシスト</button><button id="checkBtn">整合性チェック</button><button id="updateBtn">更新確認</button>
+<button id="libraryBtn">ライブラリ</button><button id="assistBtn">AIアシスト</button><button id="checkBtn">整合性チェック</button><button id="updateBtn">更新確認</button><button id="selfTestBtn">自己診断</button>
 <button id="jsonExportBtn">JSON書出</button>
 <label class="filelabel">JSON読込<input id="jsonFile" type="file" accept=".json" hidden></label>
 </div>
@@ -148,6 +150,15 @@ Leg Hair: Density / Length / Texture / Distance Visibility independent.
 <div class="actions"><button id="updateClose">閉じる</button><span style="display:flex;gap:8px;flex-wrap:wrap"><button id="copyBuildBtn">情報をコピー</button><button id="verifyBuildBtn">公開版を照合</button><button id="forceReloadBtn" class="primary">最新版を再読込</button></span></div>
 </div></div>
 
+
+<div id="selfTestModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="selfTestModalTitle"><div class="modalbox">
+<h3 id="selfTestModalTitle" style="margin-top:0">アプリ自己診断</h3>
+<div class="lead">このHTMLが単体で正しく動作するために必要な主要要素を確認します。</div>
+<div id="selfTestSummary" class="verify-box"><div class="verify-title">未実行</div><div>「診断を実行」を押してください。</div></div>
+<div id="selfTestList" class="selftest-list"></div>
+<div class="actions"><button id="selfTestClose">閉じる</button><span style="display:flex;gap:8px;flex-wrap:wrap"><button id="copySelfTestBtn">診断結果をコピー</button><button id="runSelfTestBtn" class="primary">診断を実行</button></span></div>
+</div></div>
+
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
 <script>
@@ -156,12 +167,23 @@ const STORAGE_CURRENT="cfm_beta20_3_preview_current";
 const STORAGE_LIBRARY="cfm_beta20_3_preview_library";
 const STORAGE_COMPATIBILITY="Preview Step12 storage keys retained";
 const APP_BUILD_PHASE=1;
-const APP_BUILD_STEP=4;
-const APP_BUILD_LABEL="Beta20.3 Phase1 Step4";
+const APP_BUILD_STEP=5;
+const APP_BUILD_LABEL="Beta20.3 Phase1 Step5";
 let currentStep=1;
 let toastTimer=null;
 console.info(`[Character Fullbody Maker] ${APP_BUILD_LABEL}`);
 const APP_LOADED_AT=new Date();
+const APP_BUILD_GENERATED_AT="2026-07-20T07:12:17Z";
+let APP_BUILD_FINGERPRINT="pending";
+let LAST_SELF_TEST_RESULTS=[];
+async function computeBuildFingerprint(){try{const source=document.documentElement.outerHTML;const bytes=new TextEncoder().encode(source);const digest=await crypto.subtle.digest("SHA-256",bytes);APP_BUILD_FINGERPRINT=Array.from(new Uint8Array(digest)).slice(0,8).map(b=>b.toString(16).padStart(2,"0")).join("")}catch{APP_BUILD_FINGERPRINT=`fallback-${document.documentElement.outerHTML.length}`}const el=$("buildFingerprint");if(el)el.textContent=`Fingerprint: ${APP_BUILD_FINGERPRINT}`;}
+function storageAvailable(){try{const key="__cfm_step5_test__";localStorage.setItem(key,"1");localStorage.removeItem(key);return true}catch{return false}}
+function runSelfTest(){const tests=[["ビルド情報",document.body.dataset.buildLabel===APP_BUILD_LABEL,`現在：${document.body.dataset.buildLabel||"なし"}`],["ステップ数",Array.isArray(stepNames)&&stepNames.length===10,`検出：${Array.isArray(stepNames)?stepNames.length:"不明"}`],["主要画面",!!$("page")&&!!$("steps")&&!!$("progressTrack"),"page / steps / progressTrack"],["保存機能",typeof saveDraft==="function"&&typeof loadDraft==="function","saveDraft / loadDraft"],["JSON機能",typeof exportJSON==="function"&&!!$("jsonFile"),"exportJSON / jsonFile"],["プロンプト生成",typeof generatePrompt==="function","generatePrompt"],["更新確認",typeof verifyPublishedBuild==="function"&&!!$("updateModal"),"verifyPublishedBuild / updateModal"],["ローカル保存",storageAvailable(),"localStorage"],["ビルド指紋",APP_BUILD_FINGERPRINT!=="pending",APP_BUILD_FINGERPRINT],["主要モーダル",["libraryModal","checkModal","assistModal","updateModal","selfTestModal"].every(id=>!!$(id)),"5 modal elements"]];LAST_SELF_TEST_RESULTS=tests.map(([name,ok,detail])=>({name,ok,detail}));const passed=LAST_SELF_TEST_RESULTS.filter(x=>x.ok).length,total=LAST_SELF_TEST_RESULTS.length,summary=$("selfTestSummary");summary.className=`verify-box ${passed===total?"ok":"warn"}`;summary.innerHTML=`<div class="verify-title">${passed===total?"すべて正常です":"確認が必要な項目があります"}</div><div>${passed} / ${total} 項目が正常</div>`;$("selfTestList").innerHTML=LAST_SELF_TEST_RESULTS.map(x=>`<div class="selftest-item ${x.ok?"ok":"warn"}"><div class="selftest-mark">${x.ok?"✓":"!"}</div><div><strong>${x.name}</strong><div class="mini">${x.detail}</div></div></div>`).join("");return LAST_SELF_TEST_RESULTS;}
+function selfTestText(){if(!LAST_SELF_TEST_RESULTS.length)runSelfTest();return [`Application: Character Fullbody Maker — Tatsuya Edition Ver.2.0`,`Build: ${APP_BUILD_LABEL}`,`Fingerprint: ${APP_BUILD_FINGERPRINT}`,`Generated at: ${APP_BUILD_GENERATED_AT}`,...LAST_SELF_TEST_RESULTS.map(x=>`${x.ok?"PASS":"WARN"}: ${x.name} — ${x.detail}`)].join("\n");}
+function openSelfTestModal(){$("selfTestModal").classList.add("show");runSelfTest();}
+function closeSelfTestModal(){$("selfTestModal").classList.remove("show");}
+async function copySelfTest(){const text=selfTestText();try{await navigator.clipboard.writeText(text);showToast("自己診断結果をコピーしました")}catch{const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();showToast("自己診断結果をコピーしました")}}
+
 function buildDiagnosticText(){
  const url=new URL(location.href);
  return [`Application: Character Fullbody Maker — Tatsuya Edition Ver.2.0`,`Build: ${APP_BUILD_LABEL}`,`Phase: ${APP_BUILD_PHASE}`,`Step: ${APP_BUILD_STEP}`,`Loaded at: ${APP_LOADED_AT.toLocaleString("ja-JP")}`,`Page URL: ${url.origin}${url.pathname}`,`Cache token: ${url.searchParams.get("build")||"なし"}`,`Storage compatibility: ${STORAGE_COMPATIBILITY}`].join("\n");
@@ -1936,10 +1958,17 @@ $("updateBtn").addEventListener("click",openUpdateModal);
 $("updateClose").addEventListener("click",closeUpdateModal);
 $("copyBuildBtn").addEventListener("click",copyBuildInfo);
 $("verifyBuildBtn").addEventListener("click",verifyPublishedBuild);
+$("selfTestBtn").addEventListener("click",openSelfTestModal);
+$("selfTestClose").addEventListener("click",closeSelfTestModal);
+$("runSelfTestBtn").addEventListener("click",runSelfTest);
+$("copySelfTestBtn").addEventListener("click",copySelfTest);
+$("selfTestModal").addEventListener("click",e=>{if(e.target===$("selfTestModal"))closeSelfTestModal()});
+
 $("forceReloadBtn").addEventListener("click",forceLatestReload);
 $("updateModal").addEventListener("click",e=>{if(e.target===$("updateModal"))closeUpdateModal()});
 
 render();
+computeBuildFingerprint();
 </script>
 </body>
 </html>
