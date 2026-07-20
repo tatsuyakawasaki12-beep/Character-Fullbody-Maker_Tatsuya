@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="application-name" content="Character Fullbody Maker — Tatsuya Edition">
-<meta name="description" content="Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta20.3 Phase1 Step2">
+<meta name="description" content="Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta20.3 Phase1 Step3">
 <meta name="theme-color" content="#f4f7fb">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta20.3 Phase1 Step2</title>
+<title>Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta20.3 Phase1 Step3</title>
 <style>
 :root{--bg:#f4f7fb;--panel:#fff;--text:#182235;--muted:#718096;--line:#d9e2ef;--accent:#3563e9;--soft:#eef3ff;--danger:#b42318;--safe:#16794f;--safe-bg:#eefbf4}
 *{box-sizing:border-box}
@@ -17,7 +17,7 @@ body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,B
 button,input,select,textarea{font:inherit}
 header{background:#fff;border-bottom:1px solid var(--line);padding:18px 16px}
 .wrap,main{max-width:980px;margin:auto}
-h1{margin:0;font-size:22px;line-height:1.3}.sub{margin-top:6px;color:var(--muted);font-size:13px}.build-badge{display:inline-block;margin-top:10px;padding:5px 9px;border:1px solid var(--line);border-radius:999px;background:var(--soft);color:var(--accent);font-size:11px;font-weight:900;letter-spacing:.02em}
+h1{margin:0;font-size:22px;line-height:1.3}.sub{margin-top:6px;color:var(--muted);font-size:13px}.build-badge{display:inline-block;margin-top:10px;padding:5px 9px;border:1px solid var(--line);border-radius:999px;background:var(--soft);color:var(--accent);font-size:11px;font-weight:900;letter-spacing:.02em}.build-info{display:grid;gap:8px;margin-top:12px}.build-row{display:grid;grid-template-columns:130px 1fr;gap:10px;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:#fff}.build-key{font-weight:900}.build-value{overflow-wrap:anywhere}.update-help{font-size:12px;color:var(--muted);line-height:1.6;margin-top:10px}
 main{padding:16px}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 4px 18px rgba(15,23,42,.035);margin-bottom:16px}
 .toolbar{display:flex;gap:8px;flex-wrap:wrap}
@@ -53,9 +53,10 @@ body.level-detail .standard,body.level-detail .detail{display:block}
 @media(max-width:720px){.controls,.grid{grid-template-columns:1fr}.wide{grid-column:auto}.steps{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
-<body class="level-easy" data-build-phase="1" data-build-step="2" data-build-label="Beta20.3 Phase1 Step2">
+<body class="level-easy" data-build-phase="1" data-build-step="3" data-build-label="Beta20.3 Phase1 Step3">
 
 <!-- Beta20.3 Phase1 DEVELOPMENT NOTE
+Phase1 Step3: In-app update diagnostics, forced latest reload, build-information copy workflow, and deployment verification support added.
 Phase1 Step2: Release visibility, build identification, and browser cache-refresh safeguards added while preserving all Phase1 Step1 behavior.
 Phase1 Step1: Phase baseline established from Preview Step12; existing settings, saved data, JSON compatibility, prompt generation, accessibility, and Chrome behavior preserved.
 Step 12: Release-candidate hardening, progress accessibility, current-step semantics, modal keyboard dismissal, backdrop dismissal, and final regression verification completed.
@@ -76,8 +77,8 @@ Leg Hair: Density / Length / Texture / Distance Visibility independent.
 
 <header><div class="wrap">
 <h1>Character Fullbody Maker — Tatsuya Edition Ver.2.0</h1>
-<div class="sub">開発版 Beta20.3 Phase1：Step2 更新確認・キャッシュ対策 完了</div>
-<div class="build-badge" aria-label="現在のビルド">Build: Beta20.3 Phase1 Step2</div>
+<div class="sub">開発版 Beta20.3 Phase1：Step3 更新診断・最新版再読込 完了</div>
+<div class="build-badge" aria-label="現在のビルド">Build: Beta20.3 Phase1 Step3</div>
 </div></header>
 
 <main>
@@ -85,7 +86,7 @@ Leg Hair: Density / Length / Texture / Distance Visibility independent.
 <div class="toolbar">
 <button id="newBtn">新規</button>
 <button id="saveBtn" class="primary">下書き保存</button>
-<button id="libraryBtn">ライブラリ</button><button id="assistBtn">AIアシスト</button><button id="checkBtn">整合性チェック</button>
+<button id="libraryBtn">ライブラリ</button><button id="assistBtn">AIアシスト</button><button id="checkBtn">整合性チェック</button><button id="updateBtn">更新確認</button>
 <button id="jsonExportBtn">JSON書出</button>
 <label class="filelabel">JSON読込<input id="jsonFile" type="file" accept=".json" hidden></label>
 </div>
@@ -136,6 +137,15 @@ Leg Hair: Density / Length / Texture / Distance Visibility independent.
 <div class="actions"><button id="assistClose">閉じる</button><button id="assistApply" class="primary">提案を適用</button></div>
 </div></div>
 
+
+<div id="updateModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="updateModalTitle"><div class="modalbox">
+<h3 id="updateModalTitle" style="margin-top:0">更新確認</h3>
+<div class="lead">現在読み込まれているビルドと公開ページの情報を確認できます。</div>
+<div id="buildInfo" class="build-info"></div>
+<div class="update-help">画面が古いままの場合は「最新版を再読込」を使用します。URLへ一時的な更新番号を付け、ブラウザの古いキャッシュを避けて読み込み直します。</div>
+<div class="actions"><button id="updateClose">閉じる</button><span style="display:flex;gap:8px;flex-wrap:wrap"><button id="copyBuildBtn">情報をコピー</button><button id="forceReloadBtn" class="primary">最新版を再読込</button></span></div>
+</div></div>
+
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
 <script>
@@ -144,11 +154,26 @@ const STORAGE_CURRENT="cfm_beta20_3_preview_current";
 const STORAGE_LIBRARY="cfm_beta20_3_preview_library";
 const STORAGE_COMPATIBILITY="Preview Step12 storage keys retained";
 const APP_BUILD_PHASE=1;
-const APP_BUILD_STEP=2;
-const APP_BUILD_LABEL="Beta20.3 Phase1 Step2";
+const APP_BUILD_STEP=3;
+const APP_BUILD_LABEL="Beta20.3 Phase1 Step3";
 let currentStep=1;
 let toastTimer=null;
 console.info(`[Character Fullbody Maker] ${APP_BUILD_LABEL}`);
+const APP_LOADED_AT=new Date();
+function buildDiagnosticText(){
+ const url=new URL(location.href);
+ return [`Application: Character Fullbody Maker — Tatsuya Edition Ver.2.0`,`Build: ${APP_BUILD_LABEL}`,`Phase: ${APP_BUILD_PHASE}`,`Step: ${APP_BUILD_STEP}`,`Loaded at: ${APP_LOADED_AT.toLocaleString("ja-JP")}`,`Page URL: ${url.origin}${url.pathname}`,`Cache token: ${url.searchParams.get("build")||"なし"}`,`Storage compatibility: ${STORAGE_COMPATIBILITY}`].join("\n");
+}
+function renderBuildInfo(){
+ const url=new URL(location.href);
+ const rows=[["現在のビルド",APP_BUILD_LABEL],["読み込み日時",APP_LOADED_AT.toLocaleString("ja-JP")],["公開ページ",`${url.origin}${url.pathname}`],["更新番号",url.searchParams.get("build")||"なし"],["保存データ互換",STORAGE_COMPATIBILITY]];
+ $("buildInfo").innerHTML=rows.map(([k,v])=>`<div class="build-row"><div class="build-key">${k}</div><div class="build-value">${v}</div></div>`).join("");
+}
+function openUpdateModal(){renderBuildInfo();$("updateModal").classList.add("show");}
+function closeUpdateModal(){$("updateModal").classList.remove("show");}
+async function copyBuildInfo(){const text=buildDiagnosticText();try{await navigator.clipboard.writeText(text);showToast("更新情報をコピーしました")}catch{const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();showToast("更新情報をコピーしました")}}
+function forceLatestReload(){const url=new URL(location.href);url.searchParams.set("build",`${APP_BUILD_PHASE}-${APP_BUILD_STEP}-${Date.now()}`);location.replace(url.toString());}
+
 
 const state={
  name:"",age:"18歳",gender:"男性",nationality:"日本",height:"180cm",weight:"70kg",preset:"日本人標準・引き締まった体型",
@@ -1877,7 +1902,14 @@ function bindGlobal(){
  document.addEventListener("keydown",e=>{if(e.key==="Escape")closeAllModals()});
  document.querySelectorAll(".modal").forEach(modal=>modal.addEventListener("click",e=>{if(e.target===modal)modal.classList.remove("show")}));
 }
-bindGlobal();loadCurrent();render();
+bindGlobal();loadCurrent();
+$("updateBtn").addEventListener("click",openUpdateModal);
+$("updateClose").addEventListener("click",closeUpdateModal);
+$("copyBuildBtn").addEventListener("click",copyBuildInfo);
+$("forceReloadBtn").addEventListener("click",forceLatestReload);
+$("updateModal").addEventListener("click",e=>{if(e.target===$("updateModal"))closeUpdateModal()});
+
+render();
 </script>
 </body>
 </html>
