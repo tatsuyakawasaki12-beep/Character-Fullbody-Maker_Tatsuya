@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="application-name" content="Character Fullbody Maker — Tatsuya Edition">
-<meta name="description" content="Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta20.3 Phase7 Step1 Parameter Mapping Audit">
+<meta name="description" content="Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta20.3 Phase7 Step2 Conditional UI Completion">
 <meta name="theme-color" content="#f4f7fb">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta20.3 Phase7 Step1 Parameter Mapping Audit</title>
+<title>Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta20.3 Phase7 Step2 Conditional UI Completion</title>
 <style>
 :root{--bg:#f4f7fb;--panel:#fff;--text:#182235;--muted:#718096;--line:#d9e2ef;--accent:#3563e9;--soft:#eef3ff;--danger:#b42318;--safe:#16794f;--safe-bg:#eefbf4}
 *{box-sizing:border-box}
@@ -53,9 +53,10 @@ body.level-detail .standard,body.level-detail .detail{display:block}
 @media(max-width:720px){.controls,.grid{grid-template-columns:1fr}.wide{grid-column:auto}.steps{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
-<body class="level-easy" data-build-phase="7" data-build-step="1" data-build-label="Beta20.3 Phase7 Step1 Parameter Mapping Audit">
+<body class="level-easy" data-build-phase="7" data-build-step="2" data-build-label="Beta20.3 Phase7 Step2 Conditional UI Completion">
 
 <!-- Beta20.3 Phase7 DEVELOPMENT NOTE
+Phase7 Step2 Conditional UI Completion: parent-parameter-driven show/hide behavior completed for Chest, Abdominal, Arm, Hand, Leg, Rear, Treasure Trail, and Armpit Hair; hidden values remain in internal state and survive JSON save/restore; all Phase7 Step1 functionality preserved.
 Phase7 Step1 Parameter Mapping Audit: UI → Internal Data → English Prompt mapping table, unmapped-value diagnostics, numeric/angle/unit normalization, proper-noun protection, and Japanese-leak prevention added; all Phase6 Step7 functionality preserved.
 
 Beta20.3 Phase6 DEVELOPMENT NOTE
@@ -115,8 +116,8 @@ Leg Hair: Density / Length / Texture / Distance Visibility independent.
 
 <header><div class="wrap">
 <h1>Character Fullbody Maker — Tatsuya Edition Ver.2.0</h1>
-<div class="sub">開発版 Beta20.3 Phase7：Step1</div>
-<div class="build-badge" aria-label="現在のビルド">Build: Beta20.3 Phase7 Step1 Parameter Mapping Audit</div>
+<div class="sub">開発版 Beta20.3 Phase7：Step2</div>
+<div class="build-badge" aria-label="現在のビルド">Build: Beta20.3 Phase7 Step2 Conditional UI Completion</div>
 <div class="sub fingerprint" id="buildFingerprint">Fingerprint: calculating…</div><div id="autosaveIndicator" class="autosave-indicator saved" aria-live="polite"><span class="autosave-dot"></span><span>自動保存：準備中</span></div>
 </div></header>
 
@@ -226,13 +227,13 @@ const STORAGE_LIBRARY="cfm_beta20_3_preview_library";
 const STORAGE_COMPATIBILITY="Preview Step12 storage keys retained";
 const STORAGE_RECOVERY="cfm_beta20_3_phase1_recovery";
 const APP_BUILD_PHASE=7;
-const APP_BUILD_STEP=1;
-const APP_BUILD_LABEL="Beta20.3 Phase7 Step1 Parameter Mapping Audit";
+const APP_BUILD_STEP=2;
+const APP_BUILD_LABEL="Beta20.3 Phase7 Step2 Conditional UI Completion";
 let currentStep=1;
 let toastTimer=null;
 console.info(`[Character Fullbody Maker] ${APP_BUILD_LABEL}`);
 const APP_LOADED_AT=new Date();
-const APP_BUILD_GENERATED_AT="2026-07-24T01:30:00Z";
+const APP_BUILD_GENERATED_AT="2026-07-24T02:30:00Z";
 let APP_BUILD_FINGERPRINT="pending";
 let LAST_SELF_TEST_RESULTS=[];
 
@@ -305,7 +306,7 @@ function closeBackupModal(){$("backupModal").classList.remove("show");}
 
 async function computeBuildFingerprint(){try{const source=document.documentElement.outerHTML;const bytes=new TextEncoder().encode(source);const digest=await crypto.subtle.digest("SHA-256",bytes);APP_BUILD_FINGERPRINT=Array.from(new Uint8Array(digest)).slice(0,8).map(b=>b.toString(16).padStart(2,"0")).join("")}catch{APP_BUILD_FINGERPRINT=`fallback-${document.documentElement.outerHTML.length}`}const el=$("buildFingerprint");if(el)el.textContent=`Fingerprint: ${APP_BUILD_FINGERPRINT}`;}
 function storageAvailable(){try{const key="__cfm_step5_test__";localStorage.setItem(key,"1");localStorage.removeItem(key);return true}catch{return false}}
-function runSelfTest(){const tests=[["ビルド情報",document.body.dataset.buildLabel===APP_BUILD_LABEL,`現在：${document.body.dataset.buildLabel||"なし"}`],["ステップ数",Array.isArray(stepNames)&&stepNames.length===10,`検出：${Array.isArray(stepNames)?stepNames.length:"不明"}`],["主要画面",!!$("page")&&!!$("steps")&&!!$("progressTrack"),"page / steps / progressTrack"],["保存機能",typeof saveDraft==="function"&&typeof loadDraft==="function","saveDraft / loadDraft"],["JSON機能",typeof exportJSON==="function"&&!!$("jsonFile"),"exportJSON / jsonFile"],["プロンプト生成",typeof generatePrompt==="function","generatePrompt"],["更新確認",typeof verifyPublishedBuild==="function"&&!!$("updateModal"),"verifyPublishedBuild / updateModal"],["ローカル保存",storageAvailable(),"localStorage"],["ビルド指紋",APP_BUILD_FINGERPRINT!=="pending",APP_BUILD_FINGERPRINT],["復旧機能",typeof createRecoverySnapshot==="function"&&typeof restoreRecoverySnapshot==="function"&&!!$("backupModal"),"recovery snapshot"],["自動保存",typeof runAutosave==="function"&&!!$("autosaveModal")&&!!$("autosaveIndicator"),"autosave / dirty state"],["Phase6 Step2",["armpitLength","chestHairLength","abdominalHairLength","armHairCoverage","handHairCoverage","legHairOverallDensity","rearHairOverallDensity"].every(k=>Object.prototype.hasOwnProperty.call(state,k)),"Density / Coverage / Length state"],["Phase6 Step3",["armpitClustering","chestHairGrowthFlow","chestHairClustering","abdominalHairGrowthFlow","abdominalHairClustering","armHairGrowthFlow","armHairClustering","armHairRendering","handHairGrowthFlow","handHairClustering","handHairRendering","legHairGrowthFlow","legHairClustering","legHairRendering","rearHairGrowthFlow","rearHairClustering","rearHairRendering"].every(k=>Object.prototype.hasOwnProperty.call(state,k)),"Growth Flow / Clustering / Rendering state"],["Phase6 Step4",SPECIAL_HAIR_REGION_SCHEMA_VERSION==="1.0"&&Array.isArray(SPECIAL_HAIR_REGIONS)&&SPECIAL_HAIR_REGIONS.length>=4&&["armpitSpecialRole","armpitBoundaryBehavior","trailSpecialRole","trailGrowthFlow","trailClustering","trailRendering","trailSymmetry","futureSpecialRegion1","futureSpecialRegion2"].every(k=>Object.prototype.hasOwnProperty.call(state,k)),"Special Hair Regions / extensible schema"],["Phase6 Step5",typeof bodyHairRegionVisible==="function"&&typeof sortBodyHairPromptEntries==="function"&&["bodyHairVisibility","bodyHairPriority","bodyHairVisibilityPolicy","armpitVisibility","armpitPriority","treasureTrailVisibility","treasureTrailPriority","legHairVisibility","legHairPriority"].every(k=>Object.prototype.hasOwnProperty.call(state,k)),"Visibility / Priority / conditional prompt state"],["Phase6 Step6",typeof compileConditionalBodyHairPrompt==="function"&&typeof bodyHairCompressSection==="function"&&typeof bodyHairDeduplicateLines==="function"&&["bodyHairConditionalPrompt","bodyHairPromptCompression","bodyHairDuplicateReduction","bodyHairNoneOmission","bodyHairFalseVisibilityOmission"].every(k=>Object.prototype.hasOwnProperty.call(state,k)),"Conditional Prompt / compression / omission state"],["Phase6 Step7",typeof runPhase6IntegrationChecks==="function"&&runPhase6IntegrationChecks(false).every(x=>x.ok)&&state.phase6CompletionStatus==="完成","HTML / JSON / Chrome / Prompt integration"],["Phase7 Step1",typeof parameterToEnglish==="function"&&typeof sanitizeEnglishPrompt==="function"&&typeof parameterMappingAudit==="function"&&PARAMETER_MAPPING_VERSION==="cfm-parameter-mapping-v1"&&["phase7MappingVersion","phase7MappingStatus"].every(k=>Object.prototype.hasOwnProperty.call(state,k)),"UI / Internal Data / English Prompt mapping audit"],["主要モーダル",["libraryModal","checkModal","assistModal","updateModal","selfTestModal","backupModal","autosaveModal"].every(id=>!!$(id)),"7 modal elements"]];LAST_SELF_TEST_RESULTS=tests.map(([name,ok,detail])=>({name,ok,detail}));const passed=LAST_SELF_TEST_RESULTS.filter(x=>x.ok).length,total=LAST_SELF_TEST_RESULTS.length,summary=$("selfTestSummary");summary.className=`verify-box ${passed===total?"ok":"warn"}`;summary.innerHTML=`<div class="verify-title">${passed===total?"すべて正常です":"確認が必要な項目があります"}</div><div>${passed} / ${total} 項目が正常</div>`;$("selfTestList").innerHTML=LAST_SELF_TEST_RESULTS.map(x=>`<div class="selftest-item ${x.ok?"ok":"warn"}"><div class="selftest-mark">${x.ok?"✓":"!"}</div><div><strong>${x.name}</strong><div class="mini">${x.detail}</div></div></div>`).join("");return LAST_SELF_TEST_RESULTS;}
+function runSelfTest(){const tests=[["ビルド情報",document.body.dataset.buildLabel===APP_BUILD_LABEL,`現在：${document.body.dataset.buildLabel||"なし"}`],["ステップ数",Array.isArray(stepNames)&&stepNames.length===10,`検出：${Array.isArray(stepNames)?stepNames.length:"不明"}`],["主要画面",!!$("page")&&!!$("steps")&&!!$("progressTrack"),"page / steps / progressTrack"],["保存機能",typeof saveDraft==="function"&&typeof loadDraft==="function","saveDraft / loadDraft"],["JSON機能",typeof exportJSON==="function"&&!!$("jsonFile"),"exportJSON / jsonFile"],["プロンプト生成",typeof generatePrompt==="function","generatePrompt"],["更新確認",typeof verifyPublishedBuild==="function"&&!!$("updateModal"),"verifyPublishedBuild / updateModal"],["ローカル保存",storageAvailable(),"localStorage"],["ビルド指紋",APP_BUILD_FINGERPRINT!=="pending",APP_BUILD_FINGERPRINT],["復旧機能",typeof createRecoverySnapshot==="function"&&typeof restoreRecoverySnapshot==="function"&&!!$("backupModal"),"recovery snapshot"],["自動保存",typeof runAutosave==="function"&&!!$("autosaveModal")&&!!$("autosaveIndicator"),"autosave / dirty state"],["Phase6 Step2",["armpitLength","chestHairLength","abdominalHairLength","armHairCoverage","handHairCoverage","legHairOverallDensity","rearHairOverallDensity"].every(k=>Object.prototype.hasOwnProperty.call(state,k)),"Density / Coverage / Length state"],["Phase6 Step3",["armpitClustering","chestHairGrowthFlow","chestHairClustering","abdominalHairGrowthFlow","abdominalHairClustering","armHairGrowthFlow","armHairClustering","armHairRendering","handHairGrowthFlow","handHairClustering","handHairRendering","legHairGrowthFlow","legHairClustering","legHairRendering","rearHairGrowthFlow","rearHairClustering","rearHairRendering"].every(k=>Object.prototype.hasOwnProperty.call(state,k)),"Growth Flow / Clustering / Rendering state"],["Phase6 Step4",SPECIAL_HAIR_REGION_SCHEMA_VERSION==="1.0"&&Array.isArray(SPECIAL_HAIR_REGIONS)&&SPECIAL_HAIR_REGIONS.length>=4&&["armpitSpecialRole","armpitBoundaryBehavior","trailSpecialRole","trailGrowthFlow","trailClustering","trailRendering","trailSymmetry","futureSpecialRegion1","futureSpecialRegion2"].every(k=>Object.prototype.hasOwnProperty.call(state,k)),"Special Hair Regions / extensible schema"],["Phase6 Step5",typeof bodyHairRegionVisible==="function"&&typeof sortBodyHairPromptEntries==="function"&&["bodyHairVisibility","bodyHairPriority","bodyHairVisibilityPolicy","armpitVisibility","armpitPriority","treasureTrailVisibility","treasureTrailPriority","legHairVisibility","legHairPriority"].every(k=>Object.prototype.hasOwnProperty.call(state,k)),"Visibility / Priority / conditional prompt state"],["Phase6 Step6",typeof compileConditionalBodyHairPrompt==="function"&&typeof bodyHairCompressSection==="function"&&typeof bodyHairDeduplicateLines==="function"&&["bodyHairConditionalPrompt","bodyHairPromptCompression","bodyHairDuplicateReduction","bodyHairNoneOmission","bodyHairFalseVisibilityOmission"].every(k=>Object.prototype.hasOwnProperty.call(state,k)),"Conditional Prompt / compression / omission state"],["Phase6 Step7",typeof runPhase6IntegrationChecks==="function"&&runPhase6IntegrationChecks(false).every(x=>x.ok)&&state.phase6CompletionStatus==="完成","HTML / JSON / Chrome / Prompt integration"],["Phase7 Step1",typeof parameterToEnglish==="function"&&typeof sanitizeEnglishPrompt==="function"&&typeof parameterMappingAudit==="function"&&PARAMETER_MAPPING_VERSION==="cfm-parameter-mapping-v1"&&["phase7MappingVersion","phase7MappingStatus"].every(k=>Object.prototype.hasOwnProperty.call(state,k)),"UI / Internal Data / English Prompt mapping audit"],["Phase7 Step2",typeof applyBodyHairConditionalUI==="function"&&typeof bodyHairConditionalUIAudit==="function"&&BODY_HAIR_CONDITIONAL_UI_VERSION==="cfm-conditional-ui-v1"&&bodyHairConditionalUIAudit().ok&&["phase7ConditionalUIVersion","phase7ConditionalUIStatus"].every(k=>Object.prototype.hasOwnProperty.call(state,k)),"8 body-hair conditional groups / value retention / JSON-compatible state"],["主要モーダル",["libraryModal","checkModal","assistModal","updateModal","selfTestModal","backupModal","autosaveModal"].every(id=>!!$(id)),"7 modal elements"]];LAST_SELF_TEST_RESULTS=tests.map(([name,ok,detail])=>({name,ok,detail}));const passed=LAST_SELF_TEST_RESULTS.filter(x=>x.ok).length,total=LAST_SELF_TEST_RESULTS.length,summary=$("selfTestSummary");summary.className=`verify-box ${passed===total?"ok":"warn"}`;summary.innerHTML=`<div class="verify-title">${passed===total?"すべて正常です":"確認が必要な項目があります"}</div><div>${passed} / ${total} 項目が正常</div>`;$("selfTestList").innerHTML=LAST_SELF_TEST_RESULTS.map(x=>`<div class="selftest-item ${x.ok?"ok":"warn"}"><div class="selftest-mark">${x.ok?"✓":"!"}</div><div><strong>${x.name}</strong><div class="mini">${x.detail}</div></div></div>`).join("");return LAST_SELF_TEST_RESULTS;}
 function selfTestText(){if(!LAST_SELF_TEST_RESULTS.length)runSelfTest();return [`Application: Character Fullbody Maker — Tatsuya Edition Ver.2.0`,`Build: ${APP_BUILD_LABEL}`,`Fingerprint: ${APP_BUILD_FINGERPRINT}`,`Generated at: ${APP_BUILD_GENERATED_AT}`,...LAST_SELF_TEST_RESULTS.map(x=>`${x.ok?"PASS":"WARN"}: ${x.name} — ${x.detail}`)].join("\n");}
 function openSelfTestModal(){$("selfTestModal").classList.add("show");runSelfTest();}
 function closeSelfTestModal(){$("selfTestModal").classList.remove("show");}
@@ -359,7 +360,7 @@ const state={
  hairColor:"自然な黒",hairLength:"ショート",hairStyle:"ツーブロック",bangs:"短い",sideburns:"自然",nape:"短め",hairVolume:"標準",hairTexture:"直毛",
  skinTone:"健康的",skinTexture:"自然",ageLook:"少し若く見える",wrinkles:"なし",spots:"なし",beard:"なし",
  bodyBuild:"引き締まった",shoulder:"やや広め",neck:"標準",chest:"ほどよく厚い",abdomen:"薄く腹筋",waist:"やや細い",hip:"引き締まった",arms:"引き締まった",hands:"標準",thighs:"引き締まった",calves:"引き締まった",legs:"標準",inseam:"標準",headRatio:"標準",shoeSize:"27.0cm",chestCirc:"94cm",waistCirc:"74cm",
- phase7MappingVersion:"1.0",phase7MappingStatus:"監査可能",phase6IntegrationVersion:"1.0",phase6CompletionStatus:"完成",bodyHairVisibility:"衣装・ポーズから自動判定",bodyHairPriority:"高",bodyHairVisibilityPolicy:"見える部位のみ詳述",bodyHairConditionalPrompt:"自動（推奨）",bodyHairPromptCompression:"標準",bodyHairDuplicateReduction:"有効",bodyHairNoneOmission:"有効",bodyHairFalseVisibilityOmission:"有効",armpitVisibility:"自動",armpitPriority:"最優先",chestHairVisibility:"自動",chestHairPriority:"高",abdominalHairVisibility:"自動",abdominalHairPriority:"高",treasureTrailVisibility:"自動",treasureTrailPriority:"最優先",lowerHairVisibility:"自動",lowerHairPriority:"高",armHairVisibility:"自動",armHairPriority:"標準",handHairVisibility:"自動",handHairPriority:"低",legHairVisibility:"自動",legHairPriority:"高",rearHairVisibility:"自動",rearHairPriority:"標準",specialHairSchemaVersion:"1.0",specialHairExtensionPolicy:"予約スロットを保持",armpitSpecialRole:"独立した特殊部位",armpitBoundaryBehavior:"ワキの自然な窪み内に限定",trailSpecialRole:"独立した中央ライン",trailGrowthFlow:"へそ下から下向きに流れる",trailClustering:"細い中央ライン中心",trailRendering:"明瞭な一本毛と小さな毛束",trailSymmetry:"中央軸に沿って自然",futureSpecialRegion1:"未使用",futureSpecialRegion2:"未使用",chestHair:"なし",chestHairOverallDensity:"なし",chestHairCoverage:"胸中央から左右へ広がる",chestHairLength:"標準",chestHairPattern:"中央から左右へ自然に広がる",chestHairGrowthFlow:"胸中央から外側へ自然に流れる",chestHairClustering:"一本毛中心・小さな毛束",chestHairRendering:"自然な一本毛",chestHairSymmetry:"ほぼ左右対称・自然な差あり",abHair:"薄い",abdominalHairOverallDensity:"薄い",abdominalHairCoverage:"腹部全体",abdominalHairLength:"標準",abdominalHairPattern:"左右へ自然に広がる",abdominalHairGrowthFlow:"上から下へ自然に流れる",abdominalHairClustering:"一本毛中心・小さな毛束",abdominalHairRendering:"自然な一本毛",abdominalHairSymmetry:"ほぼ左右対称・自然な差あり",trail:"ヘソより下だけ・自然",armpitOverallDensity:"やや濃い",armpitCoverage:"広い",armpitRendering:"自然な毛束感",armpitGrowthFlow:"自然な放射状・自然な分け目",armpitClustering:"小さな自然な毛束",armpitSymmetry:"ほぼ左右対称・自然な差あり",armpit:"やや濃い",armpitStrandCount:"高い",armpitArea:"広い",armpitLength:"標準",armpitTexture:"自然な毛束感",armpitDirection:"自然な放射状",armpitParting:"自然な分け目あり",armpitTipVariation:"毛先に自然なばらつき",armpitGapPattern:"小さな隙間あり",armHair:"なし",armHairCoverage:"前腕中心",armHairLength:"短い",armHairGrowthFlow:"腕の長軸に沿って自然に流れる",armHairClustering:"均等な一本毛",armHairRendering:"細く自然な一本毛",handHair:"なし",handHairCoverage:"手の甲のみ",handHairLength:"短い",handHairGrowthFlow:"手首から指先方向へ自然に流れる",handHairClustering:"まばらな一本毛",handHairRendering:"細く短い一本毛",legHairOverallDensity:"濃い",legHairCoverage:"脚全体",thighHair:"やや濃い",lowerThighHair:"やや濃い",shinHair:"濃い",calfHair:"濃い",legHairDistribution:"脚全体に均一",kneeHairTransition:"膝周辺も自然につながる",legHairLength:"標準",legHairGrowthFlow:"脚の長軸に沿って下向きに流れる",legHairClustering:"一本毛中心・小さな毛束",legHairRendering:"自然な一本毛",legHairTexture:"自然な一本毛",rearHairOverallDensity:"薄い",rearHairCoverage:"腰・臀部中心",rearHairLength:"短い",rearHairGrowthFlow:"背中の輪郭に沿って自然に流れる",rearHairClustering:"まばらな一本毛と小さな毛束",rearHairRendering:"細く自然な一本毛",shoulderBackHair:"なし",upperBackHair:"なし",lowerBackHair:"なし",waistBackHair:"ごく薄い",buttockHair:"薄い",
+ phase7ConditionalUIVersion:"1.0",phase7ConditionalUIStatus:"完成",phase7MappingVersion:"1.0",phase7MappingStatus:"監査可能",phase6IntegrationVersion:"1.0",phase6CompletionStatus:"完成",bodyHairVisibility:"衣装・ポーズから自動判定",bodyHairPriority:"高",bodyHairVisibilityPolicy:"見える部位のみ詳述",bodyHairConditionalPrompt:"自動（推奨）",bodyHairPromptCompression:"標準",bodyHairDuplicateReduction:"有効",bodyHairNoneOmission:"有効",bodyHairFalseVisibilityOmission:"有効",armpitVisibility:"自動",armpitPriority:"最優先",chestHairVisibility:"自動",chestHairPriority:"高",abdominalHairVisibility:"自動",abdominalHairPriority:"高",treasureTrailVisibility:"自動",treasureTrailPriority:"最優先",lowerHairVisibility:"自動",lowerHairPriority:"高",armHairVisibility:"自動",armHairPriority:"標準",handHairVisibility:"自動",handHairPriority:"低",legHairVisibility:"自動",legHairPriority:"高",rearHairVisibility:"自動",rearHairPriority:"標準",specialHairSchemaVersion:"1.0",specialHairExtensionPolicy:"予約スロットを保持",armpitSpecialRole:"独立した特殊部位",armpitBoundaryBehavior:"ワキの自然な窪み内に限定",trailSpecialRole:"独立した中央ライン",trailGrowthFlow:"へそ下から下向きに流れる",trailClustering:"細い中央ライン中心",trailRendering:"明瞭な一本毛と小さな毛束",trailSymmetry:"中央軸に沿って自然",futureSpecialRegion1:"未使用",futureSpecialRegion2:"未使用",chestHair:"なし",chestHairOverallDensity:"なし",chestHairCoverage:"胸中央から左右へ広がる",chestHairLength:"標準",chestHairPattern:"中央から左右へ自然に広がる",chestHairGrowthFlow:"胸中央から外側へ自然に流れる",chestHairClustering:"一本毛中心・小さな毛束",chestHairRendering:"自然な一本毛",chestHairSymmetry:"ほぼ左右対称・自然な差あり",abHair:"薄い",abdominalHairOverallDensity:"薄い",abdominalHairCoverage:"腹部全体",abdominalHairLength:"標準",abdominalHairPattern:"左右へ自然に広がる",abdominalHairGrowthFlow:"上から下へ自然に流れる",abdominalHairClustering:"一本毛中心・小さな毛束",abdominalHairRendering:"自然な一本毛",abdominalHairSymmetry:"ほぼ左右対称・自然な差あり",trail:"ヘソより下だけ・自然",armpitOverallDensity:"やや濃い",armpitCoverage:"広い",armpitRendering:"自然な毛束感",armpitGrowthFlow:"自然な放射状・自然な分け目",armpitClustering:"小さな自然な毛束",armpitSymmetry:"ほぼ左右対称・自然な差あり",armpit:"やや濃い",armpitStrandCount:"高い",armpitArea:"広い",armpitLength:"標準",armpitTexture:"自然な毛束感",armpitDirection:"自然な放射状",armpitParting:"自然な分け目あり",armpitTipVariation:"毛先に自然なばらつき",armpitGapPattern:"小さな隙間あり",armHair:"なし",armHairCoverage:"前腕中心",armHairLength:"短い",armHairGrowthFlow:"腕の長軸に沿って自然に流れる",armHairClustering:"均等な一本毛",armHairRendering:"細く自然な一本毛",handHair:"なし",handHairCoverage:"手の甲のみ",handHairLength:"短い",handHairGrowthFlow:"手首から指先方向へ自然に流れる",handHairClustering:"まばらな一本毛",handHairRendering:"細く短い一本毛",legHairOverallDensity:"濃い",legHairCoverage:"脚全体",thighHair:"やや濃い",lowerThighHair:"やや濃い",shinHair:"濃い",calfHair:"濃い",legHairDistribution:"脚全体に均一",kneeHairTransition:"膝周辺も自然につながる",legHairLength:"標準",legHairGrowthFlow:"脚の長軸に沿って下向きに流れる",legHairClustering:"一本毛中心・小さな毛束",legHairRendering:"自然な一本毛",legHairTexture:"自然な一本毛",rearHairOverallDensity:"薄い",rearHairCoverage:"腰・臀部中心",rearHairLength:"短い",rearHairGrowthFlow:"背中の輪郭に沿って自然に流れる",rearHairClustering:"まばらな一本毛と小さな毛束",rearHairRendering:"細く自然な一本毛",shoulderBackHair:"なし",upperBackHair:"なし",lowerBackHair:"なし",waistBackHair:"ごく薄い",buttockHair:"薄い",
  top:"上半身裸",topArmhole:"標準",bottom:"競泳パンツ(ビキニ)",topColor:"白",bottomColor:"水色",topFit:"ジャストフィット",topLength:"腰骨まで",topHem:"直線カット",bottomRise:"自動",bottomLegOpening:"自動",bottomSideWidth:"自動",bottomCoverage:"自動",bottomFrontShape:"自動",bottomBackShape:"自動",bottomMaterial:"自動",shoes:"裸足",accessory:"なし",
  outputType:"正面・側面・背面の三面図",basePose:"自然な直立",armPosition:"両腕を上げる",handPosition:"頭の後ろで組む",headDirection:"正面",weightBalance:"左右均等",bodyPosture:"自然な直立",armsPose:"両手を頭の後ろで組む",legWidth:"肩幅程度に開く",legOffset:"左右を揃える",footDirection:"自然な外向き",framingMargin:"広め",gaze:"自然",
  cameraAngle:"目線の高さ",cameraDistance:"余白を含む全身",focalLength:"標準（50mm相当）",cameraPerspective:"正投影に近い",subjectScale:"三面とも同一",viewSpacing:"等間隔",
@@ -618,7 +619,7 @@ function phase6HtmlIntegrationCheck(){
  const requiredIds=["page","steps","progressTrack","jsonFile"];
  const elementsOk=requiredIds.every(id=>!!document.getElementById(id));
  const promptOk=currentStep===10?!!document.getElementById("output"):typeof generatePrompt==="function";
- const buildOk=document.body.dataset.buildPhase==="7"&&document.body.dataset.buildStep==="1"&&document.body.dataset.buildLabel===APP_BUILD_LABEL;
+ const buildOk=document.body.dataset.buildPhase==="7"&&document.body.dataset.buildStep==="2"&&document.body.dataset.buildLabel===APP_BUILD_LABEL;
  return {name:"HTML確認",ok:elementsOk&&promptOk&&buildOk,detail:`required elements: ${elementsOk&&promptOk?"OK":"NG"} / build metadata: ${buildOk?"OK":"NG"}`};
 }
 function phase6JsonIntegrationCheck(){
@@ -626,7 +627,7 @@ function phase6JsonIntegrationCheck(){
   const payload={schema:"cfm-character-v2",build:APP_BUILD_LABEL,phase:APP_BUILD_PHASE,step:APP_BUILD_STEP,currentStep,data:JSON.parse(JSON.stringify(state))};
   const restored=JSON.parse(JSON.stringify(payload));
   const required=["bodyHairConditionalPrompt","bodyHairPromptCompression","bodyHairVisibility","armpitVisibility","treasureTrailVisibility","phase6IntegrationVersion"];
-  const ok=restored.schema==="cfm-character-v2"&&restored.phase===7&&restored.step===1&&required.every(k=>Object.prototype.hasOwnProperty.call(restored.data,k));
+  const ok=restored.schema==="cfm-character-v2"&&restored.phase===7&&restored.step===2&&required.every(k=>Object.prototype.hasOwnProperty.call(restored.data,k));
   return {name:"JSON確認",ok,detail:ok?"serialize / parse / Phase6 keys: OK":"Phase6 JSON keys or metadata missing"};
  }catch(error){return {name:"JSON確認",ok:false,detail:error.message};}
 }
@@ -761,10 +762,11 @@ function pageHtml(){
  <div class="note"><strong>BODY PROPORTIONS の出力順：</strong>頭身 → 脚の長さ → 足のサイズ → 胸囲 → ウエスト寸法 → 首 → 肩幅 → 胸板 → 腹部 → 腰回り → 臀部 → 腕 → 手 → 太もも → ふくらはぎ → 脚全体</div>${navButtons()}`;
 
  if(currentStep===6)return `<h2 class="section-title">STEP 6　体毛</h2>
-<div class="lead">Body Hair の大分類を Character Core 仕様の順番に整理します。Phase6 Step7では、Body Hair & Conditional Prompt System を最終統合します。HTML・JSON・Chrome単体動作・Prompt出力をアプリ内で確認でき、Phase6 Step6までの設定と条件付きコンパイル機能をそのまま保持します。</div><div class="grid">
+<div class="lead">Body Hair の大分類を Character Core 仕様の順番に整理します。Phase7 Step2では、親Parameterが「なし」のとき関連する詳細項目を非表示にします。値はInternal Dataに保持され、「あり」へ戻すと以前の設定を復元します。JSON保存・復元でも同じ状態を維持します。</div><div class="grid">
 <div class="wide section-subtitle">PHASE6 INTEGRATION — 最終確認</div>
 <div class="wide help">HTML構造、JSON往復互換、Chrome単体動作に必要な機能、条件付き体毛プロンプトをまとめて確認します。</div>
 <div class="wide"><button type="button" id="runPhase6IntegrationBtn" class="primary">Phase6 統合確認を実行</button><div id="phase6IntegrationResult" class="verify-box"><div class="verify-title">未実行</div><div>ボタンを押すと4項目を確認します。</div></div></div>
+<div class="wide note"><strong>Conditional UI：</strong>Chest／Abdominal／Arm／Hand／Leg／Rear／Treasure Trail／Armpit Hair の親Parameterが「なし」または「毛なし」の場合、子Parameterだけを非表示にします。非表示中も値は削除されません。</div>
 <div class="wide section-subtitle">VISIBLE BODY HAIR — 共通方針</div>
 <div class="wide help">体毛は黒い塊や均一なぼかしではなく、自然な一本毛と小さな毛束として描写します。前面・側面・背面で密度と分布の整合性を保ちます。</div>
 
@@ -1035,6 +1037,40 @@ ${field("buttockHair","臀部の毛",["なし","ごく薄い","薄い","普通",
  <div class="actions"><button id="prevBtn">◀ 前へ</button><button id="copyBtn" class="primary">英語プロンプトをコピー</button></div></div>`;
 }
 
+const BODY_HAIR_CONDITIONAL_UI_VERSION="cfm-conditional-ui-v1";
+const BODY_HAIR_CONDITIONAL_GROUPS=Object.freeze([
+ {parent:"chestHairOverallDensity",noneValues:["なし"],children:["chestHairCoverage","chestHairLength","chestHairPattern","chestHairGrowthFlow","chestHairClustering","chestHairRendering","chestHairSymmetry"]},
+ {parent:"abdominalHairOverallDensity",noneValues:["なし"],children:["abdominalHairCoverage","abdominalHairLength","abdominalHairPattern","abdominalHairGrowthFlow","abdominalHairClustering","abdominalHairRendering","abdominalHairSymmetry"]},
+ {parent:"armHair",noneValues:["なし"],children:["armHairCoverage","armHairLength","armHairGrowthFlow","armHairClustering","armHairRendering"]},
+ {parent:"handHair",noneValues:["なし"],children:["handHairCoverage","handHairLength","handHairGrowthFlow","handHairClustering","handHairRendering"]},
+ {parent:"legHairOverallDensity",noneValues:["なし"],children:["legHairCoverage","thighHair","lowerThighHair","shinHair","calfHair","legHairLength","legHairGrowthFlow","legHairClustering","legHairRendering","legHairTexture","legHairDistribution","kneeHairTransition"]},
+ {parent:"rearHairOverallDensity",noneValues:["なし"],children:["rearHairCoverage","rearHairLength","rearHairGrowthFlow","rearHairClustering","rearHairRendering","shoulderBackHair","upperBackHair","lowerBackHair","waistBackHair","buttockHair"]},
+ {parent:"trailBridgeWidth",noneValues:["毛なし"],children:["trailSpecialRole","trailGrowthFlow","trailClustering","trailRendering","trailSymmetry","trailBridgeDensity","trailBridgeContinuity","trailBridgeEnd","trailStyle","trailUpperLimit","trailSurroundingHair","trailTransitionZone"]},
+ {parent:"armpitOverallDensity",noneValues:["なし"],children:["armpitSpecialRole","armpitBoundaryBehavior","armpitCoverage","armpitLength","armpitRendering","armpitGrowthFlow","armpitClustering","armpitSymmetry"]}
+]);
+function bodyHairConditionalGroupHidden(group){return group.noneValues.includes(String(state[group.parent]??""));}
+function applyBodyHairConditionalUI(){
+ BODY_HAIR_CONDITIONAL_GROUPS.forEach(group=>{
+  const hidden=bodyHairConditionalGroupHidden(group);
+  group.children.forEach(id=>{
+   const el=$(id);
+   if(el&&el.parentElement){el.parentElement.classList.toggle("conditional-hidden",hidden);el.parentElement.setAttribute("aria-hidden",hidden?"true":"false");}
+  });
+ });
+}
+function bodyHairConditionalUIAudit(){
+ const results=BODY_HAIR_CONDITIONAL_GROUPS.map(group=>{
+  const original=state[group.parent];
+  const snapshot=Object.fromEntries(group.children.map(id=>[id,state[id]]));
+  state[group.parent]=group.noneValues[0];
+  const hidden=bodyHairConditionalGroupHidden(group);
+  state[group.parent]=original;
+  const retained=group.children.every(id=>state[id]===snapshot[id]);
+  return {parent:group.parent,hidden,retained};
+ });
+ return {version:BODY_HAIR_CONDITIONAL_UI_VERSION,groups:results,ok:results.length===8&&results.every(x=>x.hidden&&x.retained)};
+}
+
 function applyConditionalUI(){
  const hide=(id,yes)=>{const e=$(id);if(e&&e.parentElement)e.parentElement.classList.toggle("conditional-hidden",!!yes)};
  const noTop=state.top==="上半身裸";
@@ -1043,6 +1079,7 @@ function applyConditionalUI(){
  const noInfo=state.infoDisplay==="表示しない"; ["infoLayout","infoPlacement","infoLanguage","nameDisplayRule","showTraits","showHair","showEyes","showOutfit","showPose","showNotes","showProject","projectName","showVersion","sheetVersion","showSheetNo","sheetNo","showCreator","creatorName"].forEach(id=>hide(id,noInfo));
  const p=$("step10Panel"); if(p)p.classList.toggle("safe-active",state.safeRetryLevel==="安全表現");
  const b=$("saferRetryBtn"); if(b)b.textContent=state.safeRetryLevel==="安全表現"?"✓ 安全表現で再生成済み":"安全表現で再生成";
+ applyBodyHairConditionalUI();
 }
 
 function bindPage(){
@@ -1102,7 +1139,7 @@ function render(){
  $("progressTrack").setAttribute("aria-valuetext",`ステップ${currentStep}／10`);
  renderSteps();
  $("page").innerHTML=pageHtml();
- bindPage();refreshHeader();
+ bindPage();refreshHeader();applyConditionalUI();
  if(currentStep===10)generatePrompt();
 }
 
@@ -2374,6 +2411,8 @@ function applyAll(o){
  if(o&&!o.trailSymmetry)o.trailSymmetry="中央軸に沿って自然";
  if(o&&!o.futureSpecialRegion1)o.futureSpecialRegion1="未使用";
  if(o&&!o.futureSpecialRegion2)o.futureSpecialRegion2="未使用";
+ if(o&&!o.phase7ConditionalUIVersion)o.phase7ConditionalUIVersion="1.0";
+ if(o&&!o.phase7ConditionalUIStatus)o.phase7ConditionalUIStatus="完成";
  if(o&&!o.phase7MappingVersion)o.phase7MappingVersion="1.0";
  if(o&&!o.phase7MappingStatus)o.phase7MappingStatus="監査可能";
  Object.assign(state,o||{});$("settingLevel").value=state.settingLevel||"easy";$("changeMode").value=state.changeMode||"confirm";$("projectStatus").value=state.projectStatus||"作成途中";render()}
@@ -2394,7 +2433,7 @@ function newProject(){
  $("displayStatus").textContent="未保存・新規作成";render();window.scrollTo({top:0,behavior:"smooth"});showToast("新規作成に切り替えました。");
 }
 function buildJSONExportPayload(){
- return {schema:"cfm-character-v2",app:"Character Fullbody Maker — Tatsuya Edition",version:"2.0-beta20.3",build:APP_BUILD_LABEL,phase:APP_BUILD_PHASE,step:APP_BUILD_STEP,phase6Integration:PHASE6_INTEGRATION_SCHEMA,parameterMapping:PARAMETER_MAPPING_VERSION,exportedAt:new Date().toISOString(),currentStep,data:collectAll()};
+ return {schema:"cfm-character-v2",app:"Character Fullbody Maker — Tatsuya Edition",version:"2.0-beta20.3",build:APP_BUILD_LABEL,phase:APP_BUILD_PHASE,step:APP_BUILD_STEP,phase6Integration:PHASE6_INTEGRATION_SCHEMA,parameterMapping:PARAMETER_MAPPING_VERSION,conditionalUI:BODY_HAIR_CONDITIONAL_UI_VERSION,exportedAt:new Date().toISOString(),currentStep,data:collectAll()};
 }
 function validateImportedJSON(d){
  if(!d||typeof d!=="object")throw new Error("JSON root must be an object");
