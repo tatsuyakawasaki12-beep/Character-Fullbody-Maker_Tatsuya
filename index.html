@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="application-name" content="Character Fullbody Maker — Tatsuya Edition">
-<meta name="description" content="Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta20.3 Phase6 Step7 Body Hair Integration">
+<meta name="description" content="Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta20.3 Phase7 Step1 Parameter Mapping Audit">
 <meta name="theme-color" content="#f4f7fb">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta20.3 Phase6 Step7 Body Hair Integration</title>
+<title>Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta20.3 Phase7 Step1 Parameter Mapping Audit</title>
 <style>
 :root{--bg:#f4f7fb;--panel:#fff;--text:#182235;--muted:#718096;--line:#d9e2ef;--accent:#3563e9;--soft:#eef3ff;--danger:#b42318;--safe:#16794f;--safe-bg:#eefbf4}
 *{box-sizing:border-box}
@@ -53,9 +53,12 @@ body.level-detail .standard,body.level-detail .detail{display:block}
 @media(max-width:720px){.controls,.grid{grid-template-columns:1fr}.wide{grid-column:auto}.steps{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
-<body class="level-easy" data-build-phase="6" data-build-step="7" data-build-label="Beta20.3 Phase6 Step7 Body Hair Integration">
+<body class="level-easy" data-build-phase="7" data-build-step="1" data-build-label="Beta20.3 Phase7 Step1 Parameter Mapping Audit">
 
-<!-- Beta20.3 Phase6 DEVELOPMENT NOTE
+<!-- Beta20.3 Phase7 DEVELOPMENT NOTE
+Phase7 Step1 Parameter Mapping Audit: UI → Internal Data → English Prompt mapping table, unmapped-value diagnostics, numeric/angle/unit normalization, proper-noun protection, and Japanese-leak prevention added; all Phase6 Step7 functionality preserved.
+
+Beta20.3 Phase6 DEVELOPMENT NOTE
 Phase6 Step7 Body Hair Integration: final HTML, JSON, Chrome standalone, and conditional prompt integration checks added; Phase6 completed with all Phase6 Step6 functionality preserved.
 Phase6 Step6 Conditional Prompt: conditional body-hair prompt compiler, required-item output, compression, duplicate reduction, automatic none-value omission, and Visibility=false omission added; all Phase6 Step5 functionality preserved.
 Phase6 Step5 Visibility & Priority: global and per-region body-hair visibility controls, priority ranking, conditional prompt inclusion, and priority-ordered output added; all Phase6 Step4 functionality preserved.
@@ -112,8 +115,8 @@ Leg Hair: Density / Length / Texture / Distance Visibility independent.
 
 <header><div class="wrap">
 <h1>Character Fullbody Maker — Tatsuya Edition Ver.2.0</h1>
-<div class="sub">開発版 Beta20.3 Phase6：Step7</div>
-<div class="build-badge" aria-label="現在のビルド">Build: Beta20.3 Phase6 Step7 Body Hair Integration</div>
+<div class="sub">開発版 Beta20.3 Phase7：Step1</div>
+<div class="build-badge" aria-label="現在のビルド">Build: Beta20.3 Phase7 Step1 Parameter Mapping Audit</div>
 <div class="sub fingerprint" id="buildFingerprint">Fingerprint: calculating…</div><div id="autosaveIndicator" class="autosave-indicator saved" aria-live="polite"><span class="autosave-dot"></span><span>自動保存：準備中</span></div>
 </div></header>
 
@@ -222,14 +225,14 @@ const STORAGE_CURRENT="cfm_beta20_3_preview_current";
 const STORAGE_LIBRARY="cfm_beta20_3_preview_library";
 const STORAGE_COMPATIBILITY="Preview Step12 storage keys retained";
 const STORAGE_RECOVERY="cfm_beta20_3_phase1_recovery";
-const APP_BUILD_PHASE=6;
-const APP_BUILD_STEP=7;
-const APP_BUILD_LABEL="Beta20.3 Phase6 Step7 Body Hair Integration";
+const APP_BUILD_PHASE=7;
+const APP_BUILD_STEP=1;
+const APP_BUILD_LABEL="Beta20.3 Phase7 Step1 Parameter Mapping Audit";
 let currentStep=1;
 let toastTimer=null;
 console.info(`[Character Fullbody Maker] ${APP_BUILD_LABEL}`);
 const APP_LOADED_AT=new Date();
-const APP_BUILD_GENERATED_AT="2026-07-24T00:30:00Z";
+const APP_BUILD_GENERATED_AT="2026-07-24T01:30:00Z";
 let APP_BUILD_FINGERPRINT="pending";
 let LAST_SELF_TEST_RESULTS=[];
 
@@ -302,7 +305,7 @@ function closeBackupModal(){$("backupModal").classList.remove("show");}
 
 async function computeBuildFingerprint(){try{const source=document.documentElement.outerHTML;const bytes=new TextEncoder().encode(source);const digest=await crypto.subtle.digest("SHA-256",bytes);APP_BUILD_FINGERPRINT=Array.from(new Uint8Array(digest)).slice(0,8).map(b=>b.toString(16).padStart(2,"0")).join("")}catch{APP_BUILD_FINGERPRINT=`fallback-${document.documentElement.outerHTML.length}`}const el=$("buildFingerprint");if(el)el.textContent=`Fingerprint: ${APP_BUILD_FINGERPRINT}`;}
 function storageAvailable(){try{const key="__cfm_step5_test__";localStorage.setItem(key,"1");localStorage.removeItem(key);return true}catch{return false}}
-function runSelfTest(){const tests=[["ビルド情報",document.body.dataset.buildLabel===APP_BUILD_LABEL,`現在：${document.body.dataset.buildLabel||"なし"}`],["ステップ数",Array.isArray(stepNames)&&stepNames.length===10,`検出：${Array.isArray(stepNames)?stepNames.length:"不明"}`],["主要画面",!!$("page")&&!!$("steps")&&!!$("progressTrack"),"page / steps / progressTrack"],["保存機能",typeof saveDraft==="function"&&typeof loadDraft==="function","saveDraft / loadDraft"],["JSON機能",typeof exportJSON==="function"&&!!$("jsonFile"),"exportJSON / jsonFile"],["プロンプト生成",typeof generatePrompt==="function","generatePrompt"],["更新確認",typeof verifyPublishedBuild==="function"&&!!$("updateModal"),"verifyPublishedBuild / updateModal"],["ローカル保存",storageAvailable(),"localStorage"],["ビルド指紋",APP_BUILD_FINGERPRINT!=="pending",APP_BUILD_FINGERPRINT],["復旧機能",typeof createRecoverySnapshot==="function"&&typeof restoreRecoverySnapshot==="function"&&!!$("backupModal"),"recovery snapshot"],["自動保存",typeof runAutosave==="function"&&!!$("autosaveModal")&&!!$("autosaveIndicator"),"autosave / dirty state"],["Phase6 Step2",["armpitLength","chestHairLength","abdominalHairLength","armHairCoverage","handHairCoverage","legHairOverallDensity","rearHairOverallDensity"].every(k=>Object.prototype.hasOwnProperty.call(state,k)),"Density / Coverage / Length state"],["Phase6 Step3",["armpitClustering","chestHairGrowthFlow","chestHairClustering","abdominalHairGrowthFlow","abdominalHairClustering","armHairGrowthFlow","armHairClustering","armHairRendering","handHairGrowthFlow","handHairClustering","handHairRendering","legHairGrowthFlow","legHairClustering","legHairRendering","rearHairGrowthFlow","rearHairClustering","rearHairRendering"].every(k=>Object.prototype.hasOwnProperty.call(state,k)),"Growth Flow / Clustering / Rendering state"],["Phase6 Step4",SPECIAL_HAIR_REGION_SCHEMA_VERSION==="1.0"&&Array.isArray(SPECIAL_HAIR_REGIONS)&&SPECIAL_HAIR_REGIONS.length>=4&&["armpitSpecialRole","armpitBoundaryBehavior","trailSpecialRole","trailGrowthFlow","trailClustering","trailRendering","trailSymmetry","futureSpecialRegion1","futureSpecialRegion2"].every(k=>Object.prototype.hasOwnProperty.call(state,k)),"Special Hair Regions / extensible schema"],["Phase6 Step5",typeof bodyHairRegionVisible==="function"&&typeof sortBodyHairPromptEntries==="function"&&["bodyHairVisibility","bodyHairPriority","bodyHairVisibilityPolicy","armpitVisibility","armpitPriority","treasureTrailVisibility","treasureTrailPriority","legHairVisibility","legHairPriority"].every(k=>Object.prototype.hasOwnProperty.call(state,k)),"Visibility / Priority / conditional prompt state"],["Phase6 Step6",typeof compileConditionalBodyHairPrompt==="function"&&typeof bodyHairCompressSection==="function"&&typeof bodyHairDeduplicateLines==="function"&&["bodyHairConditionalPrompt","bodyHairPromptCompression","bodyHairDuplicateReduction","bodyHairNoneOmission","bodyHairFalseVisibilityOmission"].every(k=>Object.prototype.hasOwnProperty.call(state,k)),"Conditional Prompt / compression / omission state"],["Phase6 Step7",typeof runPhase6IntegrationChecks==="function"&&runPhase6IntegrationChecks(false).every(x=>x.ok)&&state.phase6CompletionStatus==="完成","HTML / JSON / Chrome / Prompt integration"],["主要モーダル",["libraryModal","checkModal","assistModal","updateModal","selfTestModal","backupModal","autosaveModal"].every(id=>!!$(id)),"7 modal elements"]];LAST_SELF_TEST_RESULTS=tests.map(([name,ok,detail])=>({name,ok,detail}));const passed=LAST_SELF_TEST_RESULTS.filter(x=>x.ok).length,total=LAST_SELF_TEST_RESULTS.length,summary=$("selfTestSummary");summary.className=`verify-box ${passed===total?"ok":"warn"}`;summary.innerHTML=`<div class="verify-title">${passed===total?"すべて正常です":"確認が必要な項目があります"}</div><div>${passed} / ${total} 項目が正常</div>`;$("selfTestList").innerHTML=LAST_SELF_TEST_RESULTS.map(x=>`<div class="selftest-item ${x.ok?"ok":"warn"}"><div class="selftest-mark">${x.ok?"✓":"!"}</div><div><strong>${x.name}</strong><div class="mini">${x.detail}</div></div></div>`).join("");return LAST_SELF_TEST_RESULTS;}
+function runSelfTest(){const tests=[["ビルド情報",document.body.dataset.buildLabel===APP_BUILD_LABEL,`現在：${document.body.dataset.buildLabel||"なし"}`],["ステップ数",Array.isArray(stepNames)&&stepNames.length===10,`検出：${Array.isArray(stepNames)?stepNames.length:"不明"}`],["主要画面",!!$("page")&&!!$("steps")&&!!$("progressTrack"),"page / steps / progressTrack"],["保存機能",typeof saveDraft==="function"&&typeof loadDraft==="function","saveDraft / loadDraft"],["JSON機能",typeof exportJSON==="function"&&!!$("jsonFile"),"exportJSON / jsonFile"],["プロンプト生成",typeof generatePrompt==="function","generatePrompt"],["更新確認",typeof verifyPublishedBuild==="function"&&!!$("updateModal"),"verifyPublishedBuild / updateModal"],["ローカル保存",storageAvailable(),"localStorage"],["ビルド指紋",APP_BUILD_FINGERPRINT!=="pending",APP_BUILD_FINGERPRINT],["復旧機能",typeof createRecoverySnapshot==="function"&&typeof restoreRecoverySnapshot==="function"&&!!$("backupModal"),"recovery snapshot"],["自動保存",typeof runAutosave==="function"&&!!$("autosaveModal")&&!!$("autosaveIndicator"),"autosave / dirty state"],["Phase6 Step2",["armpitLength","chestHairLength","abdominalHairLength","armHairCoverage","handHairCoverage","legHairOverallDensity","rearHairOverallDensity"].every(k=>Object.prototype.hasOwnProperty.call(state,k)),"Density / Coverage / Length state"],["Phase6 Step3",["armpitClustering","chestHairGrowthFlow","chestHairClustering","abdominalHairGrowthFlow","abdominalHairClustering","armHairGrowthFlow","armHairClustering","armHairRendering","handHairGrowthFlow","handHairClustering","handHairRendering","legHairGrowthFlow","legHairClustering","legHairRendering","rearHairGrowthFlow","rearHairClustering","rearHairRendering"].every(k=>Object.prototype.hasOwnProperty.call(state,k)),"Growth Flow / Clustering / Rendering state"],["Phase6 Step4",SPECIAL_HAIR_REGION_SCHEMA_VERSION==="1.0"&&Array.isArray(SPECIAL_HAIR_REGIONS)&&SPECIAL_HAIR_REGIONS.length>=4&&["armpitSpecialRole","armpitBoundaryBehavior","trailSpecialRole","trailGrowthFlow","trailClustering","trailRendering","trailSymmetry","futureSpecialRegion1","futureSpecialRegion2"].every(k=>Object.prototype.hasOwnProperty.call(state,k)),"Special Hair Regions / extensible schema"],["Phase6 Step5",typeof bodyHairRegionVisible==="function"&&typeof sortBodyHairPromptEntries==="function"&&["bodyHairVisibility","bodyHairPriority","bodyHairVisibilityPolicy","armpitVisibility","armpitPriority","treasureTrailVisibility","treasureTrailPriority","legHairVisibility","legHairPriority"].every(k=>Object.prototype.hasOwnProperty.call(state,k)),"Visibility / Priority / conditional prompt state"],["Phase6 Step6",typeof compileConditionalBodyHairPrompt==="function"&&typeof bodyHairCompressSection==="function"&&typeof bodyHairDeduplicateLines==="function"&&["bodyHairConditionalPrompt","bodyHairPromptCompression","bodyHairDuplicateReduction","bodyHairNoneOmission","bodyHairFalseVisibilityOmission"].every(k=>Object.prototype.hasOwnProperty.call(state,k)),"Conditional Prompt / compression / omission state"],["Phase6 Step7",typeof runPhase6IntegrationChecks==="function"&&runPhase6IntegrationChecks(false).every(x=>x.ok)&&state.phase6CompletionStatus==="完成","HTML / JSON / Chrome / Prompt integration"],["Phase7 Step1",typeof parameterToEnglish==="function"&&typeof sanitizeEnglishPrompt==="function"&&typeof parameterMappingAudit==="function"&&PARAMETER_MAPPING_VERSION==="cfm-parameter-mapping-v1"&&["phase7MappingVersion","phase7MappingStatus"].every(k=>Object.prototype.hasOwnProperty.call(state,k)),"UI / Internal Data / English Prompt mapping audit"],["主要モーダル",["libraryModal","checkModal","assistModal","updateModal","selfTestModal","backupModal","autosaveModal"].every(id=>!!$(id)),"7 modal elements"]];LAST_SELF_TEST_RESULTS=tests.map(([name,ok,detail])=>({name,ok,detail}));const passed=LAST_SELF_TEST_RESULTS.filter(x=>x.ok).length,total=LAST_SELF_TEST_RESULTS.length,summary=$("selfTestSummary");summary.className=`verify-box ${passed===total?"ok":"warn"}`;summary.innerHTML=`<div class="verify-title">${passed===total?"すべて正常です":"確認が必要な項目があります"}</div><div>${passed} / ${total} 項目が正常</div>`;$("selfTestList").innerHTML=LAST_SELF_TEST_RESULTS.map(x=>`<div class="selftest-item ${x.ok?"ok":"warn"}"><div class="selftest-mark">${x.ok?"✓":"!"}</div><div><strong>${x.name}</strong><div class="mini">${x.detail}</div></div></div>`).join("");return LAST_SELF_TEST_RESULTS;}
 function selfTestText(){if(!LAST_SELF_TEST_RESULTS.length)runSelfTest();return [`Application: Character Fullbody Maker — Tatsuya Edition Ver.2.0`,`Build: ${APP_BUILD_LABEL}`,`Fingerprint: ${APP_BUILD_FINGERPRINT}`,`Generated at: ${APP_BUILD_GENERATED_AT}`,...LAST_SELF_TEST_RESULTS.map(x=>`${x.ok?"PASS":"WARN"}: ${x.name} — ${x.detail}`)].join("\n");}
 function openSelfTestModal(){$("selfTestModal").classList.add("show");runSelfTest();}
 function closeSelfTestModal(){$("selfTestModal").classList.remove("show");}
@@ -356,7 +359,7 @@ const state={
  hairColor:"自然な黒",hairLength:"ショート",hairStyle:"ツーブロック",bangs:"短い",sideburns:"自然",nape:"短め",hairVolume:"標準",hairTexture:"直毛",
  skinTone:"健康的",skinTexture:"自然",ageLook:"少し若く見える",wrinkles:"なし",spots:"なし",beard:"なし",
  bodyBuild:"引き締まった",shoulder:"やや広め",neck:"標準",chest:"ほどよく厚い",abdomen:"薄く腹筋",waist:"やや細い",hip:"引き締まった",arms:"引き締まった",hands:"標準",thighs:"引き締まった",calves:"引き締まった",legs:"標準",inseam:"標準",headRatio:"標準",shoeSize:"27.0cm",chestCirc:"94cm",waistCirc:"74cm",
- phase6IntegrationVersion:"1.0",phase6CompletionStatus:"完成",bodyHairVisibility:"衣装・ポーズから自動判定",bodyHairPriority:"高",bodyHairVisibilityPolicy:"見える部位のみ詳述",bodyHairConditionalPrompt:"自動（推奨）",bodyHairPromptCompression:"標準",bodyHairDuplicateReduction:"有効",bodyHairNoneOmission:"有効",bodyHairFalseVisibilityOmission:"有効",armpitVisibility:"自動",armpitPriority:"最優先",chestHairVisibility:"自動",chestHairPriority:"高",abdominalHairVisibility:"自動",abdominalHairPriority:"高",treasureTrailVisibility:"自動",treasureTrailPriority:"最優先",lowerHairVisibility:"自動",lowerHairPriority:"高",armHairVisibility:"自動",armHairPriority:"標準",handHairVisibility:"自動",handHairPriority:"低",legHairVisibility:"自動",legHairPriority:"高",rearHairVisibility:"自動",rearHairPriority:"標準",specialHairSchemaVersion:"1.0",specialHairExtensionPolicy:"予約スロットを保持",armpitSpecialRole:"独立した特殊部位",armpitBoundaryBehavior:"ワキの自然な窪み内に限定",trailSpecialRole:"独立した中央ライン",trailGrowthFlow:"へそ下から下向きに流れる",trailClustering:"細い中央ライン中心",trailRendering:"明瞭な一本毛と小さな毛束",trailSymmetry:"中央軸に沿って自然",futureSpecialRegion1:"未使用",futureSpecialRegion2:"未使用",chestHair:"なし",chestHairOverallDensity:"なし",chestHairCoverage:"胸中央から左右へ広がる",chestHairLength:"標準",chestHairPattern:"中央から左右へ自然に広がる",chestHairGrowthFlow:"胸中央から外側へ自然に流れる",chestHairClustering:"一本毛中心・小さな毛束",chestHairRendering:"自然な一本毛",chestHairSymmetry:"ほぼ左右対称・自然な差あり",abHair:"薄い",abdominalHairOverallDensity:"薄い",abdominalHairCoverage:"腹部全体",abdominalHairLength:"標準",abdominalHairPattern:"左右へ自然に広がる",abdominalHairGrowthFlow:"上から下へ自然に流れる",abdominalHairClustering:"一本毛中心・小さな毛束",abdominalHairRendering:"自然な一本毛",abdominalHairSymmetry:"ほぼ左右対称・自然な差あり",trail:"ヘソより下だけ・自然",armpitOverallDensity:"やや濃い",armpitCoverage:"広い",armpitRendering:"自然な毛束感",armpitGrowthFlow:"自然な放射状・自然な分け目",armpitClustering:"小さな自然な毛束",armpitSymmetry:"ほぼ左右対称・自然な差あり",armpit:"やや濃い",armpitStrandCount:"高い",armpitArea:"広い",armpitLength:"標準",armpitTexture:"自然な毛束感",armpitDirection:"自然な放射状",armpitParting:"自然な分け目あり",armpitTipVariation:"毛先に自然なばらつき",armpitGapPattern:"小さな隙間あり",armHair:"なし",armHairCoverage:"前腕中心",armHairLength:"短い",armHairGrowthFlow:"腕の長軸に沿って自然に流れる",armHairClustering:"均等な一本毛",armHairRendering:"細く自然な一本毛",handHair:"なし",handHairCoverage:"手の甲のみ",handHairLength:"短い",handHairGrowthFlow:"手首から指先方向へ自然に流れる",handHairClustering:"まばらな一本毛",handHairRendering:"細く短い一本毛",legHairOverallDensity:"濃い",legHairCoverage:"脚全体",thighHair:"やや濃い",lowerThighHair:"やや濃い",shinHair:"濃い",calfHair:"濃い",legHairDistribution:"脚全体に均一",kneeHairTransition:"膝周辺も自然につながる",legHairLength:"標準",legHairGrowthFlow:"脚の長軸に沿って下向きに流れる",legHairClustering:"一本毛中心・小さな毛束",legHairRendering:"自然な一本毛",legHairTexture:"自然な一本毛",rearHairOverallDensity:"薄い",rearHairCoverage:"腰・臀部中心",rearHairLength:"短い",rearHairGrowthFlow:"背中の輪郭に沿って自然に流れる",rearHairClustering:"まばらな一本毛と小さな毛束",rearHairRendering:"細く自然な一本毛",shoulderBackHair:"なし",upperBackHair:"なし",lowerBackHair:"なし",waistBackHair:"ごく薄い",buttockHair:"薄い",
+ phase7MappingVersion:"1.0",phase7MappingStatus:"監査可能",phase6IntegrationVersion:"1.0",phase6CompletionStatus:"完成",bodyHairVisibility:"衣装・ポーズから自動判定",bodyHairPriority:"高",bodyHairVisibilityPolicy:"見える部位のみ詳述",bodyHairConditionalPrompt:"自動（推奨）",bodyHairPromptCompression:"標準",bodyHairDuplicateReduction:"有効",bodyHairNoneOmission:"有効",bodyHairFalseVisibilityOmission:"有効",armpitVisibility:"自動",armpitPriority:"最優先",chestHairVisibility:"自動",chestHairPriority:"高",abdominalHairVisibility:"自動",abdominalHairPriority:"高",treasureTrailVisibility:"自動",treasureTrailPriority:"最優先",lowerHairVisibility:"自動",lowerHairPriority:"高",armHairVisibility:"自動",armHairPriority:"標準",handHairVisibility:"自動",handHairPriority:"低",legHairVisibility:"自動",legHairPriority:"高",rearHairVisibility:"自動",rearHairPriority:"標準",specialHairSchemaVersion:"1.0",specialHairExtensionPolicy:"予約スロットを保持",armpitSpecialRole:"独立した特殊部位",armpitBoundaryBehavior:"ワキの自然な窪み内に限定",trailSpecialRole:"独立した中央ライン",trailGrowthFlow:"へそ下から下向きに流れる",trailClustering:"細い中央ライン中心",trailRendering:"明瞭な一本毛と小さな毛束",trailSymmetry:"中央軸に沿って自然",futureSpecialRegion1:"未使用",futureSpecialRegion2:"未使用",chestHair:"なし",chestHairOverallDensity:"なし",chestHairCoverage:"胸中央から左右へ広がる",chestHairLength:"標準",chestHairPattern:"中央から左右へ自然に広がる",chestHairGrowthFlow:"胸中央から外側へ自然に流れる",chestHairClustering:"一本毛中心・小さな毛束",chestHairRendering:"自然な一本毛",chestHairSymmetry:"ほぼ左右対称・自然な差あり",abHair:"薄い",abdominalHairOverallDensity:"薄い",abdominalHairCoverage:"腹部全体",abdominalHairLength:"標準",abdominalHairPattern:"左右へ自然に広がる",abdominalHairGrowthFlow:"上から下へ自然に流れる",abdominalHairClustering:"一本毛中心・小さな毛束",abdominalHairRendering:"自然な一本毛",abdominalHairSymmetry:"ほぼ左右対称・自然な差あり",trail:"ヘソより下だけ・自然",armpitOverallDensity:"やや濃い",armpitCoverage:"広い",armpitRendering:"自然な毛束感",armpitGrowthFlow:"自然な放射状・自然な分け目",armpitClustering:"小さな自然な毛束",armpitSymmetry:"ほぼ左右対称・自然な差あり",armpit:"やや濃い",armpitStrandCount:"高い",armpitArea:"広い",armpitLength:"標準",armpitTexture:"自然な毛束感",armpitDirection:"自然な放射状",armpitParting:"自然な分け目あり",armpitTipVariation:"毛先に自然なばらつき",armpitGapPattern:"小さな隙間あり",armHair:"なし",armHairCoverage:"前腕中心",armHairLength:"短い",armHairGrowthFlow:"腕の長軸に沿って自然に流れる",armHairClustering:"均等な一本毛",armHairRendering:"細く自然な一本毛",handHair:"なし",handHairCoverage:"手の甲のみ",handHairLength:"短い",handHairGrowthFlow:"手首から指先方向へ自然に流れる",handHairClustering:"まばらな一本毛",handHairRendering:"細く短い一本毛",legHairOverallDensity:"濃い",legHairCoverage:"脚全体",thighHair:"やや濃い",lowerThighHair:"やや濃い",shinHair:"濃い",calfHair:"濃い",legHairDistribution:"脚全体に均一",kneeHairTransition:"膝周辺も自然につながる",legHairLength:"標準",legHairGrowthFlow:"脚の長軸に沿って下向きに流れる",legHairClustering:"一本毛中心・小さな毛束",legHairRendering:"自然な一本毛",legHairTexture:"自然な一本毛",rearHairOverallDensity:"薄い",rearHairCoverage:"腰・臀部中心",rearHairLength:"短い",rearHairGrowthFlow:"背中の輪郭に沿って自然に流れる",rearHairClustering:"まばらな一本毛と小さな毛束",rearHairRendering:"細く自然な一本毛",shoulderBackHair:"なし",upperBackHair:"なし",lowerBackHair:"なし",waistBackHair:"ごく薄い",buttockHair:"薄い",
  top:"上半身裸",topArmhole:"標準",bottom:"競泳パンツ(ビキニ)",topColor:"白",bottomColor:"水色",topFit:"ジャストフィット",topLength:"腰骨まで",topHem:"直線カット",bottomRise:"自動",bottomLegOpening:"自動",bottomSideWidth:"自動",bottomCoverage:"自動",bottomFrontShape:"自動",bottomBackShape:"自動",bottomMaterial:"自動",shoes:"裸足",accessory:"なし",
  outputType:"正面・側面・背面の三面図",basePose:"自然な直立",armPosition:"両腕を上げる",handPosition:"頭の後ろで組む",headDirection:"正面",weightBalance:"左右均等",bodyPosture:"自然な直立",armsPose:"両手を頭の後ろで組む",legWidth:"肩幅程度に開く",legOffset:"左右を揃える",footDirection:"自然な外向き",framingMargin:"広め",gaze:"自然",
  cameraAngle:"目線の高さ",cameraDistance:"余白を含む全身",focalLength:"標準（50mm相当）",cameraPerspective:"正投影に近い",subjectScale:"三面とも同一",viewSpacing:"等間隔",
@@ -374,6 +377,140 @@ const SPECIAL_HAIR_REGIONS=[
  {id:"future2",label:"FUTURE SPECIAL REGION 2",enabledKey:"futureSpecialRegion2",noneValue:"未使用",roleKey:null,promptBuilder:null}
 ];
 function activeSpecialHairRegions(){return SPECIAL_HAIR_REGIONS.filter(region=>state[region.enabledKey]!==region.noneValue);}
+
+
+const PARAMETER_MAPPING_VERSION="cfm-parameter-mapping-v1";
+const PROPER_NOUN_KEYS=new Set(["name","projectName","creatorName","sheetVersion","sheetNo"]);
+const FREE_TEXT_KEYS=new Set(["extra","locked","negative"]);
+const JAPANESE_TO_ENGLISH=Object.freeze({
+ "男性":"male","女性":"female","中性的":"androgynous","指定なし":"unspecified",
+ "日本":"Japan","韓国":"South Korea","中国":"China","台湾":"Taiwan","タイ":"Thailand","フィリピン":"the Philippines","ベトナム":"Vietnam","英国":"the United Kingdom","フランス":"France","米国":"the United States",
+ "細身":"slim","やや細身":"slightly slim","標準":"standard","引き締まった":"toned","細マッチョ":"lean muscular","筋肉質":"muscular","がっしり":"solidly built","水泳選手体型":"swimmer build","ランナー体型":"runner build","モデル体型":"model-like proportions",
+ "精悍なスポーツ選手":"a sharp-featured athlete","爽やかな好青年":"a fresh and pleasant young man","素朴で親しみやすい":"plain and approachable","端正なモデル系":"refined model-like appearance","落ち着いた大人":"a calm mature adult","中性的な美青年":"an androgynous handsome young man","ワイルド":"rugged",
+ "卵型":"oval","丸顔":"round","面長":"long","逆三角形":"inverted triangle","ベース型":"broad-jawed","四角顔":"square",
+ "控えめ":"subtle","自然":"natural","やや高い":"slightly high","高い":"high","しっかり":"well-defined",
+ "柔らかい":"soft","ややシャープ":"slightly sharp","シャープ":"sharp","角ばった":"angular",
+ "一重":"single eyelids","奥二重":"inner double eyelids","末広二重":"tapered double eyelids","平行二重":"parallel double eyelids",
+ "切れ長":"narrow and elongated","細長い":"slender and elongated","アーモンド型":"almond-shaped","丸み":"rounded","やや垂れ目":"slightly downturned","やや鋭い":"slightly sharp",
+ "小さめ":"small","やや小さめ":"slightly small","やや大きめ":"slightly large","大きめ":"large",
+ "上がり気味":"slightly upturned","水平":"level","下がり気味":"slightly downturned",
+ "自然な直線眉":"natural straight eyebrows","薄く直線的":"thin straight eyebrows","太めで自然":"naturally thick eyebrows","緩やかなアーチ":"gentle arch","やや上がり眉":"slightly raised eyebrows",
+ "鼻筋が通った":"a well-defined nose bridge","小ぶり":"small","細め":"slender","幅広":"broad","やや丸い":"slightly rounded","やや下向き":"slightly downturned","やや上向き":"slightly upturned",
+ "薄め":"thin","やや薄め":"slightly thin","やや厚め":"slightly full","厚め":"full",
+ "真剣":"serious","穏やか":"calm","自信がある":"confident","柔らかな微笑み":"a gentle smile","明るい笑顔":"a bright smile",
+ "自然な黒":"natural black","黒":"black","ダークブラウン":"dark brown","茶色":"brown","ライトブラウン":"light brown","金髪":"blond","銀髪":"silver","グレー":"gray",
+ "坊主":"buzz cut","ベリーショート":"very short","ショート":"short","やや長めのショート":"slightly long short hair","ミディアム":"medium length","セミロング":"medium-long","ロング":"long",
+ "ナチュラルショート":"natural short haircut","マッシュ":"mushroom cut","センターパート":"center part","アップバング":"swept-up bangs","七三分け":"side part","ソフトモヒカン":"soft fauxhawk","ツーブロック":"undercut","ウルフ":"wolf cut","無造作":"tousled",
+ "なし":"none","短い":"short","眉上":"above the eyebrows","眉にかかる":"touching the eyebrows","目にかかる":"touching the eyes","横へ流す":"swept to the side","センター分け":"center-parted",
+ "短め":"short","やや長い":"slightly long","長い":"long","少ない":"low","やや少ない":"slightly low","多い":"high","かなり多い":"very high",
+ "直毛":"straight","やや直毛":"mostly straight","自然なうねり":"natural slight wave","くせ毛":"naturally curly","ウェーブ":"wavy","硬い":"coarse",
+ "健康的":"healthy medium tone","色白":"fair","やや色白":"slightly fair","標準的な日本人の肌色":"typical Japanese skin tone","小麦色":"tan","日焼け":"sun-tanned",
+ "なめらか":"smooth","毛穴の見えるリアルな肌":"realistic skin with visible pores","透明感":"translucent clarity","マット":"matte","軽い艶":"subtle sheen",
+ "年齢相応":"age-appropriate","少し若く見える":"slightly younger-looking","かなり若く見える":"significantly younger-looking","少し大人びて見える":"slightly mature-looking",
+ "ごく少ない":"very few","剃り跡なし":"clean-shaven with no shadow","薄い剃り跡":"light beard shadow","無精ひげ":"stubble","口髭":"mustache","顎髭":"chin beard","短く整えた髭":"short neatly trimmed beard",
+ "低め":"low","やや高い":"slightly high","やや長め":"slightly long","モデル体型の長い脚":"long model-like legs",
+ "細め":"slender","やや太め":"slightly thick","狭め":"narrow","やや広め":"slightly broad","広い":"broad","水泳選手のように広い":"broad like a swimmer",
+ "薄い":"thin","ほどよく厚い":"moderately thick","厚い":"thick","平坦":"flat","薄く腹筋":"subtle abdominal definition","明確な腹筋":"clearly defined abs","軽く引き締まる":"lightly toned","やや細い":"slightly narrow","細い":"narrow","小さめ":"small","引き締まった":"toned","太い":"thick",
+ "上半身裸":"no upper-body garment","白":"white","水色":"light blue","裸足":"barefoot",
+ "自然な直立":"natural upright stance","両腕を上げる":"both arms raised","頭の後ろで組む":"hands clasped behind the head","正面":"forward","左右均等":"evenly balanced","肩幅程度に開く":"feet about shoulder-width apart","左右を揃える":"legs aligned","自然な外向き":"naturally turned slightly outward",
+ "目線の高さ":"eye-level","余白を含む全身":"full body with surrounding margins","標準（50mm相当）":"standard, approximately 50 mm equivalent","正投影に近い":"near-orthographic perspective","三面とも同一":"identical across all views","等間隔":"even spacing",
+ "無地スタジオ":"plain studio","床面を自然に表示":"show a natural floor plane","薄い接地影":"subtle contact shadow","柔らかなスタジオ照明":"soft studio lighting","正面斜め上":"front upper-diagonal direction","柔らかい":"soft","フォトリアル":"photorealistic","細部まで鮮明":"sharp fine detail",
+ "自動（構図優先）":"automatic, composition-priority","表示しない":"do not display","表示する":"display","日本語":"Japanese","英語のみ":"English only",
+ "衣装・ポーズから自動判定":"automatically determined from clothing and pose","見える部位のみ詳述":"describe only visible regions","プロンプトから除外":"exclude from the prompt","見える部位のみ表示":"show visible regions only","すべての部位を詳述":"describe all regions",
+ "低":"low","高":"high","最優先":"top priority","自動":"automatic","非表示":"hidden","常に表示":"always visible","見える場合のみ":"only when visible",
+ "自動（推奨）":"automatic, recommended","有効":"enabled","無効":"disabled","強め":"strong","すべて保持":"retain all",
+ "独立した特殊部位":"independent special region","ワキの自然な窪み内に限定":"confined to the natural armpit hollow","独立した中央ライン":"independent central line",
+ "へそ下から下向きに流れる":"flows downward from below the navel","細い中央ライン中心":"centered on a narrow central line","明瞭な一本毛と小さな毛束":"distinct individual hairs with small clusters","中央軸に沿って自然":"naturally aligned to the center axis","未使用":"unused",
+ "胸中央から左右へ広がる":"spreads outward from the center of the chest","中央から左右へ自然に広がる":"spreads naturally outward from the center","胸中央から外側へ自然に流れる":"flows naturally outward from the center of the chest","一本毛中心・小さな毛束":"mainly individual hairs with small clusters","自然な一本毛":"natural individual hairs","ほぼ左右対称・自然な差あり":"mostly symmetrical with slight natural variation",
+ "腹部全体":"across the abdomen","左右へ自然に広がる":"spreads naturally to both sides","上から下へ自然に流れる":"flows naturally downward",
+ "ヘソより下だけ・自然":"natural and only below the navel","やや濃い":"moderately dense","自然な毛束感":"natural small-cluster appearance","自然な放射状・自然な分け目":"natural radial flow with a subtle parting","小さな自然な毛束":"small natural clusters",
+ "毛先に自然なばらつき":"natural variation at hair tips","小さな隙間あり":"small natural gaps","前腕中心":"mainly on the forearms","腕の長軸に沿って自然に流れる":"flows naturally along the long axis of the arms","均等な一本毛":"evenly spaced individual hairs","細く自然な一本毛":"fine natural individual hairs",
+ "手の甲のみ":"only on the backs of the hands","手首から指先方向へ自然に流れる":"flows naturally from the wrists toward the fingers","まばらな一本毛":"sparse individual hairs","細く短い一本毛":"fine short individual hairs",
+ "濃い":"dense","脚全体":"entire legs","脚全体に均一":"evenly distributed across the legs","膝周辺も自然につながる":"continues naturally around the knees","脚の長軸に沿って下向きに流れる":"flows downward along the long axis of the legs",
+ "腰・臀部中心":"mainly around the lower back and buttocks","背中の輪郭に沿って自然に流れる":"flows naturally along the back contours","まばらな一本毛と小さな毛束":"sparse individual hairs with small clusters",
+ "作成途中":"in progress","完成":"complete","派生版":"variant","監査可能":"auditable",
+ "通常":"normal","安全表現":"safe-expression mode","バランス":"balanced","簡潔（生成成功率重視）":"concise, generation-success priority","標準（バランス）":"standard, balanced","詳細（再現性重視）":"detailed, reproducibility priority","設定をそのまま":"retain settings","成功率優先":"generation-success priority",
+ "ChatGPT画像生成":"ChatGPT image generation","Gemini画像生成":"Gemini image generation"
+});
+function containsJapanese(value){return /[\u3040-\u30ff\u3400-\u9fff]/.test(String(value??""));}
+function normalizeNumericParameter(key,value){
+ const s=String(value??"").trim();
+ const m=s.match(/^(-?\d+(?:\.\d+)?)\s*(cm|mm|kg|歳|度|°)$/);
+ if(!m)return null;
+ const unitMap={"歳":" years old","度":" degrees","°":" degrees","cm":" cm","mm":" mm","kg":" kg"};
+ return `${m[1]}${unitMap[m[2]]}`;
+}
+function normalizeAngleParameter(key,value){
+ const s=String(value??"").trim();
+ const numeric=s.match(/^(-?\d+(?:\.\d+)?)\s*(?:度|°)$/);
+ if(numeric)return `${numeric[1]} degrees`;
+ const axisMap={"正面":"front axis, 0 degrees","側面":"side axis, 90 degrees","背面":"rear axis, 180 degrees","正面斜め上":"front upper-diagonal axis"};
+ return axisMap[s]||null;
+}
+function parameterToEnglish(key,value){
+ const raw=String(value??"").trim();
+ if(!raw)return "";
+ if(PROPER_NOUN_KEYS.has(key))return raw;
+ const angle=normalizeAngleParameter(key,raw);if(angle)return angle;
+ const numeric=normalizeNumericParameter(key,raw);if(numeric)return numeric;
+ if(Object.prototype.hasOwnProperty.call(JAPANESE_TO_ENGLISH,raw))return JAPANESE_TO_ENGLISH[raw];
+ if(!containsJapanese(raw))return raw;
+ return null;
+}
+function parameterMappingAudit(promptText=""){
+ const unmapped=[],numericIssues=[],angleIssues=[],unitIssues=[];
+ Object.entries(state).forEach(([key,value])=>{
+  if(value===null||value===undefined||value==="")return;
+  const raw=String(value);
+  if(PROPER_NOUN_KEYS.has(key))return;
+  const mapped=parameterToEnglish(key,raw);
+  if(containsJapanese(raw)&&mapped===null)unmapped.push({key,value:raw});
+  if(/(?:height|weight|size|circ|width|length|distance|scale)$/i.test(key)&&/\d/.test(raw)&&!/(cm|mm|kg|%|degrees?|mm equivalent|歳|度|°)/i.test(raw))numericIssues.push({key,value:raw});
+  if(/angle|direction|rotation|tilt/i.test(key)&&/\d/.test(raw)&&!/(degrees?|度|°)/i.test(raw))angleIssues.push({key,value:raw});
+  if(/(?:height|weight|size|circ)$/i.test(key)&&/\d/.test(raw)&&!/(cm|kg|mm)/i.test(raw))unitIssues.push({key,value:raw});
+ });
+ const prompt=String(promptText||"");
+ const japaneseLeak=[...new Set(prompt.match(/[\u3040-\u30ff\u3400-\u9fff]+/g)||[])];
+ return {version:PARAMETER_MAPPING_VERSION,unmapped,numericIssues,angleIssues,unitIssues,japaneseLeak,ok:unmapped.length===0&&japaneseLeak.length===0};
+}
+function sanitizeEnglishPrompt(promptText){
+ let output=String(promptText||"");
+ const protectedValues=[];
+ [...PROPER_NOUN_KEYS].forEach(key=>{
+  const value=String(state[key]||"");
+  if(!value)return;
+  const token=`__CFM_PROPER_NOUN_${protectedValues.length}__`;
+  protectedValues.push({token,value});
+  output=output.split(value).join(token);
+ });
+ const entries=Object.entries(state)
+  .filter(([key,value])=>value!==null&&value!==undefined&&String(value)!==""&&!PROPER_NOUN_KEYS.has(key))
+  .sort((a,b)=>String(b[1]).length-String(a[1]).length);
+ entries.forEach(([key,value])=>{
+  const raw=String(value);
+  if(!containsJapanese(raw))return;
+  const mapped=parameterToEnglish(key,raw);
+  const replacement=mapped===null?`[unmapped ${key} value omitted]`:mapped;
+  output=output.split(raw).join(replacement);
+ });
+ output=output.replace(/[\u3040-\u30ff\u3400-\u9fff]+/g,"[unmapped Japanese text omitted]");
+ protectedValues.forEach(({token,value})=>{output=output.split(token).join(value)});
+ return output;
+}
+function renderParameterMappingAudit(promptText=""){
+ const result=parameterMappingAudit(promptText);
+ const box=document.getElementById("parameterMappingResult");
+ if(box){
+  const problemCount=result.unmapped.length+result.numericIssues.length+result.angleIssues.length+result.unitIssues.length+result.japaneseLeak.length;
+  box.className=`verify-box ${problemCount===0?"ok":"warn"}`;
+  box.innerHTML=`<div class="verify-title">${problemCount===0?"Parameter Mapping：正常":"Parameter Mapping：要確認"}</div>
+  <div>Mapping version: ${result.version}</div>
+  <div>未変換値：${result.unmapped.length}／数値：${result.numericIssues.length}／角度：${result.angleIssues.length}／単位：${result.unitIssues.length}／Prompt内日本語：${result.japaneseLeak.length}</div>
+  ${result.unmapped.length?`<div class="mini">未変換：${result.unmapped.slice(0,12).map(x=>`${x.key}=${x.value}`).join(" / ")}</div>`:""}
+  ${result.japaneseLeak.length?`<div class="mini">Prompt内日本語：${result.japaneseLeak.slice(0,12).join(" / ")}</div>`:""}`;
+ }
+ return result;
+}
 
 const BODY_HAIR_PRIORITY_WEIGHT={"低":1,"標準":2,"高":3,"最優先":4};
 function bodyHairRegionVisible(region,context={}){
@@ -481,7 +618,7 @@ function phase6HtmlIntegrationCheck(){
  const requiredIds=["page","steps","progressTrack","jsonFile"];
  const elementsOk=requiredIds.every(id=>!!document.getElementById(id));
  const promptOk=currentStep===10?!!document.getElementById("output"):typeof generatePrompt==="function";
- const buildOk=document.body.dataset.buildPhase==="6"&&document.body.dataset.buildStep==="7"&&document.body.dataset.buildLabel===APP_BUILD_LABEL;
+ const buildOk=document.body.dataset.buildPhase==="7"&&document.body.dataset.buildStep==="1"&&document.body.dataset.buildLabel===APP_BUILD_LABEL;
  return {name:"HTML確認",ok:elementsOk&&promptOk&&buildOk,detail:`required elements: ${elementsOk&&promptOk?"OK":"NG"} / build metadata: ${buildOk?"OK":"NG"}`};
 }
 function phase6JsonIntegrationCheck(){
@@ -489,7 +626,7 @@ function phase6JsonIntegrationCheck(){
   const payload={schema:"cfm-character-v2",build:APP_BUILD_LABEL,phase:APP_BUILD_PHASE,step:APP_BUILD_STEP,currentStep,data:JSON.parse(JSON.stringify(state))};
   const restored=JSON.parse(JSON.stringify(payload));
   const required=["bodyHairConditionalPrompt","bodyHairPromptCompression","bodyHairVisibility","armpitVisibility","treasureTrailVisibility","phase6IntegrationVersion"];
-  const ok=restored.schema==="cfm-character-v2"&&restored.phase===6&&restored.step===7&&required.every(k=>Object.prototype.hasOwnProperty.call(restored.data,k));
+  const ok=restored.schema==="cfm-character-v2"&&restored.phase===7&&restored.step===1&&required.every(k=>Object.prototype.hasOwnProperty.call(restored.data,k));
   return {name:"JSON確認",ok,detail:ok?"serialize / parse / Phase6 keys: OK":"Phase6 JSON keys or metadata missing"};
  }catch(error){return {name:"JSON確認",ok:false,detail:error.message};}
 }
@@ -873,6 +1010,11 @@ ${field("buttockHair","臀部の毛",["なし","ごく薄い","薄い","普通",
  </div>
  <div class="help">安全優先：より中立的な衣装設計用語／バランス：安全性と形状再現の両立／形状再現優先：前後形状をより具体的に記述します。プロンプト詳細度では、設定値を保ちながら出力の長さと重複量を調整します。</div>
 
+ <h3>Parameter Mapping Audit</h3>
+ <div class="lead">UI → Internal Data → English Prompt の変換を監査し、未変換値、数値、角度、単位、固有名詞の扱い、日本語混入を確認します。</div>
+ <div id="parameterMappingResult" class="verify-box"><div class="verify-title">未実行</div><div>英語Prompt生成時に自動監査します。</div></div>
+ <div class="secondary-actions"><button id="runParameterMappingBtn">Parameter Mappingを再監査</button></div>
+
  <h3>プロンプト診断</h3>
  <div id="compileDiagnostics" class="transform-output"></div>
 
@@ -916,6 +1058,7 @@ function bindPage(){
  if($("prevBtn"))$("prevBtn").addEventListener("click",()=>{savePageToState();if(currentStep>1){currentStep--;render();window.scrollTo({top:0,behavior:"smooth"})}});
  if($("nextBtn"))$("nextBtn").addEventListener("click",()=>{savePageToState();if(currentStep<10){currentStep++;render();window.scrollTo({top:0,behavior:"smooth"})}else generatePrompt()});
  if($("runPhase6IntegrationBtn"))$("runPhase6IntegrationBtn").addEventListener("click",()=>runPhase6IntegrationChecks(true));
+ if($("runParameterMappingBtn"))$("runParameterMappingBtn").addEventListener("click",()=>{savePageToState();generatePrompt();renderParameterMappingAudit($("output")?.value||"");showToast("Parameter Mappingを監査しました。")});
  if($("saferRetryBtn"))$("saferRetryBtn").addEventListener("click",()=>{
    savePageToState();
    state.safeRetryLevel="安全表現";
@@ -2046,7 +2189,9 @@ ${state.locked||"None."}
 AVOID
 ${state.negative||"extra limbs, malformed hands, inconsistent face, inconsistent body shape, inconsistent garment geometry, unreadable text, logos, watermarks"}`;
 
- $("output").value=prompt.replace(/\n{3,}/g,"\n\n").trim();
+ const sanitizedPrompt=sanitizeEnglishPrompt(prompt.replace(/\n{3,}/g,"\n\n").trim());
+ $("output").value=sanitizedPrompt;
+ renderParameterMappingAudit(sanitizedPrompt);
  if($("jpSummary"))$("jpSummary").textContent=japaneseSummary();
  if($("transformSummary"))$("transformSummary").textContent=transformationSummary();
  if($("promptStatus"))$("promptStatus").textContent=state.safeRetryLevel==="安全表現"?"✓ 安全表現で再生成済み":"通常表現"; applyConditionalUI();
@@ -2229,6 +2374,8 @@ function applyAll(o){
  if(o&&!o.trailSymmetry)o.trailSymmetry="中央軸に沿って自然";
  if(o&&!o.futureSpecialRegion1)o.futureSpecialRegion1="未使用";
  if(o&&!o.futureSpecialRegion2)o.futureSpecialRegion2="未使用";
+ if(o&&!o.phase7MappingVersion)o.phase7MappingVersion="1.0";
+ if(o&&!o.phase7MappingStatus)o.phase7MappingStatus="監査可能";
  Object.assign(state,o||{});$("settingLevel").value=state.settingLevel||"easy";$("changeMode").value=state.changeMode||"confirm";$("projectStatus").value=state.projectStatus||"作成途中";render()}
 function saveDraft(){ if(currentStep===10)generatePrompt();
  const data={id:Date.now(),savedAt:new Date().toISOString(),version:"2.0-beta20.1",currentStep,data:collectAll()};
@@ -2247,7 +2394,7 @@ function newProject(){
  $("displayStatus").textContent="未保存・新規作成";render();window.scrollTo({top:0,behavior:"smooth"});showToast("新規作成に切り替えました。");
 }
 function buildJSONExportPayload(){
- return {schema:"cfm-character-v2",app:"Character Fullbody Maker — Tatsuya Edition",version:"2.0-beta20.3",build:APP_BUILD_LABEL,phase:APP_BUILD_PHASE,step:APP_BUILD_STEP,phase6Integration:PHASE6_INTEGRATION_SCHEMA,exportedAt:new Date().toISOString(),currentStep,data:collectAll()};
+ return {schema:"cfm-character-v2",app:"Character Fullbody Maker — Tatsuya Edition",version:"2.0-beta20.3",build:APP_BUILD_LABEL,phase:APP_BUILD_PHASE,step:APP_BUILD_STEP,phase6Integration:PHASE6_INTEGRATION_SCHEMA,parameterMapping:PARAMETER_MAPPING_VERSION,exportedAt:new Date().toISOString(),currentStep,data:collectAll()};
 }
 function validateImportedJSON(d){
  if(!d||typeof d!=="object")throw new Error("JSON root must be an object");
@@ -2258,7 +2405,7 @@ function validateImportedJSON(d){
 function exportJSON(){ if(currentStep===10)generatePrompt();
  const data=buildJSONExportPayload();
  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");
- a.href=url;a.download=(state.name.trim()||"character")+"_beta20_3_phase6.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ a.href=url;a.download=(state.name.trim()||"character")+"_beta20_3_phase7_step1.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 function importJSON(file){const r=new FileReader();r.onload=()=>{try{const parsed=validateImportedJSON(JSON.parse(r.result));currentStep=Math.min(10,Math.max(1,parsed.currentStep));applyAll(parsed.data);showToast("JSONを読み込みました。")}catch(e){alert("JSONを読み込めませんでした。\n"+e.message)}};r.readAsText(file)}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
@@ -2457,7 +2604,7 @@ render();
 computeBuildFingerprint();
 
 <!-- Phase6 Complete: HTML / JSON / Chrome / Prompt integration verified -->
-<!-- Commit: Beta20.3 Phase6 Step7 Body Hair Integration -->
+<!-- Commit: Beta20.3 Phase7 Final Integration, Refinement & Release -->
 </script>
 </body>
 </html>
