@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="application-name" content="Character Fullbody Maker — Tatsuya Edition">
-<meta name="description" content="Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta21 In Progress">
+<meta name="description" content="Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta22 In Progress">
 <meta name="theme-color" content="#f4f7fb">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta21 In Progress</title>
+<title>Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta22 In Progress</title>
 <style>
 :root{--bg:#f4f7fb;--panel:#fff;--text:#182235;--muted:#718096;--line:#d9e2ef;--accent:#3563e9;--soft:#eef3ff;--danger:#b42318;--safe:#16794f;--safe-bg:#eefbf4}
 *{box-sizing:border-box}
@@ -74,7 +74,7 @@ details.grid-section>.grid-section-body{display:grid;grid-template-columns:repea
 </style>
 </head>
 <!-- Commit: Beta20.3 Phase7 Step7 Final Polish, Diagnostics & Beta20.3 Release -->
-<body class="level-easy" data-build-phase="7" data-build-step="7" data-build-label="Beta21 In Progress">
+<body class="level-easy" data-build-phase="7" data-build-step="7" data-build-label="Beta22 In Progress">
 
 <!-- Beta20.3 Phase7 DEVELOPMENT NOTE
 Phase7 Step7 Final Polish, Diagnostics & Beta20.3 Release: beginner-friendly Pose guidance, readable Japanese Summary and AI Conversion Log presentation, developer-only diagnostic notices, special-hair reservation guidance, final release diagnostics, JSON round-trip verification, release notes, and Beta20.3 Complete labeling added; all Phase7 Step6 functionality preserved.
@@ -142,8 +142,8 @@ Leg Hair: Density / Length / Texture / Distance Visibility independent.
 
 <header><div class="wrap">
 <h1>Character Fullbody Maker — Tatsuya Edition Ver.2.0</h1>
-<div class="sub" id="buildSubLabel">Character Fullbody Maker Tatsuya Edition Ver.2.0 — Beta21 In Progress</div>
-<div class="build-badge" id="buildBadge" aria-label="現在のビルド">Build: Beta21 In Progress</div>
+<div class="sub" id="buildSubLabel">Character Fullbody Maker Tatsuya Edition Ver.2.0 — Beta22 In Progress</div>
+<div class="build-badge" id="buildBadge" aria-label="現在のビルド">Build: Beta22 In Progress</div>
 <div class="sub fingerprint" id="buildFingerprint">Fingerprint: calculating…</div><div id="autosaveIndicator" class="autosave-indicator saved" aria-live="polite"><span class="autosave-dot"></span><span>自動保存：準備中</span></div>
 </div></header>
 
@@ -341,12 +341,12 @@ const APP_BUILD_STEP=7;
    この APP_BUILD_LABEL（と必要なら下の APP_BUILD_GENERATED_AT）だけを
    更新すれば、ヘッダーの説明文・ビルドバッジ・body の data-build-label・
    ページタイトルまで自動的に追従する（syncBuildLabelToDOM 参照）。 */
-const APP_BUILD_LABEL="Beta21 In Progress";
+const APP_BUILD_LABEL="Beta22 In Progress";
 let currentStep=1;
 let toastTimer=null;
 console.info(`[Character Fullbody Maker] ${APP_BUILD_LABEL}`);
 const APP_LOADED_AT=new Date();
-const APP_BUILD_GENERATED_AT="2026-07-25T00:00:00Z";
+const APP_BUILD_GENERATED_AT="2026-07-26T00:00:00Z";
 let APP_BUILD_FINGERPRINT="pending";
 let LAST_SELF_TEST_RESULTS=[];
 
@@ -424,7 +424,7 @@ function runSelfTest(){
  ["ビルド情報",document.body.dataset.buildLabel===APP_BUILD_LABEL,`現在：${document.body.dataset.buildLabel||"なし"}`],
  ["ステップ数",Array.isArray(stepNames)&&stepNames.length===10,`検出：${Array.isArray(stepNames)?stepNames.length:"不明"}`],
  ["主要画面",!!$("page")&&!!$("steps")&&!!$("progressTrack"),"page / steps / progressTrack"],
- ["保存機能",typeof saveDraft==="function"&&typeof loadDraft==="function","saveDraft / loadDraft"],
+ ["保存機能",typeof saveDraft==="function"&&typeof loadCurrent==="function","saveDraft / loadCurrent"],
  ["JSON機能",typeof exportJSON==="function"&&!!$("jsonFile"),"exportJSON / jsonFile"],
  ["プロンプト生成",typeof generatePrompt==="function","generatePrompt"],
  ["更新確認",typeof verifyPublishedBuild==="function"&&!!$("updateModal"),"verifyPublishedBuild / updateModal"],
@@ -485,8 +485,9 @@ const state={
  phase7ReleaseVersion:"Beta20.3",phase7ReleaseStatus:"Complete",phase7FinalDiagnosticsStatus:"監査可能",phase7PromptOptimizationVersion:"1.0",phase7PromptOptimizationStatus:"完成",phase7RegressionStatus:"監査可能",phase7EnglishPromptVersion:"1.0",phase7EnglishPromptStatus:"完成",phase7JapaneseResidueStatus:"監査可能",phase7ConditionalPromptVersion:"1.0",phase7ConditionalPromptStatus:"完成",phase7ConditionalUIVersion:"1.0",phase7ConditionalUIStatus:"完成",phase7MappingVersion:"1.0",phase7MappingStatus:"監査可能",phase6IntegrationVersion:"1.0",phase6CompletionStatus:"完成",bodyHairVisibility:"衣装・ポーズから自動判定",bodyHairPriority:"高",bodyHairVisibilityPolicy:"見える部位のみ詳述",bodyHairConditionalPrompt:"自動（推奨）",bodyHairPromptCompression:"標準",bodyHairDuplicateReduction:"有効",bodyHairNoneOmission:"有効",bodyHairFalseVisibilityOmission:"有効",armpitVisibility:"自動",armpitPriority:"最優先",chestHairVisibility:"自動",chestHairPriority:"高",abdominalHairVisibility:"自動",abdominalHairPriority:"高",treasureTrailVisibility:"自動",treasureTrailPriority:"最優先",lowerHairVisibility:"自動",lowerHairPriority:"高",armHairVisibility:"自動",armHairPriority:"標準",handHairVisibility:"自動",handHairPriority:"低",legHairVisibility:"自動",legHairPriority:"高",rearHairVisibility:"自動",rearHairPriority:"標準",specialHairSchemaVersion:"1.0",specialHairExtensionPolicy:"予約スロットを保持",armpitSpecialRole:"独立した特殊部位",armpitBoundaryBehavior:"ワキの自然な窪み内に限定",trailSpecialRole:"独立した中央ライン",trailGrowthFlow:"へそ下から下向きに流れる",trailClustering:"細い中央ライン中心",trailRendering:"明瞭な一本毛と小さな毛束",trailSymmetry:"中央軸に沿って自然",futureSpecialRegion1:"未使用",futureSpecialRegion2:"未使用",chestHair:"なし",chestHairOverallDensity:"なし",chestHairCoverage:"胸中央から左右へ広がる",chestHairLength:"標準",chestHairPattern:"中央から左右へ自然に広がる",chestHairGrowthFlow:"胸中央から外側へ自然に流れる",chestHairClustering:"一本毛中心・小さな毛束",chestHairRendering:"自然な一本毛",chestHairSymmetry:"ほぼ左右対称・自然な差あり",abHair:"薄い",abdominalHairOverallDensity:"薄い",abdominalHairCoverage:"腹部全体",abdominalHairLength:"標準",abdominalHairPattern:"左右へ自然に広がる",abdominalHairGrowthFlow:"上から下へ自然に流れる",abdominalHairClustering:"一本毛中心・小さな毛束",abdominalHairRendering:"自然な一本毛",abdominalHairSymmetry:"ほぼ左右対称・自然な差あり",trail:"ヘソより下だけ・自然",armpitOverallDensity:"やや濃い",armpitCoverage:"広い",armpitRendering:"自然な毛束感",armpitGrowthFlow:"自然な放射状・自然な分け目",armpitClustering:"小さな自然な毛束",armpitSymmetry:"ほぼ左右対称・自然な差あり",armpit:"やや濃い",armpitStrandCount:"高い",armpitArea:"広い",armpitLength:"標準",armpitTexture:"自然な毛束感",armpitDirection:"自然な放射状",armpitParting:"自然な分け目あり",armpitTipVariation:"毛先に自然なばらつき",armpitGapPattern:"小さな隙間あり",armHair:"なし",armHairCoverage:"前腕中心",armHairLength:"短い",armHairGrowthFlow:"腕の長軸に沿って自然に流れる",armHairClustering:"均等な一本毛",armHairRendering:"細く自然な一本毛",handHair:"なし",handHairCoverage:"手の甲のみ",handHairLength:"短い",handHairGrowthFlow:"手首から指先方向へ自然に流れる",handHairClustering:"まばらな一本毛",handHairRendering:"細く短い一本毛",legHairOverallDensity:"濃い",legHairCoverage:"脚全体",thighHair:"やや濃い",lowerThighHair:"やや濃い",shinHair:"濃い",calfHair:"濃い",legHairDistribution:"脚全体に均一",kneeHairTransition:"膝周辺も自然につながる",legHairLength:"標準",legHairGrowthFlow:"脚の長軸に沿って下向きに流れる",legHairClustering:"一本毛中心・小さな毛束",legHairRendering:"自然な一本毛",legHairTexture:"自然な一本毛",rearHairOverallDensity:"薄い",rearHairCoverage:"腰・臀部中心",rearHairLength:"短い",rearHairGrowthFlow:"背中の輪郭に沿って自然に流れる",rearHairClustering:"まばらな一本毛と小さな毛束",rearHairRendering:"細く自然な一本毛",shoulderBackHair:"なし",upperBackHair:"なし",lowerBackHair:"なし",waistBackHair:"ごく薄い",buttockHair:"薄い",
  top:"上半身裸",topArmhole:"標準",bottom:"競泳パンツ(ビキニ)",topColor:"白",bottomColor:"水色",topFit:"ジャストフィット",topLength:"腰骨まで",topHem:"直線カット",bottomRise:"自動",bottomLegOpening:"自動",bottomSideWidth:"自動",bottomCoverage:"自動",bottomFrontShape:"自動",bottomBackShape:"自動",bottomMaterial:"自動",shoes:"裸足",accessory:"なし",
  phase7PoseAngleVersion:"1.0",phase7PoseAngleStatus:"完成",armAngle:"160°",legAngle:"12°",headAngle:"0°",neckAngle:"0°",wristAngle:"15°",elbowAngle:"95°",kneeAngle:"5°",ankleAngle:"5°",outputType:"正面・側面・背面の三面図",basePose:"自然な直立",armPosition:"両腕を上げる",handPosition:"頭の後ろで組む",headDirection:"正面",weightBalance:"左右均等",bodyPosture:"自然な直立",armsPose:"両手を頭の後ろで組む",legOffset:"0°",footDirection:"15°",framingMargin:"広め",gaze:"自然",
+ closeupFaceFront:"表示しない",closeupFaceSide:"表示しない",closeupFaceExpression:"表示しない",closeupHands:"表示しない",closeupFeetTop:"表示しない",closeupFeetAnkle:"表示しない",closeupFeetSole:"表示しない",closeupBack:"表示しない",poseExample1:"表示しない",poseExample2:"表示しない",
  cameraAngle:"目線の高さ",cameraDistance:"余白を含む全身",focalLength:"標準（50mm相当）",cameraPerspective:"正投影に近い",lensEffect:"なし",subjectScale:"三面とも同一",viewSpacing:"等間隔",
- background:"グレー",backgroundType:"無地スタジオ",backgroundColor:"グレー",floorTreatment:"床面を自然に表示",castShadow:"薄い接地影",lighting:"柔らかなスタジオ照明",lightDirection:"正面斜め上",lightIntensity:"標準",shadowSoftness:"柔らかい",camera:"余白を含む全身",style:"フォトリアル",quality:"細部まで鮮明",ratio:"自動（構図優先）",
+ background:"グレー",backgroundType:"無地スタジオ",backgroundColor:"グレー",floorTreatment:"床面を自然に表示",castShadow:"薄い接地影",timeOfDay:"自動",lighting:"柔らかなスタジオ照明",lightDirection:"正面斜め上",lightIntensity:"標準",shadowSoftness:"柔らかい",colorTemperature:"自動",camera:"余白を含む全身",style:"フォトリアル",quality:"細部まで鮮明",ratio:"自動（構図優先）",
  extra:"",locked:"",negative:"余分な手足、不自然な手指、人物重複、顔の不一致、体型の不一致、衣装の左右差、文字化け、ロゴ、透かし",
  assistStrength:"自然",assistAdjustWeight:"提案のみ",assistLockNonBody:"固定する", trailBelow:"ヘソ下・細く自然",trailBridgeWidth:"細い",trailBridgeDensity:"濃い",trailBridgeContinuity:"途切れず連続",trailBridgeEnd:"腰骨ラインで主分布へ接続",trailStyle:"濃い一本線",trailUpperLimit:"へその下縁で厳密に止める",trailSurroundingHair:"周囲はごく薄い",trailTransitionZone:"短く自然に移行",trailAroundNavel:"ヘソを通過",trailAbove:"なし",trailChestLink:"胸毛とはつながらない", pubicDensity:"自然",groinHair:"自然",innerThighHair:"薄い",hairContinuity:"自然につながる",lowerHairSpread:"陰毛周辺にまとまる",lowerHairDensity:"自然",lowerHairConnection:"全体が自然につながる",lowerHairStart:"腰骨ラインから広がる",lowerHairArea:"左右腰骨間の下腹部・鼠径部・内もも上部へ広く",lowerHairHorizontal:"左右腰骨間いっぱい",lowerHairVertical:"鼠径部・内もも上部まで広く",lowerHairBoundary:"周囲へ自然にぼかす",lowerHairFlow:"境目なく自然に連続",lowerHairShape:"横長の自然分布", framingSafety:"自動で見切れ防止",framingPriority:"全身と余白を最優先",edgeClearance:"かなり広い",infoDisplay:"表示しない",infoLayout:"シンプル一行",infoPlacement:"上部の白余白",infoLanguage:"日本語",nameDisplayRule:"入力どおり表示",referenceMode:"人体・衣装構造資料",showProject:"表示しない",projectName:"Character Fullbody Maker",showVersion:"表示しない",sheetVersion:"2026.07",showSheetNo:"表示しない",sheetNo:"001",showCreator:"表示しない",creatorName:"Tatsuya",showTraits:"表示しない",showHair:"表示しない",showEyes:"表示しない",showOutfit:"表示しない",showPose:"表示しない",showNotes:"表示しない",targetAI:"ChatGPT画像生成",promptSensitivity:"バランス",safeRetryLevel:"通常",promptDetail:"標準（バランス）",autoCompile:"自動（推奨）",outputLanguage:"英語のみ", settingLevel:"easy",changeMode:"confirm",projectStatus:"作成途中"
 };
@@ -576,6 +577,14 @@ const JAPANESE_TO_ENGLISH=Object.freeze({
  "リムライト（輪郭光）":"rim lighting that traces the silhouette","HDR風の高コントラスト":"HDR-style high-contrast lighting",
  "屋外の自然光（ゴールデンアワー風）":"outdoor natural light with a golden-hour quality","逆光シルエット風":"backlit lighting with a silhouette-leaning look",
  "森":"a forest","砂浜":"a beach","都市":"a city street","オフィス":"an office","カフェ":"a café","プール":"a poolside","教室":"a classroom","体育館":"a gymnasium",
+/* [Beta21] Camera・Lighting・背景の拡張：カメラ距離の中間プリセット、時間帯、色温度を追加 */
+ "七分身（膝上と腰上の中間）":"a mid-thigh to lower-hip crop, between the knee-up and waist-up framings",
+ "朝":"morning light","昼":"midday light","夕方（ゴールデンアワー）":"early-evening golden-hour light","夜":"night-time lighting",
+ "暖色寄り":"a warm color temperature","中間（ニュートラル）":"a neutral color temperature","寒色寄り":"a cool color temperature",
+/* [Beta21] クローズアップ＆ポーズ例シート：出力タイプ名と追加ポーズ例プリセットの変換 */
+ "クローズアップ＆ポーズ例シート":"a character reference sheet with additional close-up and pose-example panels",
+ "座って足裏を見せるポーズ":"seated with the soles of both feet turned toward the camera",
+ "しゃがむポーズ":"a crouching pose","歩くポーズ":"a walking pose","振り返るポーズ":"looking back over one shoulder","伸びをするポーズ":"a stretching pose",
 /* [Beta20.4] 追加：field()ヘルパーを使わず生の<select><option>で
    実装されていたAIアシストモーダル（体重調整・体型以外の固定）の
    選択肢と、旧バージョンJSON読み込み時に一時的に発生するレガシー
@@ -762,7 +771,8 @@ function parameterMappingAudit(promptText=""){
   if(/(?:angle|direction|rotation|tilt)$/i.test(key)&&!/version/i.test(key)&&/\d/.test(raw)&&!/(degrees?|度|°)/i.test(raw))angleIssues.push({key,value:raw});
   if(/(?:height|weight|size|circ)$/i.test(key)&&/\d/.test(raw)&&!/(cm|kg|mm)/i.test(raw))unitIssues.push({key,value:raw});
  });
- const prompt=String(promptText||"");
+ let prompt=String(promptText||"");
+ protectedJapaneseProperNouns().forEach(term=>{prompt=prompt.split(term).join("")});
  const japaneseLeak=[...new Set(prompt.match(/[\u3040-\u30ff\u3400-\u9fff]+/g)||[])];
  return {version:PARAMETER_MAPPING_VERSION,unmapped,numericIssues,angleIssues,unitIssues,japaneseLeak,ok:unmapped.length===0&&japaneseLeak.length===0};
 }
@@ -920,7 +930,7 @@ function bodyHairPruneNotApplicable(textValue){
 }
 function compileConditionalBodyHairPrompt(entries){
  if(state.bodyHairVisibility==="プロンプトから除外")return "";
- let selected=entries.filter(entry=>entry&&entry.text&&bodyHairPromptRegionEnabled(entry.region));
+ let selected=entries.filter(entry=>entry&&entry.text&&(bodyHairPromptRegionEnabled(entry.region)||bodyHairEntryHasContent(entry)));
  selected=selected.filter(entry=>entry.visible!==false&&state[`${entry.region}Visibility`]!=="非表示");
  selected=selected.sort((a,b)=>(BODY_HAIR_PRIORITY_WEIGHT[b.priority]||0)-(BODY_HAIR_PRIORITY_WEIGHT[a.priority]||0));
  if(state.bodyHairConditionalPrompt!=="すべて保持")selected=selected.filter(bodyHairEntryHasContent);
@@ -997,6 +1007,30 @@ function $(id){return document.getElementById(id)}
 function showToast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove("show"),2200)}
 function options(arr,val){return arr.map(x=>`<option ${x===val?"selected":""}>${x}</option>`).join("")}
 function field(id,label,arr,cls=""){return `<div class="${cls}"><label>${label}</label><select id="${id}">${options(arr,state[id])}</select></div>`}
+/* [Beta21] クローズアップ＆ポーズ例シート：出力タイプでこのシートを選んだ場合のみ表示される、
+   パネル構成を自由に選べる追加UI。クローズアップは部位ごとの表示/非表示トグル、
+   ポーズ例は2枠まで、それぞれプリセットまたは非表示を選択する方式。 */
+const CLOSEUP_REGION_FIELDS=Object.freeze([
+ {key:"closeupFaceFront",label:"顔クローズアップ（正面）",english:"a close-up panel of the face, front view"},
+ {key:"closeupFaceSide",label:"顔クローズアップ（側面）",english:"a close-up panel of the face, side (profile) view"},
+ {key:"closeupFaceExpression",label:"顔クローズアップ（表情違い）",english:"a close-up panel of the face showing a different expression"},
+ {key:"closeupHands",label:"手のクローズアップ",english:"a close-up panel of both hands"},
+ {key:"closeupFeetTop",label:"足のクローズアップ（甲・上から）",english:"a close-up panel of the tops of both feet, viewed from above"},
+ {key:"closeupFeetAnkle",label:"足のクローズアップ（足首）",english:"a close-up panel of the ankle"},
+ {key:"closeupFeetSole",label:"足のクローズアップ（足裏）",english:"a close-up panel of the sole of one foot"},
+ {key:"closeupBack",label:"背中のクローズアップ",english:"a close-up panel of the back"}
+]);
+const POSE_EXAMPLE_PRESETS=["表示しない","座って足裏を見せるポーズ","しゃがむポーズ","歩くポーズ","振り返るポーズ","伸びをするポーズ"];
+function closeupPanelFieldsHtml(){
+ const regionFields=CLOSEUP_REGION_FIELDS.map(r=>field(r.key,r.label,["表示しない","表示する"],"standard")).join("");
+ const poseFields=field("poseExample1","ポーズ例パネル 1",POSE_EXAMPLE_PRESETS,"standard")+field("poseExample2","ポーズ例パネル 2",POSE_EXAMPLE_PRESETS,"standard");
+ return `<div class="wide section-subtitle">追加クローズアップパネル</div>
+<div class="wide help">表示したい部位だけを「表示する」にしてください。選んだ部位・枚数がそのままプロンプトの追加パネルになります。</div>
+${regionFields}
+<div class="wide section-subtitle">追加ポーズ例パネル</div>
+<div class="wide help">通常の正面・側面ポーズとは別に、シートに加える追加ポーズ例です。最大2枠まで選べます。</div>
+${poseFields}`;
+}
 /* [Beta21] Pose Editor：既存のプルダウンと同じstateキーを操作する
    range スライダーの行を生成する。値は "N°" 形式で state に保存する
    既存の慣習（poseAngleNumber）に合わせている。 */
@@ -1287,7 +1321,8 @@ ${field("buttockHair","臀部の毛",["なし","ごく薄い","薄い","普通",
  <div class="note"><strong>STEP 7 出力ルール：</strong>上半身裸の場合は上半身衣装の色・丈・フィット感・裾・脇ぐりを自動で除外します。下半身衣装は衣装名を基本形とし、股上・脚ぐり・脇幅・前面形状・背面形状・素材感の個別指定を優先して英語プロンプトへ反映します。</div>${navButtons()}`;
 
  if(currentStep===8)return `<h2 class="section-title">STEP 8　ポーズ</h2><div class="lead">Step8-2ではポーズに加えてカメラと構図を整理します。基本姿勢・腕・手・頭・重心と、角度・距離・焦点距離・遠近感・人物スケール・間隔を個別に指定します。</div><div class="grid">
- ${field("outputType","出力タイプ",["正面・側面・背面の三面図","正面・側面の二面図","全身正面","全身側面","全身背面","キャラクター設定シート"])}
+ ${field("outputType","出力タイプ",["正面・側面・背面の三面図","正面・側面の二面図","全身正面","全身側面","全身背面","キャラクター設定シート","クローズアップ＆ポーズ例シート"])}
+ ${state.outputType==="クローズアップ＆ポーズ例シート"?closeupPanelFieldsHtml():""}
  <div class="wide section-subtitle">ポーズテンプレート</div>
  <div class="wide field-help">ボタンを押すと、基本姿勢・腕・手・頭の向き・重心と各角度がまとめて設定されます。反映後は下の各項目を自由に個別調整できます（個別調整すると、テンプレートのボタンは選択中の表示ではなくなります）。</div>
  <div class="wide toolbar">${Object.keys(POSE_PRESETS).map(name=>`<button type="button" class="${matchingPoseTemplate()===name?"primary":""}" data-pose-template="${name}">${name}</button>`).join("")}</div>
@@ -1339,7 +1374,7 @@ ${field("buttockHair","臀部の毛",["なし","ごく薄い","薄い","普通",
  ${field("framingMargin","構図の安全余白",["標準","広め","かなり広め"],"standard")}${field("framingPriority","構図の優先順位",["全身と余白を最優先","ポーズ再現を最優先","人物サイズを最優先","バランス"],"standard")}${field("edgeClearance","画像端からの距離",["標準","広い","かなり広い"],"standard")}
  <div class="wide section-subtitle">カメラと構図</div>
  ${field("cameraAngle","Camera Angle／カメラ角度",["目線の高さ","やや低い位置","やや高い位置","低い位置","高い位置","あおり（強い見上げ）","俯瞰（強い見下ろし）"],"standard")}
- ${field("cameraDistance","Camera Distance／カメラ距離",["余白を含む全身","全身","膝上","腰上","胸上"],"standard")}
+ ${field("cameraDistance","Camera Distance／カメラ距離",["余白を含む全身","全身","膝上","七分身（膝上と腰上の中間）","腰上","胸上"],"standard")}
  ${field("focalLength","Focal Length／焦点距離",["広角（35mm相当）","標準（50mm相当）","中望遠（85mm相当）","望遠（105mm相当）"],"standard")}
  ${field("cameraPerspective","Perspective／遠近感",["正投影に近い","弱い遠近感","自然な遠近感","強い遠近感"],"standard")}
  ${field("lensEffect","Lens Effect／レンズ効果",["なし","被写界深度浅め（背景ぼかし）","広角による遠近誇張","望遠による圧縮効果","ソフトフォーカス"],"standard")}
@@ -1354,11 +1389,14 @@ ${field("buttockHair","臀部の毛",["なし","ごく薄い","薄い","普通",
  ${field("backgroundColor","Background Color／背景色",["グレー","白","黒","淡いベージュ","淡いブルー","自動"],"standard")}
  ${field("floorTreatment","Floor／床面",["床面を自然に表示","共有グラウンドラインのみ","床面なし","背景と連続","自動"],"detail")}
  ${field("castShadow","Cast Shadow／接地影",["影なし","ごく薄い接地影","薄い接地影","自然な接地影","明確な接地影"],"detail")}
+ ${field("timeOfDay","Time of Day／時間帯",["自動","朝","昼","夕方（ゴールデンアワー）","夜"],"detail")}
+ <div class="wide help">Time of Day は屋外系の背景（屋外・森・砂浜・都市・プールなど）でのみプロンプトに反映されます。屋内背景では無視されます。</div>
  <div class="wide section-subtitle">ライティング</div>
  ${field("lighting","Lighting Style／照明スタイル",["柔らかなスタジオ照明","均一な照明","自然光","曇天の柔らかな光","ややドラマチック","フラット","リムライト（輪郭光）","HDR風の高コントラスト","屋外の自然光（ゴールデンアワー風）","逆光シルエット風"],"standard")}
  ${field("lightDirection","Light Direction／光の方向",["正面斜め上","正面","左斜め上","右斜め上","真上","均一"],"standard")}
  ${field("lightIntensity","Light Intensity／光の強さ",["弱い","やや弱い","標準","やや強い","強い"],"detail")}
  ${field("shadowSoftness","Shadow Softness／影の柔らかさ",["影なし","非常に柔らかい","柔らかい","自然","やや硬い"],"detail")}
+ ${field("colorTemperature","Color Temperature／色温度",["自動","暖色寄り","中間（ニュートラル）","寒色寄り"],"detail")}
  <div class="wide note"><strong>カメラ設定：</strong>Step8の設定を維持します。現在：${state.cameraAngle}／${state.cameraDistance}／${state.focalLength}／${state.cameraPerspective}</div>
  <div class="wide section-subtitle">画面品質</div>
  ${field("style","画風",["フォトリアル","写実的写真","セミリアル","モデル撮影風","キャラクター設定画","アニメ調","イラスト調"],"standard")}
@@ -1425,6 +1463,12 @@ ${field("buttockHair","臀部の毛",["なし","ごく薄い","薄い","普通",
   <div class="release-note-item">Pose Preset・Overrideのプルダウンを廃止し、ポーズテンプレートボタン（直前に編集した項目を優先する方式）に刷新</div>
   <div class="release-note-item">「現在のポーズ」要約欄をステップに関係なく常時表示するよう変更</div>
   <div class="release-note-item">初心者向けの使い方ガイド（かんたん操作案内）を追加</div>
+  <div class="release-note-item">胸毛・腹毛・背中の毛のOverall densityが「なし」の場合に、明示的な「毛なし」記述ごとプロンプトから消えてしまい、画像生成側で体毛が復活してしまう不具合を修正（該当部位が肌露出している場合は、簡潔な「remain hairless」等の否定文だけを必ず残すよう変更）</div>
+  <div class="release-note-item">自己診断の「保存機能」項目が存在しないloadDraftを参照し常に失敗していた不具合を修正し、実際に使われているloadCurrentを参照するよう変更</div>
+  <div class="release-note-item">Parameter Mapping監査の日本語残存チェックが、名前・追加指定・避ける要素などの保護対象フリーテキストを除外しておらずscanJapaneseResidueと判定基準が食い違っていた不具合を修正し、保護対象の日本語は正しく除外したうえで判定するよう変更</div>
+  <div class="release-note-item">Beta21残りのCamera・Lighting・背景の拡張として、Camera Distanceに中間プリセット「七分身」を追加、背景に屋外系のみ有効な「Time of Day（時間帯）」、ライティングに「Color Temperature（色温度）」を新規追加。両項目とも「自動」選択時はプロンプトに出力せず、Time of Dayは屋内背景では自動的に省略される</div>
+  <div class="release-note-item">新しい出力タイプ「クローズアップ＆ポーズ例シート」を追加。顔（正面・側面・表情違い）・手・足（甲・足首・足裏）・背中のクローズアップと、最大2枠の追加ポーズ例パネルを個別に選択でき、選んだ部位・枚数だけが英語Promptに反映される</div>
+  <div class="release-note-item">[Beta22 Step1] AIごとの出力プロファイル化：これまでbottomGarmentTranslationにだけ個別実装されていた「Gemini向けはセミコロンではなくカンマ区切りにする」調整をAI_PROFILESという単一設定に集約し、topFitDescription・bottomShapeTranslationにも同じ調整を漏れなく適用するよう修正</div>
  </div>
 
  <h3>プロンプト診断</h3>
@@ -1688,6 +1732,20 @@ function promptProfile(){
    retry:(typeof effectiveCompileProfile==="function"?effectiveCompileProfile().expression:(state.safeRetryLevel||"通常"))
  };
 }
+/* [Beta22] AIごとの出力プロファイル化：これまで一部の衣装変換関数にだけ
+   個別に埋め込まれていた「Gemini向けはセミコロンではなくカンマ区切りにする」
+   という調整を、AI_PROFILESという単一の設定に集約する。今後、AIごとの
+   差分が増えた場合もここに項目を追加するだけでよく、個々の変換関数に
+   if(state.targetAI==="...")を都度書く必要がなくなる。 */
+const AI_PROFILES=Object.freeze({
+ "ChatGPT画像生成":{listSeparator:"; "},
+ "Gemini画像生成":{listSeparator:", "}
+});
+function aiProfile(){return AI_PROFILES[state.targetAI]||AI_PROFILES["ChatGPT画像生成"];}
+function applyAiListStyle(text){
+ const separator=aiProfile().listSeparator;
+ return separator===", "?String(text||"").replace(/;\s*/g,", "):String(text||"");
+}
 function structuralTerm(level, safety, balanced, precise){
  const p=promptProfile();
  if(p.retry==="安全表現")return safety;
@@ -1753,10 +1811,9 @@ function topFitDescription(){
  const fitMap={"コンプレッション":"compression fit closely following the body","タイト":"tight fit","ジャストフィット":"true-to-size fitted silhouette","レギュラーフィット":"regular fit","ゆったり":"relaxed fit","オーバーサイズ":"oversized fit"};
  const lengthMap={"クロップド丈":"cropped above the waist","短め":"slightly short","ジャスト丈":"standard length ending at the waistband","腰骨まで":"long enough to reach the hip bones and fully cover the abdomen","ヒップ上部まで":"extended to the upper hips","ロング丈":"longline length"};
  const hemMap={"身体に沿う":"hem following the body","自然に垂れる":"hem hanging naturally","直線カット":"straight-cut hem","ラウンドヘム":"rounded hem","パンツの外へ出す":"worn untucked","パンツへ入れる":"tucked into the lower garment"};
- return `${fitMap[state.topFit]||state.topFit}; ${lengthMap[state.topLength]||state.topLength}; ${hemMap[state.topHem]||state.topHem}`;
+ return applyAiListStyle(`${fitMap[state.topFit]||state.topFit}; ${lengthMap[state.topLength]||state.topLength}; ${hemMap[state.topHem]||state.topHem}`);
 }
 function bottomGarmentTranslation(value){
- const ai=state.targetAI;
  const items={
   "ボクサーパンツ(ハイライズ)":{
    safety:"opaque high-rise boxer briefs with a deep waistband at or above the navel and full front and rear coverage",
@@ -1904,9 +1961,7 @@ function bottomGarmentTranslation(value){
  };
  const item=items[value]||{safety:value,balanced:value,precise:value,jp:`「${value}」を衣装名として指示`};
  let en=structuralTerm(value,item.safety,item.balanced,item.precise);
- if(ai==="Gemini画像生成"){
-   en=en.replace(/; /g,", ");
- }
+ en=applyAiListStyle(en);
  return {en,jp:item.jp};
 }
 function bottomShapeTranslation(){
@@ -1975,7 +2030,7 @@ function bottomShapeTranslation(){
    materialMap[state.bottomMaterial]||materialMap["自動"]
  ];
  return {
-   en:entries.map(x=>x.en).filter(Boolean).join("; "),
+   en:applyAiListStyle(entries.map(x=>x.en).filter(Boolean).join("; ")),
    jp:entries.map(x=>x.jp).join("／")
  };
 }
@@ -2328,6 +2383,46 @@ function effectiveRatio(){
  if(two)return "4:5";
  return "3:4";
 }
+/* [Beta21] Camera・Lighting・背景の拡張：Time of Dayは屋外系の背景でのみ意味を持つため、
+   背景タイプが屋外系かどうかを判定するヘルパーを用意し、屋内背景では出力しない。 */
+const OUTDOOR_BACKGROUND_TYPES=new Set(["屋外","森","砂浜","都市","プール"]);
+function isOutdoorBackground(){return OUTDOOR_BACKGROUND_TYPES.has(state.backgroundType);}
+function timeOfDayEnglish(){
+ if(!isOutdoorBackground())return "";
+ if(!state.timeOfDay||state.timeOfDay==="自動")return "";
+ const mapped=parameterToEnglish("timeOfDay",state.timeOfDay);
+ return mapped?` Time of day: ${mapped}.`:"";
+}
+function colorTemperatureEnglish(){
+ if(!state.colorTemperature||state.colorTemperature==="自動")return "";
+ const mapped=parameterToEnglish("colorTemperature",state.colorTemperature);
+ return mapped?` Color temperature: ${mapped}.`:"";
+}
+/* [Beta21] クローズアップ＆ポーズ例シート：選択された部位・ポーズ例だけを
+   ADDITIONAL CLOSE-UP AND POSE PANELSセクションとして出力する。
+   出力タイプがこのシートでない場合はセクションごと省略する。 */
+function closeupPanelPrompt(){
+ if(state.outputType!=="クローズアップ＆ポーズ例シート")return "";
+ const regionLines=CLOSEUP_REGION_FIELDS
+  .filter(r=>state[r.key]==="表示する")
+  .map(r=>`- ${r.english}.`);
+ const poseLines=[state.poseExample1,state.poseExample2]
+  .filter(v=>v&&v!=="表示しない")
+  .map(v=>`- Additional pose panel: ${parameterToEnglish("poseExample1",v)}.`);
+ if(!regionLines.length&&!poseLines.length)return "";
+ return `
+ADDITIONAL CLOSE-UP AND POSE PANELS
+In addition to the main full-body front and side views, include the following extra panels in the same composite reference sheet:
+${[...regionLines,...poseLines].join("\n")}
+Arrange all panels together in a single grid-style composite sheet, similar to a professional character reference sheet. Keep the same face, hairstyle, body proportions, skin tone, and any worn garment identical to the main full-body views in every additional panel. Do not invent new anatomy, clothing, or accessories that were not otherwise specified.`;
+}
+function jpCloseupPanelSummary(){
+ if(state.outputType!=="クローズアップ＆ポーズ例シート")return "";
+ const regions=CLOSEUP_REGION_FIELDS.filter(r=>state[r.key]==="表示する").map(r=>r.label);
+ const poses=[state.poseExample1,state.poseExample2].filter(v=>v&&v!=="表示しない");
+ if(!regions.length&&!poses.length)return "追加クローズアップ・ポーズ例：未選択\n";
+ return `追加クローズアップ：${regions.length?regions.join("／"):"なし"}\n追加ポーズ例：${poses.length?poses.join("／"):"なし"}\n`;
+}
 function framingEnglish(){
  const veryWide=legWidthLabel()==="非常に大きく開く";
  const wide=veryWide||legWidthLabel()==="大きく開く"||legWidthLabel()==="肩幅より広く開く";
@@ -2617,12 +2712,14 @@ Lens Effect／レンズ効果：${state.lensEffect}
 背景色：${state.backgroundColor}
 床面：${state.floorTreatment}
 接地影：${state.castShadow}
+時間帯：${state.timeOfDay}${isOutdoorBackground()?"":"（屋内背景のため未使用）"}
 照明：${state.lighting}
 光の方向：${state.lightDirection}
 光の強さ：${state.lightIntensity}
 影の柔らかさ：${state.shadowSoftness}
+色温度：${state.colorTemperature}
 画風：${state.style}
-情報表示：${state.infoDisplay}／${state.infoLayout}／${state.infoPlacement}
+${jpCloseupPanelSummary()}情報表示：${state.infoDisplay}／${state.infoLayout}／${state.infoPlacement}
 
 【生成AI】
 ${state.targetAI}`;
@@ -3032,7 +3129,9 @@ ${legHairEnglish()}`,bodyHairContext),
   bodyHairPromptEntry("rearHair","REAR BODY HAIR",(!concise||[state.shoulderBackHair,state.upperBackHair,state.lowerBackHair,state.waistBackHair,state.buttockHair].some(v=>v!=="なし"))?`REAR BODY HAIR
 Visibility: ${state.rearHairVisibility}. Priority: ${state.rearHairPriority}.
 Overall density: ${state.rearHairOverallDensity}. Coverage: ${state.rearHairCoverage}. Length: ${state.rearHairLength}. Growth flow: ${state.rearHairGrowthFlow}. Clustering: ${state.rearHairClustering}. Rendering: ${state.rearHairRendering}.
-Shoulders: ${state.shoulderBackHair}. Upper back: ${state.upperBackHair}. Lower back: ${state.lowerBackHair}. Waist: ${state.waistBackHair}. Buttocks: ${state.buttockHair}.`:"",bodyHairContext)
+Shoulders: ${state.shoulderBackHair}. Upper back: ${state.upperBackHair}. Lower back: ${state.lowerBackHair}. Waist: ${state.waistBackHair}. Buttocks: ${state.buttockHair}.`:`REAR BODY HAIR
+Overall density: none.
+Rendering: no visible hair on the shoulders, upper back, lower back, waist, or buttocks; keep this skin naturally hairless and consistent across all views.`,bodyHairContext)
  ];
  const bodyHairPrompt=compileConditionalBodyHairPrompt(bodyHairEntries);
 
@@ -3149,14 +3248,15 @@ ${poseAnglePrompt()}
 Framing rule: ${state.framingSafety}. Safety margin: ${state.framingMargin}. ${framingEnglish()}
 Camera angle: ${state.cameraAngle}. Camera distance: ${state.cameraDistance}. Focal length: ${state.focalLength}. Perspective: ${state.cameraPerspective}.${state.lensEffect&&state.lensEffect!=="なし"?` Lens effect: ${state.lensEffect}.`:""} Subject scale: ${state.subjectScale}. View spacing: ${state.viewSpacing}.
 BACKGROUND AND LIGHTING
-Background type: ${state.backgroundType}. Background color: ${state.backgroundColor}. Floor treatment: ${state.floorTreatment}. Cast shadow: ${state.castShadow}.
-Lighting style: ${state.lighting}. Light direction: ${state.lightDirection}. Light intensity: ${state.lightIntensity}. Shadow softness: ${state.shadowSoftness}.
+Background type: ${state.backgroundType}. Background color: ${state.backgroundColor}. Floor treatment: ${state.floorTreatment}. Cast shadow: ${state.castShadow}.${timeOfDayEnglish()}
+Lighting style: ${state.lighting}. Light direction: ${state.lightDirection}. Light intensity: ${state.lightIntensity}. Shadow softness: ${state.shadowSoftness}.${colorTemperatureEnglish()}
 Use the same background, floor line, cast-shadow treatment, light direction, light intensity, and shadow softness across every requested view.
 Visual style: ${state.style}. Quality: ${state.quality}. Aspect ratio: ${effectiveRatio()}.
+${closeupPanelPrompt()}
 
 TURNAROUND CONSISTENCY
 The front, side, and back views must depict the exact same adult character.
-Keep the face, hairstyle, body proportions, visible body-hair pattern, body-hair density, garment construction, garment color, pose logic, and scale strictly consistent. Preserve the selected base pose, arm position, hand position, head direction, weight balance, leg stance, and foot placement as one coherent pose across every requested view; interpret left and right from the character’s own perspective. Preserve the selected camera angle, camera distance, focal length, perspective, subject scale, and view spacing across all requested views; for turnaround sheets, prioritize an orthographic-like presentation with matched scale and spacing. Preserve the selected background type, background color, floor treatment, cast-shadow treatment, lighting style, light direction, light intensity, and shadow softness across all requested views. Preserve the special-hair region schema and active-region identities; the selected armpit-hair special role, boundary behavior, overall density, coverage, length, rendering, growth flow, clustering, and symmetry; chest-hair overall density, coverage, pattern, rendering, and symmetry across the front and side views wherever visible; abdominal-hair overall density, coverage, pattern, rendering, and symmetry across the front and side views wherever visible; Treasure Trail special role, growth flow, clustering, strand rendering, center-axis symmetry, width, density, continuity and connection; lower-abdomen horizontal and downward coverage; boundary softness; and leg-hair length, texture and regional density across all applicable views.
+Keep the face, hairstyle, body proportions, visible body-hair pattern, body-hair density, garment construction, garment color, pose logic, and scale strictly consistent. Preserve the selected base pose, arm position, hand position, head direction, weight balance, leg stance, and foot placement as one coherent pose across every requested view; interpret left and right from the character’s own perspective. Preserve the selected camera angle, camera distance, focal length, perspective, subject scale, and view spacing across all requested views; for turnaround sheets, prioritize an orthographic-like presentation with matched scale and spacing. Preserve the selected background type, background color, floor treatment, cast-shadow treatment, lighting style, light direction, light intensity, shadow softness, time of day (when applicable), and color temperature (when specified) across all requested views. Preserve the special-hair region schema and active-region identities; the selected armpit-hair special role, boundary behavior, overall density, coverage, length, rendering, growth flow, clustering, and symmetry; chest-hair overall density, coverage, pattern, rendering, and symmetry across the front and side views wherever visible; abdominal-hair overall density, coverage, pattern, rendering, and symmetry across the front and side views wherever visible; Treasure Trail special role, growth flow, clustering, strand rendering, center-axis symmetry, width, density, continuity and connection; lower-abdomen horizontal and downward coverage; boundary softness; and leg-hair length, texture and regional density across all applicable views.
 Maintain the same athletic masculine facial structure in all views, with identical forehead slope, brow line, eyelid type, eye angle, nose bridge and tip, lips, jawline, chin, ears, hairstyle silhouette, and apparent age. Keep lean facial features, calm focused eyes, and natural proportions.${extraConsistency}
 
 ${infoSection}${modelGuidance}
@@ -3378,6 +3478,18 @@ function applyAll(o){
  if(o&&!o.trailSymmetry)o.trailSymmetry="中央軸に沿って自然";
  if(o&&!o.futureSpecialRegion1)o.futureSpecialRegion1="未使用";
  if(o&&!o.futureSpecialRegion2)o.futureSpecialRegion2="未使用";
+ if(o&&!o.timeOfDay)o.timeOfDay="自動";
+ if(o&&!o.colorTemperature)o.colorTemperature="自動";
+ if(o&&!o.closeupFaceFront)o.closeupFaceFront="表示しない";
+ if(o&&!o.closeupFaceSide)o.closeupFaceSide="表示しない";
+ if(o&&!o.closeupFaceExpression)o.closeupFaceExpression="表示しない";
+ if(o&&!o.closeupHands)o.closeupHands="表示しない";
+ if(o&&!o.closeupFeetTop)o.closeupFeetTop="表示しない";
+ if(o&&!o.closeupFeetAnkle)o.closeupFeetAnkle="表示しない";
+ if(o&&!o.closeupFeetSole)o.closeupFeetSole="表示しない";
+ if(o&&!o.closeupBack)o.closeupBack="表示しない";
+ if(o&&!o.poseExample1)o.poseExample1="表示しない";
+ if(o&&!o.poseExample2)o.poseExample2="表示しない";
  if(o&&!o.phase7ReleaseVersion)o.phase7ReleaseVersion="Beta20.3";
  if(o&&!o.phase7ReleaseStatus)o.phase7ReleaseStatus="Complete";
  if(o&&!o.phase7FinalDiagnosticsStatus)o.phase7FinalDiagnosticsStatus="監査可能";
