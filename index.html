@@ -62,6 +62,15 @@ details.grid-section>summary::before{content:"▸";display:inline-block;transiti
 details.grid-section[open]>summary::before{transform:rotate(90deg)}
 details.grid-section>.grid-section-body{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:14px}
 @media(max-width:720px){details.grid-section>.grid-section-body{grid-template-columns:1fr}}
+.pose-editor-panel{grid-column:1/-1;border:1px solid var(--line);border-radius:14px;padding:14px;background:#fff;display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:720px){.pose-editor-panel{grid-template-columns:1fr 200px}}
+.pose-slider-list{display:grid;gap:12px}
+.pose-slider-row label{display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:4px}
+.pose-slider-row output{color:var(--accent);font-weight:900}
+.pose-slider-row input[type=range]{width:100%;height:32px;touch-action:pan-y}
+.pose-skeleton-wrap{display:flex;flex-direction:column;align-items:center;gap:6px;justify-self:center}
+.pose-skeleton-preview{background:var(--soft);border-radius:12px;padding:8px;width:160px}
+.pose-skeleton-caption{font-size:11px;color:var(--muted);text-align:center;line-height:1.5}
 </style>
 </head>
 <!-- Commit: Beta20.3 Phase7 Step7 Final Polish, Diagnostics & Beta20.3 Release -->
@@ -140,6 +149,19 @@ Leg Hair: Density / Length / Texture / Distance Visibility independent.
 
 <main>
 <section class="card">
+<details id="quickGuide" class="grid-section" open>
+<summary>使い方ガイド（かんたん操作案内）</summary>
+<div class="note">
+1. 上部のステップ番号（1〜10）を順番に進めるだけで、顔・髪・体毛・衣装・ポーズ・背景などを設定できます。前後のステップにはいつでも戻れます。<br>
+2. 「設定レベル」は最初「かんたん」のままで大丈夫です。表示された項目だけ埋めれば、隠れている詳細項目は自動で無難な値が使われます。<br>
+3. STEP8のポーズは、まずポーズテンプレートのボタン（自然な直立・両手を頭の後ろで組む など）を押すだけでOKです。細かく変えたい時だけ、その下のスライダーを動かしてください。<br>
+4. 最後のSTEP10で「プロンプト更新」を押すと、画像生成AI用の英語プロンプトができあがります。それをコピーして画像生成AIに貼り付けてください。<br>
+5. 迷ったときは上部の「整合性チェック」で設定の矛盾がないか確認できます。「自己診断」はアプリ自体の動作確認用です。<br>
+6. 入力内容は自動保存されます。作業を中断しても「ライブラリ」からいつでも読み込み直せます。
+</div>
+</details>
+</section>
+<section class="card">
 <div class="toolbar">
 <button id="newBtn">新規</button>
 <button id="saveBtn" class="primary">下書き保存</button>
@@ -154,6 +176,7 @@ Leg Hair: Density / Length / Texture / Distance Visibility independent.
 <div id="displayStatus" class="status">未保存</div>
 <div class="progress" id="progressTrack" role="progressbar" aria-label="設定ステップの進行状況" aria-valuemin="1" aria-valuemax="10" aria-valuenow="1"><span id="progressBar"></span></div>
 <div class="steps" id="steps"></div>
+<div id="poseSummaryBar" class="note"></div>
 </section>
 
 <section class="card">
@@ -461,7 +484,7 @@ const state={
  bodyBuild:"引き締まった",shoulder:"やや広め",neck:"標準",chest:"ほどよく厚い",abdomen:"薄く腹筋",waist:"やや細い",hip:"引き締まった",arms:"引き締まった",hands:"標準",thighs:"引き締まった",calves:"引き締まった",legs:"標準",inseam:"標準",headRatio:"標準",shoeSize:"27.0cm",chestCirc:"94cm",waistCirc:"74cm",
  phase7ReleaseVersion:"Beta20.3",phase7ReleaseStatus:"Complete",phase7FinalDiagnosticsStatus:"監査可能",phase7PromptOptimizationVersion:"1.0",phase7PromptOptimizationStatus:"完成",phase7RegressionStatus:"監査可能",phase7EnglishPromptVersion:"1.0",phase7EnglishPromptStatus:"完成",phase7JapaneseResidueStatus:"監査可能",phase7ConditionalPromptVersion:"1.0",phase7ConditionalPromptStatus:"完成",phase7ConditionalUIVersion:"1.0",phase7ConditionalUIStatus:"完成",phase7MappingVersion:"1.0",phase7MappingStatus:"監査可能",phase6IntegrationVersion:"1.0",phase6CompletionStatus:"完成",bodyHairVisibility:"衣装・ポーズから自動判定",bodyHairPriority:"高",bodyHairVisibilityPolicy:"見える部位のみ詳述",bodyHairConditionalPrompt:"自動（推奨）",bodyHairPromptCompression:"標準",bodyHairDuplicateReduction:"有効",bodyHairNoneOmission:"有効",bodyHairFalseVisibilityOmission:"有効",armpitVisibility:"自動",armpitPriority:"最優先",chestHairVisibility:"自動",chestHairPriority:"高",abdominalHairVisibility:"自動",abdominalHairPriority:"高",treasureTrailVisibility:"自動",treasureTrailPriority:"最優先",lowerHairVisibility:"自動",lowerHairPriority:"高",armHairVisibility:"自動",armHairPriority:"標準",handHairVisibility:"自動",handHairPriority:"低",legHairVisibility:"自動",legHairPriority:"高",rearHairVisibility:"自動",rearHairPriority:"標準",specialHairSchemaVersion:"1.0",specialHairExtensionPolicy:"予約スロットを保持",armpitSpecialRole:"独立した特殊部位",armpitBoundaryBehavior:"ワキの自然な窪み内に限定",trailSpecialRole:"独立した中央ライン",trailGrowthFlow:"へそ下から下向きに流れる",trailClustering:"細い中央ライン中心",trailRendering:"明瞭な一本毛と小さな毛束",trailSymmetry:"中央軸に沿って自然",futureSpecialRegion1:"未使用",futureSpecialRegion2:"未使用",chestHair:"なし",chestHairOverallDensity:"なし",chestHairCoverage:"胸中央から左右へ広がる",chestHairLength:"標準",chestHairPattern:"中央から左右へ自然に広がる",chestHairGrowthFlow:"胸中央から外側へ自然に流れる",chestHairClustering:"一本毛中心・小さな毛束",chestHairRendering:"自然な一本毛",chestHairSymmetry:"ほぼ左右対称・自然な差あり",abHair:"薄い",abdominalHairOverallDensity:"薄い",abdominalHairCoverage:"腹部全体",abdominalHairLength:"標準",abdominalHairPattern:"左右へ自然に広がる",abdominalHairGrowthFlow:"上から下へ自然に流れる",abdominalHairClustering:"一本毛中心・小さな毛束",abdominalHairRendering:"自然な一本毛",abdominalHairSymmetry:"ほぼ左右対称・自然な差あり",trail:"ヘソより下だけ・自然",armpitOverallDensity:"やや濃い",armpitCoverage:"広い",armpitRendering:"自然な毛束感",armpitGrowthFlow:"自然な放射状・自然な分け目",armpitClustering:"小さな自然な毛束",armpitSymmetry:"ほぼ左右対称・自然な差あり",armpit:"やや濃い",armpitStrandCount:"高い",armpitArea:"広い",armpitLength:"標準",armpitTexture:"自然な毛束感",armpitDirection:"自然な放射状",armpitParting:"自然な分け目あり",armpitTipVariation:"毛先に自然なばらつき",armpitGapPattern:"小さな隙間あり",armHair:"なし",armHairCoverage:"前腕中心",armHairLength:"短い",armHairGrowthFlow:"腕の長軸に沿って自然に流れる",armHairClustering:"均等な一本毛",armHairRendering:"細く自然な一本毛",handHair:"なし",handHairCoverage:"手の甲のみ",handHairLength:"短い",handHairGrowthFlow:"手首から指先方向へ自然に流れる",handHairClustering:"まばらな一本毛",handHairRendering:"細く短い一本毛",legHairOverallDensity:"濃い",legHairCoverage:"脚全体",thighHair:"やや濃い",lowerThighHair:"やや濃い",shinHair:"濃い",calfHair:"濃い",legHairDistribution:"脚全体に均一",kneeHairTransition:"膝周辺も自然につながる",legHairLength:"標準",legHairGrowthFlow:"脚の長軸に沿って下向きに流れる",legHairClustering:"一本毛中心・小さな毛束",legHairRendering:"自然な一本毛",legHairTexture:"自然な一本毛",rearHairOverallDensity:"薄い",rearHairCoverage:"腰・臀部中心",rearHairLength:"短い",rearHairGrowthFlow:"背中の輪郭に沿って自然に流れる",rearHairClustering:"まばらな一本毛と小さな毛束",rearHairRendering:"細く自然な一本毛",shoulderBackHair:"なし",upperBackHair:"なし",lowerBackHair:"なし",waistBackHair:"ごく薄い",buttockHair:"薄い",
  top:"上半身裸",topArmhole:"標準",bottom:"競泳パンツ(ビキニ)",topColor:"白",bottomColor:"水色",topFit:"ジャストフィット",topLength:"腰骨まで",topHem:"直線カット",bottomRise:"自動",bottomLegOpening:"自動",bottomSideWidth:"自動",bottomCoverage:"自動",bottomFrontShape:"自動",bottomBackShape:"自動",bottomMaterial:"自動",shoes:"裸足",accessory:"なし",
- phase7PoseAngleVersion:"1.0",phase7PoseAngleStatus:"完成",posePreset:"両手を頭の後ろで組む",poseOverride:"Presetを基準に個別調整",armAngle:"160°",legAngle:"12°",headAngle:"0°",neckAngle:"0°",wristAngle:"15°",elbowAngle:"95°",kneeAngle:"5°",ankleAngle:"5°",outputType:"正面・側面・背面の三面図",basePose:"自然な直立",armPosition:"両腕を上げる",handPosition:"頭の後ろで組む",headDirection:"正面",weightBalance:"左右均等",bodyPosture:"自然な直立",armsPose:"両手を頭の後ろで組む",legWidth:"肩幅程度に開く",legOffset:"左右を揃える",footDirection:"自然な外向き",framingMargin:"広め",gaze:"自然",
+ phase7PoseAngleVersion:"1.0",phase7PoseAngleStatus:"完成",armAngle:"160°",legAngle:"12°",headAngle:"0°",neckAngle:"0°",wristAngle:"15°",elbowAngle:"95°",kneeAngle:"5°",ankleAngle:"5°",outputType:"正面・側面・背面の三面図",basePose:"自然な直立",armPosition:"両腕を上げる",handPosition:"頭の後ろで組む",headDirection:"正面",weightBalance:"左右均等",bodyPosture:"自然な直立",armsPose:"両手を頭の後ろで組む",legOffset:"0°",footDirection:"15°",framingMargin:"広め",gaze:"自然",
  cameraAngle:"目線の高さ",cameraDistance:"余白を含む全身",focalLength:"標準（50mm相当）",cameraPerspective:"正投影に近い",lensEffect:"なし",subjectScale:"三面とも同一",viewSpacing:"等間隔",
  background:"グレー",backgroundType:"無地スタジオ",backgroundColor:"グレー",floorTreatment:"床面を自然に表示",castShadow:"薄い接地影",lighting:"柔らかなスタジオ照明",lightDirection:"正面斜め上",lightIntensity:"標準",shadowSoftness:"柔らかい",camera:"余白を含む全身",style:"フォトリアル",quality:"細部まで鮮明",ratio:"自動（構図優先）",
  extra:"",locked:"",negative:"余分な手足、不自然な手指、人物重複、顔の不一致、体型の不一致、衣装の左右差、文字化け、ロゴ、透かし",
@@ -974,6 +997,13 @@ function $(id){return document.getElementById(id)}
 function showToast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove("show"),2200)}
 function options(arr,val){return arr.map(x=>`<option ${x===val?"selected":""}>${x}</option>`).join("")}
 function field(id,label,arr,cls=""){return `<div class="${cls}"><label>${label}</label><select id="${id}">${options(arr,state[id])}</select></div>`}
+/* [Beta21] Pose Editor：既存のプルダウンと同じstateキーを操作する
+   range スライダーの行を生成する。値は "N°" 形式で state に保存する
+   既存の慣習（poseAngleNumber）に合わせている。 */
+function poseSliderRow(key,label,min,max){
+ const current=poseAngleNumber(state[key]);
+ return `<div class="pose-slider-row"><label for="${key}Slider">${label} <output id="${key}Value">${current}°</output></label><input type="range" id="${key}Slider" min="${min}" max="${max}" step="1" value="${current}" aria-label="${label}"></div>`;
+}
 function inputField(id,label,cls=""){return `<div class="${cls}"><label>${label}</label><input id="${id}" value="${state[id]||""}"></div>`}
 function textareaField(id,label,ph="",cls="wide"){return `<div class="${cls}"><label>${label}</label><textarea id="${id}" placeholder="${ph}">${state[id]||""}</textarea></div>`}
 function navButtons(){
@@ -990,6 +1020,14 @@ function renderSteps(){
  $("steps").querySelectorAll("[data-step]").forEach(b=>b.addEventListener("click",()=>{
    savePageToState();currentStep=Number(b.dataset.step);render();window.scrollTo({top:0,behavior:"smooth"});
  }));
+}
+/* [Beta21] 「現在のポーズ」要約欄をステップに関係なく常時表示する。
+   以前はSTEP8のページ内にのみ表示していたが、他のステップ（衣装・
+   カメラ・背景など）を編集中も現在のポーズ設定を確認できるよう、
+   ステップ切り替えUIのすぐ下（#page の外側）に固定表示する。 */
+function renderPoseSummaryBar(){
+ const bar=$("poseSummaryBar");if(!bar)return;
+ bar.innerHTML=`<strong>現在のポーズ：</strong>${state.basePose}／腕 ${state.armPosition}／手 ${state.handPosition}／頭 ${state.headDirection}／重心 ${state.weightBalance}／脚幅 ${legWidthLabel()}（脚の角度 ${state.legAngle}）／脚の前後 ${legOffsetLabel()}／足先 ${footDirectionLabel()}`;
 }
 
 function pageHtml(){
@@ -1250,17 +1288,16 @@ ${field("buttockHair","臀部の毛",["なし","ごく薄い","薄い","普通",
 
  if(currentStep===8)return `<h2 class="section-title">STEP 8　ポーズ</h2><div class="lead">Step8-2ではポーズに加えてカメラと構図を整理します。基本姿勢・腕・手・頭・重心と、角度・距離・焦点距離・遠近感・人物スケール・間隔を個別に指定します。</div><div class="grid">
  ${field("outputType","出力タイプ",["正面・側面・背面の三面図","正面・側面の二面図","全身正面","全身側面","全身背面","キャラクター設定シート"])}
- <div class="wide section-subtitle">Pose Preset・Override</div>
- <div class="wide field-help"><strong>Pose Preset</strong><br>全体のポーズを一括設定します。最初に近いポーズを選び、その後に必要な部分だけ調整できます。</div>
- ${field("posePreset","Pose Preset／全体ポーズ",["自然な直立","両手を頭の後ろで組む","胸の前で腕を組む","腰に手を置く","歩行"],"standard")}
- <div class="wide field-help"><strong>Override</strong><br>Presetを基準として、必要な部分だけ個別に変更できます。「Presetをそのまま使用」以外では、下の各項目を自由に調整できます。</div>
- ${field("poseOverride","Override／個別変更方法",["Presetをそのまま使用","Presetを基準に個別調整","腕の位置を優先","手の位置を優先"],"standard")}
+ <div class="wide section-subtitle">ポーズテンプレート</div>
+ <div class="wide field-help">ボタンを押すと、基本姿勢・腕・手・頭の向き・重心と各角度がまとめて設定されます。反映後は下の各項目を自由に個別調整できます（個別調整すると、テンプレートのボタンは選択中の表示ではなくなります）。</div>
+ <div class="wide toolbar">${Object.keys(POSE_PRESETS).map(name=>`<button type="button" class="${matchingPoseTemplate()===name?"primary":""}" data-pose-template="${name}">${name}</button>`).join("")}</div>
  <div class="wide section-subtitle">ポーズ構造</div>
- ${field("basePose","Base Pose／基本姿勢",["自然な直立","気をつけ","リラックスした直立","片脚重心","歩行"])}
+ ${field("basePose","Base Pose／基本姿勢",["自然な直立","気をつけ","リラックスした直立","歩行"])}
  ${field("armPosition","Arm Position／腕の位置",["体側に自然に下ろす","両腕を上げる","胸の前で組む","腰に置く","片腕を曲げる","背中側へ回す"],"standard")}
  ${field("handPosition","Hand Position／手の位置",["自然に開く","頭の後ろで組む","腕組みに合わせる","腰に添える","片手をポケットに入れる","背中で組む"],"standard")}
  ${field("headDirection","Head Direction／頭の向き",["正面","自然","左を向く","右を向く","やや上向き","やや下向き"],"standard")}
  ${field("weightBalance","Weight Balance／重心",["左右均等","左脚重心","右脚重心","やや左脚重心","やや右脚重心","歩行に合わせる"],"standard")}
+ <div class="wide field-help">「片脚重心」はBase Poseから撤廃し、こちらのWeight Balance／重心（左脚重心・右脚重心など）に一本化しました。</div>
  ${field("gaze","視線",["自然","カメラを見る","正面を見る","遠くを見る","横を見る"],"detail")}
  <div class="wide section-subtitle">Angle System／角度設定</div>
  <div class="angle-guide"><strong>角度の見方</strong><div class="angle-guide-grid"><div><strong>腕の角度：地面に対する角度</strong><br>0°＝真下<br>90°＝水平<br>180°＝真上</div><div><strong>脚の角度：体の中心線から外側へ開く角度</strong><br>0°＝脚を閉じる<br>数値が大きいほど脚を広く開く</div><div><strong>頭・首・手首・足首</strong><br>0°＝まっすぐ<br>マイナス値とプラス値は反対方向への傾き</div><div><strong>肘・膝</strong><br>0°＝まっすぐ<br>数値が大きいほど関節を深く曲げる</div></div></div>
@@ -1272,15 +1309,34 @@ ${field("buttockHair","臀部の毛",["なし","ごく薄い","薄い","普通",
  ${field("elbowAngle","Elbow／肘の曲げ角度",["0°","5°","15°","30°","45°","60°","85°","95°","100°","120°","150°"],"standard")}
  ${field("kneeAngle","Knee／膝の曲げ角度",["0°","3°","5°","10°","15°","30°","45°","60°","90°"],"standard")}
  ${field("ankleAngle","Ankle／足首の角度",["-20°","-10°","0°","5°","10°","15°","20°","30°"],"detail")}
+ <div class="wide section-subtitle">Pose Editor — スライダー＆プレビュー</div>
+ <div class="wide help">上のプルダウンと同じ角度を、スライダーでも直接調整できます。棒人間のプレビューがその場で動きます。スライダー操作中はプルダウンの表示が一時的に追いつかない場合がありますが、実際に使われる角度は常にスライダーで動かした最新の数値です。次に画面を切り替えると表示も揃います。</div>
+ <div class="wide pose-editor-panel">
+  <div class="pose-slider-list">
+   ${poseSliderRow("armAngle","Arm Angle／腕の角度",0,180)}
+   ${poseSliderRow("elbowAngle","Elbow／肘の曲げ角度",0,150)}
+   ${poseSliderRow("legAngle","Leg Angle／脚の角度",0,60)}
+   ${poseSliderRow("kneeAngle","Knee／膝の曲げ角度",0,90)}
+   ${poseSliderRow("headAngle","Head Angle／頭の角度",-30,30)}
+   ${poseSliderRow("neckAngle","Neck Angle／首の角度",-20,20)}
+   ${poseSliderRow("wristAngle","Wrist Angle／手首の角度",-30,30)}
+   ${poseSliderRow("ankleAngle","Ankle／足首の角度",-20,30)}
+  </div>
+  <div class="pose-skeleton-wrap">
+   <div id="poseSkeletonPreview" class="pose-skeleton-preview"></div>
+   <div class="pose-skeleton-caption">簡易プレビュー（正面からの模式図です。実際の画像生成結果とは異なります）</div>
+  </div>
+ </div>
  <div class="wide note"><strong>角度Prompt：</strong>${poseAnglePrompt().replace(/\n/g," ／ ")}</div>
  <div class="wide section-subtitle">下半身と接地</div>
- ${field("legWidth","脚幅",["両脚を揃える","やや開く","肩幅程度に開く","肩幅より広く開く","大きく開く","非常に大きく開く"],"standard")}
- ${field("legOffset","脚の前後位置",["左右を揃える","左脚を少し前","右脚を少し前","軽く前後にずらす","片脚重心"],"standard")}
- ${field("footDirection","足先の向き",["正面","自然な外向き","やや外向き","大きく外向き","内向き"],"standard")}
+ <div class="wide field-help"><strong>脚幅</strong>は上の「Leg Angle／脚の角度」スライダーに統合されました。角度が大きいほど脚幅も広くなります（現在：${legWidthLabel()}）。</div>
+ <div class="wide">${poseSliderRow("legOffset","Fore-aft Leg Placement／脚の前後位置",-25,25)}</div>
+ <div class="wide field-help">マイナス＝左脚が前、プラス＝右脚が前、0°＝左右を揃える。「片脚重心」（体重のかけ方）はWeight Balance／重心の項目で指定してください（現在：${legOffsetLabel()}）。</div>
+ <div class="wide">${poseSliderRow("footDirection","Foot Direction／足先の向き",-20,45)}</div>
+ <div class="wide field-help">マイナス＝内向き、0°＝正面、プラスが大きいほど足先が外側を向きます（現在：${footDirectionLabel()}）。</div>
  <div class="wide section-subtitle">見切れ防止</div>
  ${field("framingSafety","見切れ防止",["自動で見切れ防止","頭頂と足先を必ず含める","手・肘・足を必ず含める","三面とも同じ余白","見切れ防止を使用しない"],"standard")}
  ${field("framingMargin","構図の安全余白",["標準","広め","かなり広め"],"standard")}${field("framingPriority","構図の優先順位",["全身と余白を最優先","ポーズ再現を最優先","人物サイズを最優先","バランス"],"standard")}${field("edgeClearance","画像端からの距離",["標準","広い","かなり広い"],"standard")}
- <div class="wide note"><strong>現在のポーズ構造：</strong>${state.basePose}／腕 ${state.armPosition}／手 ${state.handPosition}／頭 ${state.headDirection}／重心 ${state.weightBalance}／脚幅 ${state.legWidth}</div>
  <div class="wide section-subtitle">カメラと構図</div>
  ${field("cameraAngle","Camera Angle／カメラ角度",["目線の高さ","やや低い位置","やや高い位置","低い位置","高い位置","あおり（強い見上げ）","俯瞰（強い見下ろし）"],"standard")}
  ${field("cameraDistance","Camera Distance／カメラ距離",["余白を含む全身","全身","膝上","腰上","胸上"],"standard")}
@@ -1364,11 +1420,11 @@ ${field("buttockHair","臀部の毛",["なし","ごく薄い","薄い","普通",
 
  <h3>Release Notes</h3>
  <div class="release-notes">
-  <div class="release-note-item">Pose Preset・Override・Angle Systemへ初心者向け説明を追加</div>
-  <div class="release-note-item">「気をつけ」選択時の脚・足先・重心Presetを追加</div>
-  <div class="release-note-item">日本語要約とAI変換ログをブロック表示へ整理</div>
-  <div class="release-note-item">開発者向け診断と将来拡張項目の説明を明確化</div>
-  <div class="release-note-item">最終診断・JSON往復・Chrome単体動作・Release metadataを統合</div>
+  <div class="release-note-item">脚幅（Leg Width）を独立項目から廃止し、Leg Angle／脚の角度スライダーに統合</div>
+  <div class="release-note-item">足先の向き・脚の前後位置を角度スライダー化し、「片脚重心」の重複をWeight Balance／重心に一本化</div>
+  <div class="release-note-item">Pose Preset・Overrideのプルダウンを廃止し、ポーズテンプレートボタン（直前に編集した項目を優先する方式）に刷新</div>
+  <div class="release-note-item">「現在のポーズ」要約欄をステップに関係なく常時表示するよう変更</div>
+  <div class="release-note-item">初心者向けの使い方ガイド（かんたん操作案内）を追加</div>
  </div>
 
  <h3>プロンプト診断</h3>
@@ -1488,15 +1544,14 @@ function applyConditionalUI(){
 function bindPage(){
  document.querySelectorAll("#page input,#page select,#page textarea").forEach(el=>{
    if(el.id==="output")return;
+   if(el.id.endsWith("Slider"))return;
    el.addEventListener("input",()=>{
      state[el.id]=el.value;
      if(currentStep===8){
-       if(el.id==="posePreset"){applyPosePreset(state.poseOverride==="Presetをそのまま使用");render();return;}
-       if(el.id==="poseOverride"){applyPosePreset(el.value==="Presetをそのまま使用");render();return;}
-       if(el.id==="basePose"&&applyBasePosePreset(el.value)){render();showToast("「気をつけ」の基本姿勢を反映しました。Overrideで個別変更できます。");return;}
-       if(el.id==="armPosition"||el.id==="handPosition"){reconcilePosePositionConflict();render();return;}
+       if(el.id==="basePose"&&applyBasePosePreset(el.value)){render();showToast("「気をつけ」の基本姿勢を反映しました。下の各項目で個別に調整できます。");return;}
+       if(el.id==="armPosition"||el.id==="handPosition"){reconcilePosePositionConflict(el.id);render();return;}
      }
-     refreshHeader();applyConditionalUI();
+     refreshHeader();applyConditionalUI();renderPoseSummaryBar();
      if(currentStep===7 && el.id==="top"){savePageToState();render();return;}
      if(currentStep===9 && el.id==="infoDisplay"){savePageToState();render();return;}
      if(currentStep===10)generatePrompt();
@@ -1541,6 +1596,7 @@ if($("copyBtn"))$("copyBtn").addEventListener("click",async()=>{
      }
    }
  });
+ document.querySelectorAll("[data-pose-template]").forEach(b=>b.addEventListener("click",()=>applyPoseTemplate(b.dataset.poseTemplate)));
 }
 function savePageToState(){document.querySelectorAll("#page input,#page select,#page textarea").forEach(el=>{if(el.id!=="output")state[el.id]=el.value})}
  // Step6B compatibility: legacy keys remain synchronized for older saved data and helper logic.
@@ -1557,9 +1613,11 @@ function render(){
  $("progressTrack").setAttribute("aria-valuenow",String(currentStep));
  $("progressTrack").setAttribute("aria-valuetext",`ステップ${currentStep}／10`);
  renderSteps();
+ renderPoseSummaryBar();
  $("page").innerHTML=pageHtml();
  bindPage();refreshHeader();applyConditionalUI();
  enhanceGridSections();
+ if(currentStep===8)bindPoseEditorSliders();
  if(currentStep===10)generatePrompt();
 }
 
@@ -2250,7 +2308,7 @@ function compileRisk(){
  if(["非常に細い"].includes(state.bottomSideWidth)){score+=1;reasons.push("非常に細い脇幅");}
  if(["少なめ","Tバック状"].includes(state.bottomCoverage)){score+=2;reasons.push("背面被覆が少ない設定");}
  if(["しっかり立体"].includes(state.bottomFrontShape)){score+=1;reasons.push("強い前面立体指定");}
- if(state.legWidth==="非常に大きく開く"){score+=1;reasons.push("非常に大きい脚幅");}
+ if(legWidthLabel()==="非常に大きく開く"){score+=1;reasons.push("非常に大きい脚幅");}
  if(state.lowerHairDensity==="非常に濃い" && /内もも/.test(state.lowerHairArea)){score+=1;reasons.push("下腹部から内ももまで非常に濃い体毛");}
  return {score,reasons,level:score>=6?"高":score>=3?"中":"低"};
 }
@@ -2271,8 +2329,8 @@ function effectiveRatio(){
  return "3:4";
 }
 function framingEnglish(){
- const veryWide=state.legWidth==="非常に大きく開く";
- const wide=veryWide||state.legWidth==="大きく開く"||state.legWidth==="肩幅より広く開く";
+ const veryWide=legWidthLabel()==="非常に大きく開く";
+ const wide=veryWide||legWidthLabel()==="大きく開く"||legWidthLabel()==="肩幅より広く開く";
  const three=/三面図/.test(state.outputType);
  let lines=[
   "Include the full head, both elbows, both hands, and both feet with comfortable empty margins.",
@@ -2545,9 +2603,9 @@ Arm Position／腕の位置：${state.armPosition}
 Hand Position／手の位置：${state.handPosition}
 Head Direction／頭の向き：${state.headDirection}
 Weight Balance／重心：${state.weightBalance}
-脚幅：${state.legWidth}
-脚の前後位置：${state.legOffset}
-足先の向き：${state.footDirection}
+脚幅：${legWidthLabel()}（脚の角度：${state.legAngle}）
+脚の前後位置：${legOffsetLabel()}（角度：${state.legOffset}）
+足先の向き：${footDirectionLabel()}（角度：${state.footDirection}）
 Camera Angle／カメラ角度：${state.cameraAngle}
 Camera Distance／カメラ距離：${state.cameraDistance}
 Focal Length／焦点距離：${state.focalLength}
@@ -2573,29 +2631,142 @@ ${state.targetAI}`;
 
 const POSE_ANGLE_SYSTEM_VERSION="cfm-pose-angle-v1";
 const POSE_PRESETS=Object.freeze({
- "自然な直立":{basePose:"自然な直立",armPosition:"体側に自然に下ろす",handPosition:"自然に開く",headDirection:"正面",legWidth:"やや開く",armAngle:"5°",legAngle:"8°",headAngle:"0°",neckAngle:"0°",wristAngle:"0°",elbowAngle:"5°",kneeAngle:"3°",ankleAngle:"5°"},
- "両手を頭の後ろで組む":{basePose:"自然な直立",armPosition:"両腕を上げる",handPosition:"頭の後ろで組む",headDirection:"正面",legWidth:"肩幅程度に開く",armAngle:"160°",legAngle:"12°",headAngle:"0°",neckAngle:"0°",wristAngle:"15°",elbowAngle:"95°",kneeAngle:"5°",ankleAngle:"5°"},
- "胸の前で腕を組む":{basePose:"自然な直立",armPosition:"胸の前で組む",handPosition:"腕組みに合わせる",headDirection:"正面",legWidth:"やや開く",armAngle:"45°",legAngle:"8°",headAngle:"0°",neckAngle:"0°",wristAngle:"10°",elbowAngle:"100°",kneeAngle:"3°",ankleAngle:"5°"},
- "腰に手を置く":{basePose:"自然な直立",armPosition:"腰に置く",handPosition:"腰に添える",headDirection:"正面",legWidth:"肩幅程度に開く",armAngle:"35°",legAngle:"12°",headAngle:"0°",neckAngle:"0°",wristAngle:"20°",elbowAngle:"85°",kneeAngle:"5°",ankleAngle:"5°"},
- "歩行":{basePose:"歩行",armPosition:"体側に自然に下ろす",handPosition:"自然に開く",headDirection:"正面",legWidth:"やや開く",armAngle:"20°",legAngle:"35°",headAngle:"0°",neckAngle:"0°",wristAngle:"5°",elbowAngle:"15°",kneeAngle:"30°",ankleAngle:"15°"}
+ "自然な直立":{basePose:"自然な直立",armPosition:"体側に自然に下ろす",handPosition:"自然に開く",headDirection:"正面",armAngle:"5°",legAngle:"8°",headAngle:"0°",neckAngle:"0°",wristAngle:"0°",elbowAngle:"5°",kneeAngle:"3°",ankleAngle:"5°"},
+ "両手を頭の後ろで組む":{basePose:"自然な直立",armPosition:"両腕を上げる",handPosition:"頭の後ろで組む",headDirection:"正面",armAngle:"160°",legAngle:"12°",headAngle:"0°",neckAngle:"0°",wristAngle:"15°",elbowAngle:"95°",kneeAngle:"5°",ankleAngle:"5°"},
+ "胸の前で腕を組む":{basePose:"自然な直立",armPosition:"胸の前で組む",handPosition:"腕組みに合わせる",headDirection:"正面",armAngle:"45°",legAngle:"8°",headAngle:"0°",neckAngle:"0°",wristAngle:"10°",elbowAngle:"100°",kneeAngle:"3°",ankleAngle:"5°"},
+ "腰に手を置く":{basePose:"自然な直立",armPosition:"腰に置く",handPosition:"腰に添える",headDirection:"正面",armAngle:"35°",legAngle:"12°",headAngle:"0°",neckAngle:"0°",wristAngle:"20°",elbowAngle:"85°",kneeAngle:"5°",ankleAngle:"5°"},
+ "歩行":{basePose:"歩行",armPosition:"体側に自然に下ろす",handPosition:"自然に開く",headDirection:"正面",armAngle:"20°",legAngle:"35°",headAngle:"0°",neckAngle:"0°",wristAngle:"5°",elbowAngle:"15°",kneeAngle:"30°",ankleAngle:"15°"}
 });
 function poseAngleNumber(value){const n=parseFloat(String(value??"").replace("°",""));return Number.isFinite(n)?n:0;}
+/* [Beta21] 脚幅統合：独立していた「脚幅」項目を廃止し、Leg Angle／脚の角度
+   （体の中心線から外側へ開く角度、0〜60°）から自動算出する。旧「脚幅」の
+   6段階カテゴリはそのまま維持し、角度の閾値で割り当てる。閾値は旧プリセット
+   （8°→やや開く／12°→肩幅程度に開く／45°・60°→非常に大きく開く 等）との
+   整合を優先して設定。歩行プリセットのみ、脚の角度35°が歩幅（前後の踏み出し）
+   の意味も兼ねていたため、統合後は「大きく開く」表示になる（旧仕様では
+   「やや開く」固定だった）。これは脚幅と脚の角度という二重管理をなくすための
+   意図的な仕様変更。 */
+function legWidthFromAngle(angleValue){
+ const n=poseAngleNumber(angleValue);
+ if(n<=0)return "両脚を揃える";
+ if(n<=9)return "やや開く";
+ if(n<=16)return "肩幅程度に開く";
+ if(n<=27)return "肩幅より広く開く";
+ if(n<=40)return "大きく開く";
+ return "非常に大きく開く";
+}
+function legWidthLabel(){return legWidthFromAngle(state.legAngle);}
+/* [Beta21] 足先の向きスライダー：footDirectionを他の角度項目と同じ
+   "N°"形式の数値で保持する（マイナス＝内向き、0°＝正面、プラス＝外向き）。
+   旧来の5段階カテゴリ（正面／自然な外向き／やや外向き／大きく外向き／
+   内向き）は日本語サマリー・英語プロンプト・翻訳辞書との互換のため、
+   角度から算出して復元する。代表角度：内向き-15°／正面0°／
+   自然な外向き15°／やや外向き25°／大きく外向き40°。 */
+function footDirectionFromAngle(angleValue){
+ const n=poseAngleNumber(angleValue);
+ if(n<=-8)return "内向き";
+ if(n<=7)return "正面";
+ if(n<=20)return "自然な外向き";
+ if(n<=32)return "やや外向き";
+ return "大きく外向き";
+}
+function footDirectionLabel(){return footDirectionFromAngle(state.footDirection);}
+/* [Beta21] 脚の前後位置スライダー：legOffsetもfootDirectionと同じ
+   "N°"形式の数値で保持する（マイナス＝左脚が前、プラス＝右脚が前、
+   0°＝左右を揃える）。旧来「片脚重心」はここに紛れ込んでいたが、
+   体重のかけ方はWeight Balance／重心の項目と意味が重複していたため、
+   脚の前後位置からは撤廃し、重心の項目に一本化した。 */
+function legOffsetFromAngle(angleValue){
+ const n=poseAngleNumber(angleValue);
+ if(n===0)return "左右を揃える";
+ if(Math.abs(n)<=12)return "軽く前後にずらす";
+ return n<0?"左脚を少し前":"右脚を少し前";
+}
+function legOffsetLabel(){return legOffsetFromAngle(state.legOffset);}
+/* [Beta21] Pose Editor：簡易棒人間プレビュー。腕・肘・脚・膝・頭・首の
+   現在角度からSVGの座標を計算して描画するだけの、見た目確認用の模式図。
+   実際の画像生成結果を保証するものではない（プレビュー用の目安）。 */
+function renderPoseSkeleton(){
+ const box=$("poseSkeletonPreview");if(!box)return;
+ const clamp=(v,lo,hi)=>Math.max(lo,Math.min(hi,v));
+ const toRad=d=>d*Math.PI/180;
+ const arm=clamp(poseAngleNumber(state.armAngle),0,180);
+ const elbow=clamp(poseAngleNumber(state.elbowAngle),0,150);
+ const leg=clamp(poseAngleNumber(state.legAngle),0,60);
+ const knee=clamp(poseAngleNumber(state.kneeAngle),0,90);
+ const head=clamp(poseAngleNumber(state.headAngle),-30,30);
+ const neck=clamp(poseAngleNumber(state.neckAngle),-20,20);
+ const shoulderY=68,hipY=128,headCX=80,headCY=44,headR=14;
+ const neckTiltX=clamp(neck*0.4,-12,12);
+ const headTiltX=clamp(head*0.5,-16,16)+neckTiltX*0.5;
+ const armLen=38,foreLen=32,thighLen=36,shinLen=34;
+ const armRad=toRad(arm),elbowBendRad=toRad(elbow),legRad=toRad(leg),kneeBendRad=toRad(knee);
+ function limb(mult){
+  const shoulderX=80+mult*15,hipX=80+mult*10;
+  const elbowX=shoulderX+mult*Math.sin(armRad)*armLen,elbowY=shoulderY+Math.cos(armRad)*armLen;
+  const foreRad=Math.max(0,armRad-elbowBendRad*0.6);
+  const handX=elbowX+mult*Math.sin(foreRad)*foreLen,handY=elbowY+Math.cos(foreRad)*foreLen;
+  const kneeX=hipX+mult*Math.sin(legRad)*thighLen,kneeY=hipY+Math.cos(legRad)*thighLen;
+  const shinRad=Math.max(0,legRad-kneeBendRad*0.5);
+  const footX=kneeX+mult*Math.sin(shinRad)*shinLen,footY=kneeY+Math.cos(shinRad)*shinLen;
+  return {shoulderX,elbowX,elbowY,handX,handY,hipX,kneeX,kneeY,footX,footY};
+ }
+ const L=limb(-1),R=limb(1);
+ const line=(a,b,c,d)=>`<line x1="${a}" y1="${b}" x2="${c}" y2="${d}" stroke="#3563e9" stroke-width="4" stroke-linecap="round"/>`;
+ box.innerHTML=`<svg viewBox="0 0 160 220" width="100%" height="220" role="img" aria-label="ポーズの模式図プレビュー">
+${line(80,shoulderY,80,hipY)}
+${line(80+neckTiltX*0.3,shoulderY,headCX+headTiltX,headCY+headR)}
+<circle cx="${headCX+headTiltX}" cy="${headCY}" r="${headR}" fill="#eef3ff" stroke="#3563e9" stroke-width="3"/>
+${line(L.shoulderX,shoulderY,L.elbowX,L.elbowY)}
+${line(L.elbowX,L.elbowY,L.handX,L.handY)}
+${line(R.shoulderX,shoulderY,R.elbowX,R.elbowY)}
+${line(R.elbowX,R.elbowY,R.handX,R.handY)}
+${line(L.hipX,hipY,L.kneeX,L.kneeY)}
+${line(L.kneeX,L.kneeY,L.footX,L.footY)}
+${line(R.hipX,hipY,R.kneeX,R.kneeY)}
+${line(R.kneeX,R.kneeY,R.footX,R.footY)}
+<circle cx="80" cy="${shoulderY}" r="3" fill="#3563e9"/>
+<circle cx="80" cy="${hipY}" r="3" fill="#3563e9"/>
+</svg>`;
+}
+function bindPoseEditorSliders(){
+ const keys=["armAngle","elbowAngle","legAngle","kneeAngle","headAngle","neckAngle","wristAngle","ankleAngle","footDirection","legOffset"];
+ keys.forEach(key=>{
+  const slider=$(key+"Slider");if(!slider)return;
+  const valueOutput=$(key+"Value");
+  slider.addEventListener("input",()=>{
+   const v=slider.value;
+   state[key]=`${v}°`;
+   if(valueOutput)valueOutput.textContent=`${v}°`;
+   renderPoseSkeleton();
+   renderPoseSummaryBar();
+   markAutosaveDirty();
+  });
+ });
+ renderPoseSkeleton();
+}
 function poseAngleNatural(key,value){
  const n=poseAngleNumber(value),a=Math.abs(n),side=n<0?"left or backward":"right or forward";
  const joint={armAngle:"arms",legAngle:"legs",headAngle:"head",neckAngle:"neck",wristAngle:"wrists",elbowAngle:"elbows",kneeAngle:"knees",ankleAngle:"ankles"}[key]||key;
  const degree=a<1?"neutral":a<=10?"slight":a<=30?"moderate":a<=60?"pronounced":a<=120?"strongly bent or raised":"highly raised";
  return `${joint}: ${value} (${degree}${a<1?"":`, ${side}`})`;
 }
-function applyPosePreset(force=false){
- const preset=POSE_PRESETS[state.posePreset];if(!preset)return;
- if(force||state.poseOverride==="Presetをそのまま使用")Object.assign(state,preset);
- reconcilePosePositionConflict();
+function matchingPoseTemplate(){
+ return Object.keys(POSE_PRESETS).find(name=>Object.entries(POSE_PRESETS[name]).every(([k,v])=>state[k]===v))||null;
 }
-function reconcilePosePositionConflict(){
+function applyPoseTemplate(name){
+ const preset=POSE_PRESETS[name];if(!preset)return;
+ Object.assign(state,preset);
+ reconcilePosePositionConflict();
+ markAutosaveDirty();
+ render();
+ showToast(`テンプレート「${name}」を反映しました。必要な部分は下の項目で個別に調整できます。`);
+}
+function reconcilePosePositionConflict(priorityField){
  const required={"頭の後ろで組む":"両腕を上げる","腕組みに合わせる":"胸の前で組む","腰に添える":"腰に置く","背中で組む":"背中側へ回す"};
  const handByArm={"両腕を上げる":"頭の後ろで組む","胸の前で組む":"腕組みに合わせる","腰に置く":"腰に添える","背中側へ回す":"背中で組む","体側に自然に下ろす":"自然に開く"};
  if(required[state.handPosition]&&required[state.handPosition]!==state.armPosition){
-  if(state.poseOverride==="腕の位置を優先")state.handPosition=handByArm[state.armPosition]||"自然に開く";
+  if(priorityField==="armPosition")state.handPosition=handByArm[state.armPosition]||"自然に開く";
   else state.armPosition=required[state.handPosition];
  }
  state.armsPose=state.handPosition==="頭の後ろで組む"?"両手を頭の後ろで組む":`${state.armPosition}・${state.handPosition}`;
@@ -2604,7 +2775,6 @@ function poseAnglePrompt(){
  reconcilePosePositionConflict();
  const keys=["armAngle","legAngle","headAngle","neckAngle","wristAngle","elbowAngle","kneeAngle","ankleAngle"];
  return `POSE ANGLE SYSTEM
-Preset: ${parameterToEnglish("posePreset",state.posePreset)}. Override policy: ${parameterToEnglish("poseOverride",state.poseOverride)}.
 ${keys.map(k=>poseAngleNatural(k,state[k])).join("\n")}
 Maintain these numeric angles and their natural-language interpretation consistently across all requested views.`;
 }
@@ -2787,9 +2957,8 @@ function formatAIConversionLogForDisplay(value){
 }
 function applyBasePosePreset(value){
  if(value!=="気をつけ")return false;
- state.legWidth="両脚を揃える";
- state.legOffset="左右を揃える";
- state.footDirection="正面";
+ state.legOffset="0°";
+ state.footDirection="0°";
  state.weightBalance="左右均等";
  state.legAngle="0°";
  state.kneeAngle="0°";
@@ -2897,7 +3066,7 @@ Creator: ${state.showCreator==="表示する"?state.creatorName:"do not display"
 Hair: ${state.showHair==="表示する"?`${state.hairColor}, ${state.hairStyle}`:"do not display"}.
 Eyes: ${state.showEyes==="表示する"?`${state.eyelid}, ${state.eyeShape}`:"do not display"}.
 Outfit: ${state.showOutfit==="表示する"?`${state.top} / ${state.bottom}`:"do not display"}.
-Pose: ${state.showPose==="表示する"?`${state.basePose}, ${state.armPosition}, ${state.handPosition}, ${state.headDirection}, ${state.weightBalance}, ${state.legWidth}`:"do not display"}.
+Pose: ${state.showPose==="表示する"?`${state.basePose}, ${state.armPosition}, ${state.handPosition}, ${state.headDirection}, ${state.weightBalance}, ${legWidthLabel()}`:"do not display"}.
 Notes: ${state.showNotes==="表示する"?"display only supplied setting values":"do not display"}.
 If a value is unavailable, display an em dash.`;
  }
@@ -2975,7 +3144,7 @@ ${conversionProfile}${costumeLines.join("\n")}
 
 POSE AND COMPOSITION
 Output type: ${state.outputType}.
-Base pose: ${state.basePose}. Arm position: ${state.armPosition}. Hand position: ${state.handPosition}. Head direction: ${state.headDirection}. Weight balance: ${state.weightBalance}. Leg stance width: ${state.legWidth}. Fore-aft leg placement: ${state.legOffset}. Foot direction: ${state.footDirection}. Gaze: ${state.gaze}.
+Base pose: ${state.basePose}. Arm position: ${state.armPosition}. Hand position: ${state.handPosition}. Head direction: ${state.headDirection}. Weight balance: ${state.weightBalance}. Leg stance width: ${legWidthLabel()}. Fore-aft leg placement: ${legOffsetLabel()}. Foot direction: ${footDirectionLabel()}. Gaze: ${state.gaze}.
 ${poseAnglePrompt()}
 Framing rule: ${state.framingSafety}. Safety margin: ${state.framingMargin}. ${framingEnglish()}
 Camera angle: ${state.cameraAngle}. Camera distance: ${state.cameraDistance}. Focal length: ${state.focalLength}. Perspective: ${state.cameraPerspective}.${state.lensEffect&&state.lensEffect!=="なし"?` Lens effect: ${state.lensEffect}.`:""} Subject scale: ${state.subjectScale}. View spacing: ${state.viewSpacing}.
@@ -3152,10 +3321,25 @@ function applyAll(o){
   o.handPosition=a.includes("頭の後ろ")?"頭の後ろで組む":a.includes("腕組み")?"腕組みに合わせる":a.includes("腰")?"腰に添える":a.includes("ポケット")?"片手をポケットに入れる":a.includes("後ろ")?"背中で組む":"自然に開く";
  }
  if(o&&!o.headDirection)o.headDirection="正面";
- if(o&&!o.weightBalance)o.weightBalance=(o.bodyPosture==="片脚重心"||o.legOffset==="片脚重心")?"やや右脚重心":o.bodyPosture==="歩行"?"歩行に合わせる":"左右均等";
- if(o&&!o.legWidth)o.legWidth=o.legsPose||"肩幅程度に開く";
- if(o&&!o.legOffset)o.legOffset="左右を揃える";
- if(o&&!o.footDirection)o.footDirection="自然な外向き";
+ if(o&&!o.weightBalance)o.weightBalance=(o.bodyPosture==="片脚重心"||o.basePose==="片脚重心"||o.legOffset==="片脚重心")?"やや右脚重心":(o.bodyPosture==="歩行"||o.basePose==="歩行")?"歩行に合わせる":"左右均等";
+ if(o&&o.basePose==="片脚重心")o.basePose="自然な直立";
+ if(o&&o.bodyPosture==="片脚重心")o.bodyPosture="自然な直立";
+ if(o&&!o.legAngle){
+  const legacyWidth=o.legWidth||o.legsPose;
+  const widthToAngle={"両脚を揃える":"0°","やや開く":"5°","肩幅程度に開く":"12°","肩幅より広く開く":"20°","大きく開く":"35°","非常に大きく開く":"45°"};
+  if(legacyWidth&&widthToAngle[legacyWidth])o.legAngle=widthToAngle[legacyWidth];
+ }
+ if(o)delete o.legWidth;
+ if(o&&o.legOffset&&!/^[-+]?\d+(?:\.\d+)?°$/.test(o.legOffset)){
+  const offsetToAngle={"左右を揃える":"0°","左脚を少し前":"-20°","右脚を少し前":"20°","軽く前後にずらす":"8°","片脚重心":"0°"};
+  o.legOffset=offsetToAngle[o.legOffset]||"0°";
+ }
+ if(o&&!o.legOffset)o.legOffset="0°";
+ if(o&&o.footDirection&&!/^[-+]?\d+(?:\.\d+)?°$/.test(o.footDirection)){
+  const dirToAngle={"内向き":"-15°","正面":"0°","自然な外向き":"15°","やや外向き":"25°","大きく外向き":"40°"};
+  o.footDirection=dirToAngle[o.footDirection]||"15°";
+ }
+ if(o&&!o.footDirection)o.footDirection="15°";
  if(o&&!o.cameraAngle)o.cameraAngle="目線の高さ";
  if(o&&!o.cameraDistance)o.cameraDistance=o.camera||"余白を含む全身";
  if(o&&!o.focalLength)o.focalLength="標準（50mm相当）";
@@ -3205,8 +3389,7 @@ function applyAll(o){
  if(o&&!o.phase7JapaneseResidueStatus)o.phase7JapaneseResidueStatus="監査可能";
  if(o&&!o.phase7PoseAngleVersion)o.phase7PoseAngleVersion="1.0";
  if(o&&!o.phase7PoseAngleStatus)o.phase7PoseAngleStatus="完成";
- if(o&&!o.posePreset)o.posePreset="自然な直立";
- if(o&&!o.poseOverride)o.poseOverride="Presetを基準に個別調整";
+ if(o){delete o.posePreset;delete o.poseOverride;}
  const poseDefaults={armAngle:"5°",legAngle:"8°",headAngle:"0°",neckAngle:"0°",wristAngle:"0°",elbowAngle:"5°",kneeAngle:"3°",ankleAngle:"5°"};
  Object.entries(poseDefaults).forEach(([k,v])=>{if(o&&!o[k])o[k]=v});
  if(o&&!o.phase7ConditionalPromptVersion)o.phase7ConditionalPromptVersion="1.0";
@@ -3364,7 +3547,6 @@ function runConsistencyCheck(){
  if(state.handPosition==="頭の後ろで組む"&&state.framingSafety==="見切れ防止を使用しない")issues.push({type:"warn",text:"両手を頭の後ろで組むポーズは横幅が広がるため、見切れ防止を推奨します。"});
  if(state.handPosition==="片手をポケットに入れる"&&state.armPosition!=="片腕を曲げる")issues.push({type:"info",text:"片手をポケットに入れる場合は、腕の位置を「片腕を曲げる」にすると自然です。"});
  if(state.handPosition==="背中で組む"&&state.armPosition!=="背中側へ回す")issues.push({type:"warn",text:"手は「背中で組む」ですが、腕の位置が「背中側へ回す」ではありません。"});
- if(state.weightBalance==="左右均等"&&state.legOffset==="片脚重心")issues.push({type:"warn",text:"重心は「左右均等」ですが、脚の前後位置は「片脚重心」です。"});
  if(state.basePose==="歩行"&&state.weightBalance!=="歩行に合わせる")issues.push({type:"info",text:"基本姿勢が「歩行」の場合、重心を「歩行に合わせる」にすると三面図の整合性が高まります。"});
  if(state.outputType.includes("三面図")&&state.cameraPerspective==="強い遠近感")issues.push({type:"warn",text:"三面図に強い遠近感を設定すると、正面・側面・背面の比較精度が下がる可能性があります。"});
  if(state.outputType.includes("三面図")&&state.subjectScale!=="三面とも同一")issues.push({type:"warn",text:"三面図では、人物スケールを「三面とも同一」にすると比較しやすくなります。"});
