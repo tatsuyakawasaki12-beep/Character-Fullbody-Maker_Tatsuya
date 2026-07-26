@@ -466,7 +466,15 @@ function renderBuildInfo(){
 function openUpdateModal(){renderBuildInfo();$("updateModal").classList.add("show");}
 function closeUpdateModal(){$("updateModal").classList.remove("show");}
 async function copyBuildInfo(){const text=buildDiagnosticText();try{await navigator.clipboard.writeText(text);showToast("更新情報をコピーしました")}catch{try{const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();showToast("更新情報をコピーしました")}catch{showToast("コピーに失敗しました。テキストを選択して手動でコピーしてください。")}}}
-function forceLatestReload(){showToast("このプレビュー環境ではページの再読み込みはできません（実際の公開先でお試しください）");}
+function forceLatestReload(){
+ try{
+  const url=new URL(location.href);
+  url.searchParams.set("build",Date.now().toString(36));
+  location.href=url.toString();
+ }catch(e){
+  try{location.reload();}catch(e2){showToast("再読み込みに失敗しました。ブラウザのキャッシュを手動で削除してから開き直してください。");}
+ }
+}
 
 async function verifyPublishedBuild(){
  const box=$("verifyResult");
@@ -1507,7 +1515,7 @@ ${field("buttockHair","臀部の毛",["なし","ごく薄い","薄い","普通",
 </div>
 
 <div class="note">English Promptには通常の日本語設定値を残しません。日本語の固有名詞は保護対象として扱い、それ以外の未変換値は監査ログへ記録して英語出力から除外します。</div>
-<div class="actions"><button id="prevBtn">◀ 前へ</button><span style="display:flex;gap:8px;flex-wrap:wrap"><button id="copyBtn">英語Promptをコピー</button><button id="copyFinalPackageBtn" class="primary">4層一括コピー</button></span></div></div>`;
+<div class="actions"><button id="prevBtn">◀ 前へ</button><span style="display:flex;gap:8px;flex-wrap:wrap"><button id="copyBtn" class="primary">英語Promptをコピー</button><button id="copyFinalPackageBtn">4層一括コピー</button></span></div></div>`;
 }
 
 const BODY_HAIR_CONDITIONAL_UI_VERSION="cfm-conditional-ui-v1";
