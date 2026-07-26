@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="application-name" content="Character Fullbody Maker — Tatsuya Edition">
-<meta name="description" content="Character Fullbody Maker — Tatsuya Edition Ver.2.0 RC Complete">
+<meta name="description" content="Character Fullbody Maker — Tatsuya Edition Ver.2.0 Complete">
 <meta name="theme-color" content="#f4f7fb">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>Character Fullbody Maker — Tatsuya Edition Ver.2.0 RC Complete</title>
+<title>Character Fullbody Maker — Tatsuya Edition Ver.2.0 Complete</title>
 <style>
 :root{--bg:#f4f7fb;--panel:#fff;--text:#182235;--muted:#718096;--line:#d9e2ef;--accent:#3563e9;--soft:#eef3ff;--danger:#b42318;--safe:#16794f;--safe-bg:#eefbf4}
 *{box-sizing:border-box}
@@ -74,7 +74,7 @@ details.grid-section>.grid-section-body{display:grid;grid-template-columns:repea
 </style>
 </head>
 <!-- Commit: Beta20.3 Phase7 Step7 Final Polish, Diagnostics & Beta20.3 Release -->
-<body class="level-easy" data-build-phase="7" data-build-step="7" data-build-label="RC Complete">
+<body class="level-easy" data-build-phase="7" data-build-step="7" data-build-label="Ver.2.0 Complete">
 
 <!-- Beta20.3 Phase7 DEVELOPMENT NOTE
 Phase7 Step7 Final Polish, Diagnostics & Beta20.3 Release: beginner-friendly Pose guidance, readable Japanese Summary and AI Conversion Log presentation, developer-only diagnostic notices, special-hair reservation guidance, final release diagnostics, JSON round-trip verification, release notes, and Beta20.3 Complete labeling added; all Phase7 Step6 functionality preserved.
@@ -142,8 +142,8 @@ Leg Hair: Density / Length / Texture / Distance Visibility independent.
 
 <header><div class="wrap">
 <h1>Character Fullbody Maker — Tatsuya Edition Ver.2.0</h1>
-<div class="sub" id="buildSubLabel">Character Fullbody Maker Tatsuya Edition Ver.2.0 — RC Complete</div>
-<div class="build-badge" id="buildBadge" aria-label="現在のビルド">Build: RC Complete</div>
+<div class="sub" id="buildSubLabel">Character Fullbody Maker Tatsuya Edition Ver.2.0 — Complete</div>
+<div class="build-badge" id="buildBadge" aria-label="現在のビルド">Build: Ver.2.0 Complete</div>
 <div class="sub fingerprint" id="buildFingerprint">Fingerprint: calculating…</div><div id="autosaveIndicator" class="autosave-indicator saved" aria-live="polite"><span class="autosave-dot"></span><span>自動保存：準備中</span></div>
 </div></header>
 
@@ -152,7 +152,7 @@ Leg Hair: Density / Length / Texture / Distance Visibility independent.
 <details id="quickGuide" class="grid-section" open>
 <summary>使い方ガイド（かんたん操作案内）</summary>
 <div class="note">
-1. 上部のステップ番号（1〜10）を順番に進めるだけで、顔・髪・体毛・衣装・ポーズ・背景などを設定できます。前後のステップにはいつでも戻れます。<br>
+1. 上部のステップ番号（1〜10）を順番に進めるだけで、顔・髪・体毛・衣装・ポーズ・背景などを設定できます。前後のステップにはいつでも戻れます。STEP11は動き・映像用プロンプトを作る、静止画設定とは別枠の追加機能です。<br>
 2. 「設定レベル」は最初「かんたん」のままで大丈夫です。表示された項目だけ埋めれば、隠れている詳細項目は自動で無難な値が使われます。<br>
 3. STEP8のポーズは、まずポーズテンプレートのボタン（自然な直立・両手を頭の後ろで組む など）を押すだけでOKです。細かく変えたい時だけ、その下のスライダーを動かしてください。<br>
 4. 最後のSTEP10で「プロンプト更新」を押すと、画像生成AI用の英語プロンプトができあがります。それをコピーして画像生成AIに貼り付けてください。<br>
@@ -341,7 +341,7 @@ const APP_BUILD_STEP=7;
    この APP_BUILD_LABEL（と必要なら下の APP_BUILD_GENERATED_AT）だけを
    更新すれば、ヘッダーの説明文・ビルドバッジ・body の data-build-label・
    ページタイトルまで自動的に追従する（syncBuildLabelToDOM 参照）。 */
-const APP_BUILD_LABEL="RC Complete";
+const APP_BUILD_LABEL="Ver.2.0 Complete";
 let currentStep=1;
 let toastTimer=null;
 console.info(`[Character Fullbody Maker] ${APP_BUILD_LABEL}`);
@@ -422,7 +422,7 @@ function storageAvailable(){try{const key="__cfm_step5_test__";localStorage.setI
 function runSelfTest(){
  const tests=[
  ["ビルド情報",document.body.dataset.buildLabel===APP_BUILD_LABEL,`現在：${document.body.dataset.buildLabel||"なし"}`],
- ["ステップ数",Array.isArray(stepNames)&&stepNames.length===10,`検出：${Array.isArray(stepNames)?stepNames.length:"不明"}`],
+ ["ステップ数",Array.isArray(stepNames)&&stepNames.length===11,`検出：${Array.isArray(stepNames)?stepNames.length:"不明"}`],
  ["主要画面",!!$("page")&&!!$("steps")&&!!$("progressTrack"),"page / steps / progressTrack"],
  ["保存機能",typeof saveDraft==="function"&&typeof loadCurrent==="function","saveDraft / loadCurrent"],
  ["JSON機能",typeof exportJSON==="function"&&!!$("jsonFile"),"exportJSON / jsonFile"],
@@ -497,10 +497,11 @@ const state={
  cameraAngle:"目線の高さ",cameraDistance:"余白を含む全身",focalLength:"標準（50mm相当）",cameraPerspective:"正投影に近い",lensEffect:"なし",subjectScale:"三面とも同一",viewSpacing:"等間隔",
  background:"グレー",backgroundType:"無地スタジオ",backgroundColor:"グレー",floorTreatment:"床面を自然に表示",castShadow:"薄い接地影",timeOfDay:"自動",lighting:"柔らかなスタジオ照明",lightDirection:"正面斜め上",lightIntensity:"標準",shadowSoftness:"柔らかい",colorTemperature:"自動",camera:"余白を含む全身",style:"フォトリアル",quality:"細部まで鮮明",ratio:"自動（構図優先）",
  extra:"",locked:"",negative:"余分な手足、不自然な手指、人物重複、顔の不一致、体型の不一致、衣装の左右差、文字化け、ロゴ、透かし",
- assistStrength:"自然",assistAdjustWeight:"提案のみ",assistLockNonBody:"固定する", trailBelow:"ヘソ下・細く自然",trailBridgeWidth:"細い",trailBridgeDensity:"濃い",trailBridgeContinuity:"途切れず連続",trailBridgeEnd:"腰骨ラインで主分布へ接続",trailStyle:"濃い一本線",trailUpperLimit:"へその下縁で厳密に止める",trailSurroundingHair:"周囲はごく薄い",trailTransitionZone:"短く自然に移行",trailAroundNavel:"ヘソを通過",trailAbove:"なし",trailChestLink:"胸毛とはつながらない", pubicDensity:"自然",groinHair:"自然",innerThighHair:"薄い",hairContinuity:"自然につながる",lowerHairSpread:"陰毛周辺にまとまる",lowerHairDensity:"自然",lowerHairConnection:"全体が自然につながる",lowerHairStart:"腰骨ラインから広がる",lowerHairArea:"左右腰骨間の下腹部・鼠径部・内もも上部へ広く",lowerHairHorizontal:"左右腰骨間いっぱい",lowerHairVertical:"鼠径部・内もも上部まで広く",lowerHairBoundary:"周囲へ自然にぼかす",lowerHairFlow:"境目なく自然に連続",lowerHairShape:"横長の自然分布", framingSafety:"自動で見切れ防止",framingPriority:"全身と余白を最優先",edgeClearance:"かなり広い",infoDisplay:"表示しない",infoLayout:"シンプル一行",infoPlacement:"上部の白余白",infoLanguage:"日本語",nameDisplayRule:"入力どおり表示",referenceMode:"人体・衣装構造資料",showProject:"表示しない",projectName:"Character Fullbody Maker",showVersion:"表示しない",sheetVersion:"2026.07",showSheetNo:"表示しない",sheetNo:"001",showCreator:"表示しない",creatorName:"Tatsuya",showTraits:"表示しない",showHair:"表示しない",showEyes:"表示しない",showOutfit:"表示しない",showPose:"表示しない",showNotes:"表示しない",targetAI:"ChatGPT画像生成",promptSensitivity:"バランス",safeRetryLevel:"通常",promptDetail:"標準（バランス）",autoCompile:"自動（推奨）",outputLanguage:"英語のみ", settingLevel:"easy",changeMode:"confirm",projectStatus:"作成途中"
+ assistStrength:"自然",assistAdjustWeight:"提案のみ",assistLockNonBody:"固定する", trailBelow:"ヘソ下・細く自然",trailBridgeWidth:"細い",trailBridgeDensity:"濃い",trailBridgeContinuity:"途切れず連続",trailBridgeEnd:"腰骨ラインで主分布へ接続",trailStyle:"濃い一本線",trailUpperLimit:"へその下縁で厳密に止める",trailSurroundingHair:"周囲はごく薄い",trailTransitionZone:"短く自然に移行",trailAroundNavel:"ヘソを通過",trailAbove:"なし",trailChestLink:"胸毛とはつながらない", pubicDensity:"自然",groinHair:"自然",innerThighHair:"薄い",hairContinuity:"自然につながる",lowerHairSpread:"陰毛周辺にまとまる",lowerHairDensity:"自然",lowerHairConnection:"全体が自然につながる",lowerHairStart:"腰骨ラインから広がる",lowerHairArea:"左右腰骨間の下腹部・鼠径部・内もも上部へ広く",lowerHairHorizontal:"左右腰骨間いっぱい",lowerHairVertical:"鼠径部・内もも上部まで広く",lowerHairBoundary:"周囲へ自然にぼかす",lowerHairFlow:"境目なく自然に連続",lowerHairShape:"横長の自然分布", framingSafety:"自動で見切れ防止",framingPriority:"全身と余白を最優先",edgeClearance:"かなり広い",infoDisplay:"表示しない",infoLayout:"シンプル一行",infoPlacement:"上部の白余白",infoLanguage:"日本語",nameDisplayRule:"入力どおり表示",referenceMode:"人体・衣装構造資料",showProject:"表示しない",projectName:"Character Fullbody Maker",showVersion:"表示しない",sheetVersion:"2026.07",showSheetNo:"表示しない",sheetNo:"001",showCreator:"表示しない",creatorName:"Tatsuya",showTraits:"表示しない",showHair:"表示しない",showEyes:"表示しない",showOutfit:"表示しない",showPose:"表示しない",showNotes:"表示しない",targetAI:"ChatGPT画像生成",promptSensitivity:"バランス",safeRetryLevel:"通常",promptDetail:"標準（バランス）",autoCompile:"自動（推奨）",outputLanguage:"英語のみ", settingLevel:"easy",changeMode:"confirm",projectStatus:"作成途中",
+ motionTargetAI:"Runway Gen-3 Alpha",motionSubjectText:"",motionCameraType:"固定",motionCameraFreeText:"",motionPace:"普通",motionPaceFreeText:"",motionDurationText:"",motionBackgroundHandling:"背景は静止させる",motionNegativeText:"",motionToneText:"",motionOutputJa:"",motionOutputEn:""
 };
 const initial=JSON.parse(JSON.stringify(state));
-const stepNames=["人物情報","顔","髪","肌","身体","体毛","衣装","ポーズ","背景","完成"];
+const stepNames=["人物情報","顔","髪","肌","身体","体毛","衣装","ポーズ","背景","完成","動き・映像"];
 const SPECIAL_HAIR_REGION_SCHEMA_VERSION="1.0";
 const SPECIAL_HAIR_REGIONS=[
  {id:"armpit",label:"ARMPIT HAIR",enabledKey:"armpitOverallDensity",noneValue:"なし",roleKey:"armpitSpecialRole",promptBuilder:"armpitHairEnglish"},
@@ -518,7 +519,7 @@ const PROPER_NOUN_KEYS=new Set(["name","projectName","creatorName","sheetVersion
    日本語を入力すると、選択式項目向けの変換・監査ロジックにそのまま巻き込まれ、
    内容が丸ごと[unmapped ... omitted]に置き換わって消えていた。固有名詞と同じ
    保護対象に加えることで、入力した日本語がそのまま英語Promptにも残るようにする。 */
-const FREE_TEXT_KEYS=new Set(["extra","locked","negative"]);
+const FREE_TEXT_KEYS=new Set(["extra","locked","negative","motionSubjectText","motionCameraType","motionCameraFreeText","motionPace","motionPaceFreeText","motionDurationText","motionBackgroundHandling","motionNegativeText","motionToneText","motionOutputJa","motionOutputEn"]);
 function isProtectedFromMapping(key){return PROPER_NOUN_KEYS.has(key)||FREE_TEXT_KEYS.has(key)}
 const JAPANESE_TO_ENGLISH=Object.freeze({
  "男性":"male","女性":"female","中性的":"androgynous","指定なし":"unspecified",
@@ -1428,7 +1429,7 @@ ${field("buttockHair","臀部の毛",["なし","ごく薄い","薄い","普通",
  </div>
  <div class="note"><strong>STEP 9 出力ルール：</strong>背景・床・接地影・照明は全ビューで共通にします。Character Sheet／制作資料では、入力済みの設定値だけを表示し、AIによる要約・推測・特徴文の創作を禁止します。</div>${navButtons()}`;
 
- return `<div id="step10Panel"><h2 class="section-title">STEP 10　完成</h2>
+ if(currentStep===10)return `<div id="step10Panel"><h2 class="section-title">STEP 10　完成</h2>
  <div class="lead">画面上の日本語設定を、選択したAIが理解しやすい英語の構造設計表現へ変換します。</div>
  <div class="grid">
  ${field("targetAI","生成AI",["ChatGPT画像生成","Gemini画像生成"],"standard")}
@@ -1482,6 +1483,9 @@ ${field("buttockHair","臀部の毛",["なし","ごく薄い","薄い","普通",
   <div class="release-note-item">[Beta22 Step3 追加調整] プロンプト詳細度が「簡潔」で、かつ長さの自動調整（Step2）が発動した場合でも、AIごとの既知の弱点対策のうち同一性の崩れ防止・体型の平均化防止・透かし禁止・指の本数などの核心部分（aiCoreGuidance）は省略せず維持するよう変更。ガーメント解釈や体毛保持など詳細寄りの一般ガイダンス（aiExtendedGuidance）のみ、従来どおり簡潔モードで省略する</div>
   <div class="release-note-item">[Beta22 Step3 追加拡張] FACE欄（全体印象・顔型・額・頬骨・顎線・まぶた・目の形・目の大きさ・目尻・眉・鼻筋・鼻先・唇・耳・表情）の各選択肢を、他の項目とも共有される汎用1語訳（standard・natural等）ではなく、項目ごとに区別しやすい具体的な描写へ拡張。表情はbrow position（眉の位置）・mouth corner（口角）・gaze intensity（視線の強さ）の手がかりを含める。生成時に選択肢を変えた際の見た目の違いが分かりやすくなることを狙った初期実装で、内容は今後の生成テストで随時調整する前提</div>
   <div class="release-note-item">[RC] Beta22ロードマップ（Step1〜3）完了を確認したうえで、Node上にDOMスタブ環境を構築し、263項目の検証（AI×詳細度×一発生成アシストの全組み合わせでの生成確認72項目、FACE欄15項目・全81選択肢の個別確認162項目、体毛none省略・長さ自動調整の実発動・簡潔モードでの核心ガード維持・JSON往復・レガシーJSON移行・AI別しきい値・ビルド表示同期などの既知バグ回帰確認29項目、アプリ内蔵の自己診断20項目）を実施。結果：263項目すべて正常。テスト初回に2件の疑わしい結果が出たが、いずれもアプリ側の不具合ではなくテスト環境（Node）固有の制約によるもの（1: リリースノートの説明文中に過去の修正履歴として残る「loadDraft」という単語を実装コードの参照と誤検知、2: ブラウザ専用API（Blob/FileReader/DOMParser）がNode環境に無いことによる誤検知）と特定し、テスト環境側を補正のうえ再検証して解消を確認。実装上の新規バグは検出されなかった</div>
+  <div class="release-note-item">[Ver.2.0] 実機（iPhone）で「Prompt Optimization & System Regression」「最終診断」が要確認表示のままになる不具合を修正。体毛density＝なし時にBeta21で導入済みの新仕様（見出しと簡潔なhairless文は残し、not applicable等の子項目行だけ刈り取る）と、内部監査（conditionalPromptVisibilityAudit）の判定基準が旧仕様のまま食い違っていたことが原因。判定基準を新仕様に合わせて修正</div>
+  <div class="release-note-item">[Ver.2.0] 「英語Promptをコピー」ボタンを強調色に、「4層一括コピー」ボタンを無色に変更。また、機能していなかった「最新版を再読込」ボタンを、キャッシュ回避クエリ付きの実際の再読込処理に修正（ブラウザキャッシュにより更新が反映されない場合の対処用）</div>
+  <div class="release-note-item">[Ver.2.0] 新ステップ「STEP 11　動き・映像プロンプト」を追加。Runway Gen-3 AlphaやPollo AIなど、生成済みキャラクターの特徴を維持したまま別のポーズ・動画へ加工するAIツール向けに、日本語の自由記述から動き・映像用プロンプトを作成できる。被写体の動き・カメラの動き・速度テンポを必須項目、尺・背景環境の扱い・してほしくないこと・雰囲気トーンを任意項目とし、方向や程度の指定が読み取れない場合はルールベースで確認メッセージを表示する。日本語プロンプトは構造化して出力し、English Promptは簡易辞書による自動下書き（対応していない語句は[ja: …]として明示し、手動確認を前提とする）として出力する。STEP1〜10の判定・監査からは独立した出力系統として実装</div>
  </div>
 
  <h3>プロンプト診断</h3>
@@ -1516,6 +1520,38 @@ ${field("buttockHair","臀部の毛",["なし","ごく薄い","薄い","普通",
 
 <div class="note">English Promptには通常の日本語設定値を残しません。日本語の固有名詞は保護対象として扱い、それ以外の未変換値は監査ログへ記録して英語出力から除外します。</div>
 <div class="actions"><button id="prevBtn">◀ 前へ</button><span style="display:flex;gap:8px;flex-wrap:wrap"><button id="copyBtn" class="primary">英語Promptをコピー</button><button id="copyFinalPackageBtn">4層一括コピー</button></span></div></div>`;
+ if(currentStep===11)return `<h2 class="section-title">STEP 11　動き・映像プロンプト</h2>
+<div class="lead">Runway Gen-3 AlphaやPollo AIなど、生成したキャラクターの特徴を維持したまま別のポーズ・動画へ加工するAIツール向けに、動き・映像用のプロンプトを作成します。「被写体の動き」は日本語で自由に書いてください。</div>
+<div class="grid">
+${field("motionTargetAI","出力先ツール",["Runway Gen-3 Alpha","Pollo AI","汎用（未指定）"],"")}
+${textareaField("motionSubjectText","被写体の動き（必須）","例：右腕をゆっくり肩の高さまで上げる","wide")}
+<div class="wide" id="motionAmbiguityResult"></div>
+${field("motionCameraType","カメラの動き（必須）",MOTION_CAMERA_OPTIONS,"")}
+${inputField("motionCameraFreeText","カメラの動き（自由入力時のみ）","")}
+${field("motionPace","動きの速度・テンポ（必須）",MOTION_PACE_OPTIONS,"")}
+${inputField("motionPaceFreeText","速度・テンポ（自由入力時のみ）","")}
+<div class="wide section-subtitle">任意項目</div>
+${inputField("motionDurationText","尺の目安（任意・例：3秒程度）","")}
+${field("motionBackgroundHandling","背景・環境の扱い（任意）",MOTION_BACKGROUND_OPTIONS,"")}
+${textareaField("motionNegativeText","してほしくないこと（任意）","例：カメラが激しく揺れない、顔が歪まない","wide")}
+${inputField("motionToneText","雰囲気・トーン（任意・例：落ち着いた／エネルギッシュ）","wide")}
+</div>
+<div class="note"><strong>あいまいさチェックについて：</strong>「曲げる」「動かす」などの動詞があるのに方向や程度が書かれていない場合、生成時に確認メッセージを表示します。メッセージの案内に沿って本文を書き足してから、再度「生成」を押してください。</div>
+<div class="secondary-actions"><button id="generateMotionPromptBtn" class="primary">動き・映像プロンプトを生成</button></div>
+<div id="motionPromptResultWrap" style="${state.motionOutputJa?"":"display:none"}">
+<div class="final-layer">
+<h3>日本語プロンプト</h3>
+<textarea id="motionOutputJa" class="output readable-block">${state.motionOutputJa||""}</textarea>
+<div class="secondary-actions"><button id="copyMotionJaBtn">日本語プロンプトをコピー</button></div>
+</div>
+<div class="final-layer">
+<h3>English Prompt（自動下書き・要確認）</h3>
+<div class="note">英語部分は簡易辞書による自動下書きです。対応していない語句は「[ja: …]」として日本語のまま残ります。実際にAIツールへ渡す前に内容をご確認・修正ください。</div>
+<textarea id="motionOutputEn" class="output" lang="en" spellcheck="false">${state.motionOutputEn||""}</textarea>
+<div class="secondary-actions"><button id="copyMotionEnBtn">English Promptをコピー</button></div>
+</div>
+</div>
+<div class="actions"><button id="prevBtn">◀ 前へ</button></div>`;
 }
 
 const BODY_HAIR_CONDITIONAL_UI_VERSION="cfm-conditional-ui-v1";
@@ -1607,6 +1643,7 @@ function applyConditionalUI(){
  const p=$("step10Panel"); if(p)p.classList.toggle("safe-active",state.safeRetryLevel==="安全表現");
  const b=$("saferRetryBtn"); if(b)b.textContent=state.safeRetryLevel==="安全表現"?"✓ 安全表現で再生成済み":"安全表現で再生成";
  applyBodyHairConditionalUI();
+ applyMotionConditionalUI();
 }
 
 function bindPage(){
@@ -1631,6 +1668,9 @@ function bindPage(){
  if($("runParameterMappingBtn"))$("runParameterMappingBtn").addEventListener("click",()=>{savePageToState();generatePrompt();renderParameterMappingAudit($("output")?.value||"");showToast("Parameter Mappingを監査しました。")});
  if($("runConditionalPromptBtn"))$("runConditionalPromptBtn").addEventListener("click",()=>{savePageToState();generatePrompt();renderConditionalPromptAudit();showToast("Conditional Promptを監査しました。")});
  if($("runRegressionBtn"))$("runRegressionBtn").addEventListener("click",()=>{savePageToState();generatePrompt();showToast("Prompt最適化・回帰テストを実行しました。")});
+ if($("generateMotionPromptBtn"))$("generateMotionPromptBtn").addEventListener("click",()=>{savePageToState();generateMotionPrompt();});
+ if($("copyMotionJaBtn"))$("copyMotionJaBtn").addEventListener("click",()=>copyMotionText("motionOutputJa"));
+ if($("copyMotionEnBtn"))$("copyMotionEnBtn").addEventListener("click",()=>copyMotionText("motionOutputEn"));
  if($("runFinalReleaseDiagnosticBtn"))$("runFinalReleaseDiagnosticBtn").addEventListener("click",()=>{savePageToState();generatePrompt();renderFinalReleaseDiagnostics();showToast("最終診断を実行しました。")});
  if($("saferRetryBtn"))$("saferRetryBtn").addEventListener("click",()=>{
    savePageToState();
@@ -1677,9 +1717,9 @@ function savePageToState(){document.querySelectorAll("#page input,#page select,#
 function refreshHeader(){$("displayName").textContent=state.name.trim()||"名称未設定"}
 function render(){
  document.body.className="level-"+$("settingLevel").value;
- $("progressBar").style.width=(currentStep*10)+"%";
+ $("progressBar").style.width=(currentStep*100/stepNames.length)+"%";
  $("progressTrack").setAttribute("aria-valuenow",String(currentStep));
- $("progressTrack").setAttribute("aria-valuetext",`ステップ${currentStep}／10`);
+ $("progressTrack").setAttribute("aria-valuetext",`ステップ${currentStep}／${stepNames.length}`);
  renderSteps();
  renderPoseSummaryBar();
  $("page").innerHTML=pageHtml();
@@ -1769,6 +1809,127 @@ const AI_PROFILES=Object.freeze({
  "Gemini画像生成":{listSeparator:", ",targetMaxLength:4200}
 });
 function aiProfile(){return AI_PROFILES[state.targetAI]||AI_PROFILES["ChatGPT画像生成"];}
+
+/* [STEP11] 動き・映像プロンプト：Runway Gen-3 Alpha・Pollo AIなど
+   「生成済みキャラクターの特徴を維持したまま別のポーズ・動画に加工する」
+   AIツール向けの追加ステップ。既存の静止画向けSTEP1〜10とは別の
+   出力系統として、被写体の動き（自由記述）・カメラの動き・速度/テンポを
+   必須項目とし、尺・背景環境・ネガティブ指示・雰囲気トーンを任意項目とする。
+   このアプリはAI API（Claude等）を呼び出さない静的なJS/HTMLアプリのため、
+   「あいまいな指示に質問で補う」機能は、まずルールベースの検出から着手し、
+   実際に出てきたあいまいな言い回しのパターンを今後追加していく方針。 */
+const MOTION_CAMERA_OPTIONS=["固定","パン（左）","パン（右）","ズームイン","ズームアウト","トラッキング","軌道移動（オービット）","自由入力"];
+const MOTION_PACE_OPTIONS=["ゆっくり","普通","素早く","自由入力"];
+const MOTION_BACKGROUND_OPTIONS=["背景は静止させる","背景・環境も自然に動かす（風・光など）"];
+const MOTION_AI_PROFILES=Object.freeze({
+ "Runway Gen-3 Alpha":{note:"1文〜数文の簡潔な英語段落を好む傾向があります。被写体の動きとカメラワークを分けて明確に書くと安定しやすいとされています。",noteJa:"簡潔な段落形式を優先し、被写体の動きとカメラワークを分けて記述することを推奨します。"},
+ "Pollo AI":{note:"元画像のキャラクター再現を重視するため、「人物の外見・衣装・背景を変えない」という指示を明示すると安定しやすいとされています。",noteJa:"元画像のキャラクターを維持する指示（外見・衣装・背景を変えない）を明示することを推奨します。"},
+ "汎用（未指定）":{note:"特定ツール向けの調整は行っていません。",noteJa:"特定ツール向けの調整は行っていません。"}
+});
+function motionAiProfile(){return MOTION_AI_PROFILES[state.motionTargetAI]||MOTION_AI_PROFILES["汎用（未指定）"];}
+/* あいまいさ判定：方向・程度が必要になりやすい動詞と、それを解決する
+   手がかり語（方向・程度）をあらかじめ登録し、同じ節（、。！？で区切った
+   一文）内に手がかり語が無い場合にのみ「要確認」として検出する。
+   実測に基づく確定リストではなく、初期の一般的傾向としてのルールセット。 */
+const MOTION_VERBS_NEEDING_DIRECTION=["曲げる","伸ばす","上げる","下げる","回す","傾ける","向ける","振る","開く","閉じる","動かす"];
+const MOTION_DIRECTION_HINTS=["上","下","左","右","前","後","内側","外側","斜め","時計回り","反時計回り"];
+const MOTION_DEGREE_HINTS=["少し","わずか","大きく","ゆっくり","素早く","半分","全開","限界","小さく","一気に"];
+function detectMotionAmbiguity(text){
+ const clauses=String(text||"").split(/[、。！？\n]/).map(x=>x.trim()).filter(Boolean);
+ const issues=[];
+ clauses.forEach(clause=>{
+  MOTION_VERBS_NEEDING_DIRECTION.forEach(verb=>{
+   if(!clause.includes(verb))return;
+   const hasHint=MOTION_DIRECTION_HINTS.some(h=>clause.includes(h))||MOTION_DEGREE_HINTS.some(h=>clause.includes(h));
+   if(!hasHint)issues.push({verb,clause});
+  });
+ });
+ return issues;
+}
+function renderMotionAmbiguityWarnings(issues){
+ const box=$("motionAmbiguityResult");if(!box)return;
+ if(!issues.length){box.innerHTML="";box.className="wide";return;}
+ box.className="wide verify-box warn";
+ box.innerHTML=`<div class="verify-title">確認をおすすめします（${issues.length}件）</div>`+issues.map(x=>`<div class="mini">「${x.verb}」を含む一文『${x.clause}』に、方向（上下左右・内側外側など）や程度（少し・大きく・ゆっくりなど）の記載が見当たりません。本文に書き足すと、より意図どおりの動きになりやすいです。</div>`).join("");
+}
+/* 簡易日英辞書：長いフレーズから先にマッチさせ、対応語がない部分は
+   日本語のまま [ja: …] として残す（＝機械翻訳ではなく、確度の高い
+   語句のみを対応させる方式。誤訳のリスクより「訳せていない箇所が
+   分かること」を優先する）。 */
+const MOTION_PHRASE_EN=[
+ ["ゆっくりと","slowly"],["ゆっくり","slowly"],["素早く","quickly"],["少しだけ","just slightly"],["少し","slightly"],["わずかに","slightly"],["大きく","broadly"],["一気に","in one motion"],["限界まで","as far as it will naturally go"],["半分だけ","halfway"],["半分","halfway"],
+ ["時計回りに","clockwise"],["反時計回りに","counterclockwise"],["斜め上","diagonally upward"],["斜め下","diagonally downward"],["内側に","inward"],["外側に","outward"],["右腕","the right arm"],["左腕","the left arm"],["右脚","the right leg"],["左脚","the left leg"],["右手","the right hand"],["左手","the left hand"],["両腕","both arms"],["両手","both hands"],["両脚","both legs"],
+ ["肩の高さまで","up to shoulder height"],["頭を","the head"],["首を","the neck"],["肩を","the shoulder"],["腰を","the hips"],["膝を","the knee"],["肘を","the elbow"],["指を","the fingers"],
+ ["曲げる","bend"],["伸ばす","extend"],["上げる","raise"],["下げる","lower"],["回す","rotate"],["傾ける","tilt"],["向ける","turn"],["振る","wave"],["開く","open"],["閉じる","close"],["動かす","move"],
+ ["歩く","walk"],["走る","run"],["座る","sit down"],["立つ","stand up"],["振り返る","turn around"],["見る","look"],["微笑む","smile"],["うなずく","nod"],["首をかしげる","tilt the head"],
+ ["上に","upward"],["下に","downward"],["左に","to the left"],["右に","to the right"],["前に","forward"],["後ろに","backward"]
+];
+function translateMotionTextBestEffort(text){
+ let remaining=String(text||"");
+ if(!remaining.trim())return "";
+ const sorted=[...MOTION_PHRASE_EN].sort((a,b)=>b[0].length-a[0].length);
+ let out="";
+ while(remaining.length){
+  const match=sorted.find(([ja])=>remaining.startsWith(ja));
+  if(match){out+=(out&&!/[\s、,]$/.test(out)?" ":"")+match[1];remaining=remaining.slice(match[0].length);continue;}
+  const nextHitIndex=Math.min(...sorted.map(([ja])=>{const i=remaining.indexOf(ja);return i<0?Infinity:i;}));
+  if(!isFinite(nextHitIndex)){out+=` [ja: ${remaining}]`;remaining="";break;}
+  out+=` [ja: ${remaining.slice(0,nextHitIndex)}]`;remaining=remaining.slice(nextHitIndex);
+ }
+ return out.replace(/\s+/g," ").trim();
+}
+function motionCameraLabel(){return state.motionCameraType==="自由入力"?(state.motionCameraFreeText||"（未入力）"):state.motionCameraType;}
+function motionCameraLabelEn(){
+ if(state.motionCameraType==="自由入力")return translateMotionTextBestEffort(state.motionCameraFreeText||"");
+ return {"固定":"static, fixed camera","パン（左）":"the camera pans to the left","パン（右）":"the camera pans to the right","ズームイン":"the camera slowly zooms in","ズームアウト":"the camera slowly zooms out","トラッキング":"the camera tracks alongside the subject","軌道移動（オービット）":"the camera slowly orbits around the subject"}[state.motionCameraType]||state.motionCameraType;
+}
+function motionPaceLabel(){return state.motionPace==="自由入力"?(state.motionPaceFreeText||"（未入力）"):state.motionPace;}
+function motionPaceLabelEn(){
+ if(state.motionPace==="自由入力")return translateMotionTextBestEffort(state.motionPaceFreeText||"");
+ return {"ゆっくり":"slow, gentle pacing","普通":"natural, moderate pacing","素早く":"quick, energetic pacing"}[state.motionPace]||state.motionPace;
+}
+function motionBackgroundLabelEn(){return state.motionBackgroundHandling==="背景・環境も自然に動かす（風・光など）"?"allow the background and environment (wind, light, etc.) to move naturally":"keep the background completely static";}
+function generateMotionPromptJa(){
+ const lines=[`【出力先ツール】`,state.motionTargetAI,``,`【被写体の動き】`,state.motionSubjectText||"（未入力）",``,`【カメラの動き】`,motionCameraLabel(),``,`【動きの速度・テンポ】`,motionPaceLabel(),``,`【一貫性維持】`,"人物の顔・体型・衣装・背景は、動きの前後で変化させないこと。"];
+ if(state.motionDurationText)lines.push(``,`【尺の目安】`,state.motionDurationText);
+ if(state.motionBackgroundHandling)lines.push(``,`【背景・環境の扱い】`,state.motionBackgroundHandling);
+ if(state.motionNegativeText)lines.push(``,`【してほしくないこと】`,state.motionNegativeText);
+ if(state.motionToneText)lines.push(``,`【雰囲気・トーン】`,state.motionToneText);
+ const profile=motionAiProfile();
+ if(profile.noteJa&&state.motionTargetAI!=="汎用（未指定）")lines.push(``,`【${state.motionTargetAI}向けの補足】`,profile.noteJa);
+ return lines.join("\n");
+}
+function generateMotionPromptEn(){
+ const parts=[`Subject motion: ${translateMotionTextBestEffort(state.motionSubjectText||"")}`,`Camera motion: ${motionCameraLabelEn()}`,`Pacing: ${motionPaceLabelEn()}`,`Consistency: keep the character's face, body proportions, outfit, and background unchanged throughout the motion.`];
+ if(state.motionDurationText)parts.push(`Approximate duration: ${translateMotionTextBestEffort(state.motionDurationText)}`);
+ if(state.motionBackgroundHandling)parts.push(`Background handling: ${motionBackgroundLabelEn()}`);
+ if(state.motionNegativeText)parts.push(`Avoid: ${translateMotionTextBestEffort(state.motionNegativeText)}`);
+ if(state.motionToneText)parts.push(`Tone/mood: ${translateMotionTextBestEffort(state.motionToneText)}`);
+ const profile=motionAiProfile();
+ if(profile.note&&state.motionTargetAI!=="汎用（未指定）")parts.push(`Note for ${state.motionTargetAI}: ${profile.note}`);
+ return parts.join("\n");
+}
+function generateMotionPrompt(showNotice=true){
+ const issues=detectMotionAmbiguity(state.motionSubjectText||"");
+ renderMotionAmbiguityWarnings(issues);
+ state.motionOutputJa=generateMotionPromptJa();
+ state.motionOutputEn=generateMotionPromptEn();
+ const ja=$("motionOutputJa"),en=$("motionOutputEn"),wrap=$("motionPromptResultWrap");
+ if(ja)ja.value=state.motionOutputJa;
+ if(en)en.value=state.motionOutputEn;
+ if(wrap)wrap.style.display="";
+ if(showNotice)showToast(issues.length?"生成しました（確認をおすすめする箇所があります）":"動き・映像プロンプトを生成しました。");
+}
+function applyMotionConditionalUI(){
+ const hide=(id,yes)=>{const e=$(id);if(e&&e.parentElement)e.parentElement.classList.toggle("conditional-hidden",!!yes)};
+ hide("motionCameraFreeText",state.motionCameraType!=="自由入力");
+ hide("motionPaceFreeText",state.motionPace!=="自由入力");
+}
+async function copyMotionText(elId){
+ const text=$(elId)?.value||"";
+ try{await navigator.clipboard.writeText(text);showToast("コピーしました")}
+ catch{try{const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();showToast("コピーしました")}catch{showToast("コピーに失敗しました。テキストを選択して手動でコピーしてください。")}}
+}
 /* [Beta22 Step2] 一発生成アシストが「設定をそのまま」の場合は、ユーザーが
    詳細度・長さを意図的に固定していると解釈し、長さの自動調整の対象外とする。 */
 function lengthAutoAdjustEligible(){return state.autoCompile!=="設定をそのまま";}
