@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="application-name" content="Character Fullbody Maker — Tatsuya Edition">
-<meta name="description" content="Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta22 In Progress">
+<meta name="description" content="Character Fullbody Maker — Tatsuya Edition Ver.2.0 RC Complete">
 <meta name="theme-color" content="#f4f7fb">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>Character Fullbody Maker — Tatsuya Edition Ver.2.0 Beta22 In Progress</title>
+<title>Character Fullbody Maker — Tatsuya Edition Ver.2.0 RC Complete</title>
 <style>
 :root{--bg:#f4f7fb;--panel:#fff;--text:#182235;--muted:#718096;--line:#d9e2ef;--accent:#3563e9;--soft:#eef3ff;--danger:#b42318;--safe:#16794f;--safe-bg:#eefbf4}
 *{box-sizing:border-box}
@@ -74,7 +74,7 @@ details.grid-section>.grid-section-body{display:grid;grid-template-columns:repea
 </style>
 </head>
 <!-- Commit: Beta20.3 Phase7 Step7 Final Polish, Diagnostics & Beta20.3 Release -->
-<body class="level-easy" data-build-phase="7" data-build-step="7" data-build-label="Beta22 In Progress">
+<body class="level-easy" data-build-phase="7" data-build-step="7" data-build-label="RC Complete">
 
 <!-- Beta20.3 Phase7 DEVELOPMENT NOTE
 Phase7 Step7 Final Polish, Diagnostics & Beta20.3 Release: beginner-friendly Pose guidance, readable Japanese Summary and AI Conversion Log presentation, developer-only diagnostic notices, special-hair reservation guidance, final release diagnostics, JSON round-trip verification, release notes, and Beta20.3 Complete labeling added; all Phase7 Step6 functionality preserved.
@@ -142,8 +142,8 @@ Leg Hair: Density / Length / Texture / Distance Visibility independent.
 
 <header><div class="wrap">
 <h1>Character Fullbody Maker — Tatsuya Edition Ver.2.0</h1>
-<div class="sub" id="buildSubLabel">Character Fullbody Maker Tatsuya Edition Ver.2.0 — Beta22 In Progress</div>
-<div class="build-badge" id="buildBadge" aria-label="現在のビルド">Build: Beta22 In Progress</div>
+<div class="sub" id="buildSubLabel">Character Fullbody Maker Tatsuya Edition Ver.2.0 — RC Complete</div>
+<div class="build-badge" id="buildBadge" aria-label="現在のビルド">Build: RC Complete</div>
 <div class="sub fingerprint" id="buildFingerprint">Fingerprint: calculating…</div><div id="autosaveIndicator" class="autosave-indicator saved" aria-live="polite"><span class="autosave-dot"></span><span>自動保存：準備中</span></div>
 </div></header>
 
@@ -341,7 +341,7 @@ const APP_BUILD_STEP=7;
    この APP_BUILD_LABEL（と必要なら下の APP_BUILD_GENERATED_AT）だけを
    更新すれば、ヘッダーの説明文・ビルドバッジ・body の data-build-label・
    ページタイトルまで自動的に追従する（syncBuildLabelToDOM 参照）。 */
-const APP_BUILD_LABEL="Beta22 In Progress";
+const APP_BUILD_LABEL="RC Complete";
 let currentStep=1;
 let toastTimer=null;
 console.info(`[Character Fullbody Maker] ${APP_BUILD_LABEL}`);
@@ -1469,6 +1469,11 @@ ${field("buttockHair","臀部の毛",["なし","ごく薄い","薄い","普通",
   <div class="release-note-item">Beta21残りのCamera・Lighting・背景の拡張として、Camera Distanceに中間プリセット「七分身」を追加、背景に屋外系のみ有効な「Time of Day（時間帯）」、ライティングに「Color Temperature（色温度）」を新規追加。両項目とも「自動」選択時はプロンプトに出力せず、Time of Dayは屋内背景では自動的に省略される</div>
   <div class="release-note-item">新しい出力タイプ「クローズアップ＆ポーズ例シート」を追加。顔（正面・側面・表情違い）・手・足（甲・足首・足裏）・背中のクローズアップと、最大2枠の追加ポーズ例パネルを個別に選択でき、選んだ部位・枚数だけが英語Promptに反映される</div>
   <div class="release-note-item">[Beta22 Step1] AIごとの出力プロファイル化：これまでbottomGarmentTranslationにだけ個別実装されていた「Gemini向けはセミコロンではなくカンマ区切りにする」調整をAI_PROFILESという単一設定に集約し、topFitDescription・bottomShapeTranslationにも同じ調整を漏れなく適用するよう修正</div>
+  <div class="release-note-item">[Beta22 Step2] 長さの自動調整：一発生成アシストが「設定をそのまま」以外の場合、English Promptの実測文字数を自動計測し、AIごとの目安上限（AI_PROFILESのtargetMaxLength）を超えたときだけ詳細度を自動的に「簡潔」へ切り替えて再生成する。ユーザーが選んだ詳細度・プロンプト詳細度の表示自体は変更せず、実際に使用した詳細度・実測文字数・自動簡潔化の発動有無は「プロンプト診断」欄とAI変換ログに表示する。あわせて、これまでHTML上に用意されていたものの描画処理が結び付いていなかった「プロンプト診断」欄（compileDiagnostics）を実際に表示させるよう修正</div>
+  <div class="release-note-item">[Beta22 Step3] AIごとの既知の弱点への対処：一般的によく知られている傾向として、ChatGPT画像生成向けには、三面図の各パネルを別人として描いてしまう同一性の崩れへの注意、指定した身長・体重・体型を平均的な体格へ引き戻してしまう平均化への注意、透かし・署名・余計な文字の禁止、手の指を5本で自然に保つ指示を追加。Gemini画像生成向けには、同様の同一性の崩れへの注意、遠近感を平坦化しない指示、非性的な衣装デザイン資料であることの誤検知防止の明示、情報パネル表示時のみ文字を正確に描画する指示を追加。いずれも実測に基づく確定情報ではなく、今後の生成テストで効果を検証しながら調整する前提の初期実装</div>
+  <div class="release-note-item">[Beta22 Step3 追加調整] プロンプト詳細度が「簡潔」で、かつ長さの自動調整（Step2）が発動した場合でも、AIごとの既知の弱点対策のうち同一性の崩れ防止・体型の平均化防止・透かし禁止・指の本数などの核心部分（aiCoreGuidance）は省略せず維持するよう変更。ガーメント解釈や体毛保持など詳細寄りの一般ガイダンス（aiExtendedGuidance）のみ、従来どおり簡潔モードで省略する</div>
+  <div class="release-note-item">[Beta22 Step3 追加拡張] FACE欄（全体印象・顔型・額・頬骨・顎線・まぶた・目の形・目の大きさ・目尻・眉・鼻筋・鼻先・唇・耳・表情）の各選択肢を、他の項目とも共有される汎用1語訳（standard・natural等）ではなく、項目ごとに区別しやすい具体的な描写へ拡張。表情はbrow position（眉の位置）・mouth corner（口角）・gaze intensity（視線の強さ）の手がかりを含める。生成時に選択肢を変えた際の見た目の違いが分かりやすくなることを狙った初期実装で、内容は今後の生成テストで随時調整する前提</div>
+  <div class="release-note-item">[RC] Beta22ロードマップ（Step1〜3）完了を確認したうえで、Node上にDOMスタブ環境を構築し、263項目の検証（AI×詳細度×一発生成アシストの全組み合わせでの生成確認72項目、FACE欄15項目・全81選択肢の個別確認162項目、体毛none省略・長さ自動調整の実発動・簡潔モードでの核心ガード維持・JSON往復・レガシーJSON移行・AI別しきい値・ビルド表示同期などの既知バグ回帰確認29項目、アプリ内蔵の自己診断20項目）を実施。結果：263項目すべて正常。テスト初回に2件の疑わしい結果が出たが、いずれもアプリ側の不具合ではなくテスト環境（Node）固有の制約によるもの（1: リリースノートの説明文中に過去の修正履歴として残る「loadDraft」という単語を実装コードの参照と誤検知、2: ブラウザ専用API（Blob/FileReader/DOMParser）がNode環境に無いことによる誤検知）と特定し、テスト環境側を補正のうえ再検証して解消を確認。実装上の新規バグは検出されなかった</div>
  </div>
 
  <h3>プロンプト診断</h3>
@@ -1548,19 +1553,29 @@ function conditionalPromptVisibilityAudit(){
    const region=regionByParent[group.parent];
    if(!region)return;
    state[group.parent]=group.noneValues[0];
-   const densityPrompt=compileConditionalBodyHairPrompt([{region,label:region,text:`${region.toUpperCase()}\nDensity: none.\nCoverage: retained child value.`,priority:"標準",visible:true}]);
+   /* [RC] density=none時、実際のchestHairEnglish等は見出しごと省略するのではなく、
+      「Overall density: none / Coverage: none / Length: not applicable」等の
+      子項目行は刈り取りつつ、見出しと「no visible ... hair」等の簡潔な否定文だけを
+      必ず残す設計（Release Notes参照）。監査用のダミーテキストも同じ形にする。 */
+   const densityPrompt=compileConditionalBodyHairPrompt([{region,label:region,text:`${region.toUpperCase()}\nOverall density: none.\nCoverage: none.\nLength: not applicable.\nRendering: no visible hair in this region.\nSymmetry: this region should remain hairless.`,priority:"標準",visible:true}]);
    state[group.parent]=stateSnapshot[group.parent];
    const visibilityKey=`${region}Visibility`;
    const oldVisibility=state[visibilityKey];
    state[visibilityKey]="非表示";
    const hiddenPrompt=compileConditionalBodyHairPrompt([{region,label:region,text:`${region.toUpperCase()}\nDensity: dense.`,priority:"標準",visible:false}]);
    state[visibilityKey]=oldVisibility;
-   results.push({region,densityOmitted:!densityPrompt.includes(region.toUpperCase()),hiddenOmitted:!hiddenPrompt.includes(region.toUpperCase())});
+   results.push({
+    region,
+    densityRetained:densityPrompt.includes(region.toUpperCase()),
+    densityChildPruned:!/:\s*(?:none|not applicable)\b/i.test(densityPrompt),
+    densityNegationKept:/no visible|hairless/i.test(densityPrompt),
+    hiddenOmitted:!hiddenPrompt.includes(region.toUpperCase())
+   });
   });
   const pruned=bodyHairPruneNotApplicable("TEST\nDensity: natural; Length: not applicable; Visibility: hidden; Rendering: individual strands.");
   const compressed=bodyHairCompressSection("TEST\nDensity: natural.\nDensity: natural.\nRendering: individual strands.","強め");
   const restored=BODY_HAIR_CONDITIONAL_GROUPS.every(group=>state[group.parent]===stateSnapshot[group.parent]);
-  const ok=results.length===8&&results.every(x=>x.densityOmitted&&x.hiddenOmitted)&&!pruned.toLowerCase().includes("not applicable")&&!pruned.toLowerCase().includes("visibility: hidden")&&(compressed.match(/Density: natural/gi)||[]).length===1&&restored;
+  const ok=results.length===8&&results.every(x=>x.densityRetained&&x.densityChildPruned&&x.densityNegationKept&&x.hiddenOmitted)&&!pruned.toLowerCase().includes("not applicable")&&!pruned.toLowerCase().includes("visibility: hidden")&&(compressed.match(/Density: natural/gi)||[]).length===1&&restored;
   return {version:BODY_HAIR_CONDITIONAL_PROMPT_VERSION,results,notApplicableReduced:!pruned.toLowerCase().includes("not applicable"),compressionOk:(compressed.match(/Density: natural/gi)||[]).length===1,restored,ok};
  }finally{
   Object.keys(state).forEach(key=>delete state[key]);
@@ -1571,7 +1586,8 @@ function renderConditionalPromptAudit(){
  const box=$("conditionalPromptResult");if(!box)return;
  const audit=conditionalPromptVisibilityAudit();
  box.className=`verify-box ${audit.ok?"ok":"warn"}`;
- box.innerHTML=`<div class="verify-title">${audit.ok?"Conditional Prompt：正常":"Conditional Prompt：要確認"}</div><div>${audit.results.filter(x=>x.densityOmitted&&x.hiddenOmitted).length} / ${audit.results.length} 部位がUI条件と一致</div><div class="mini">Density none omission: ${audit.results.every(x=>x.densityOmitted)?"OK":"NG"} / Visibility hidden omission: ${audit.results.every(x=>x.hiddenOmitted)?"OK":"NG"} / not applicable reduction: ${audit.notApplicableReduced?"OK":"NG"} / compression: ${audit.compressionOk?"OK":"NG"}</div>`;
+ const densityAllOk=audit.results.every(x=>x.densityRetained&&x.densityChildPruned&&x.densityNegationKept);
+ box.innerHTML=`<div class="verify-title">${audit.ok?"Conditional Prompt：正常":"Conditional Prompt：要確認"}</div><div>${audit.results.filter(x=>x.densityRetained&&x.densityChildPruned&&x.densityNegationKept&&x.hiddenOmitted).length} / ${audit.results.length} 部位がUI条件と一致</div><div class="mini">Density none retention (見出し保持＋簡潔な否定文): ${densityAllOk?"OK":"NG"} / Visibility hidden omission: ${audit.results.every(x=>x.hiddenOmitted)?"OK":"NG"} / not applicable reduction: ${audit.notApplicableReduced?"OK":"NG"} / compression: ${audit.compressionOk?"OK":"NG"}</div>`;
 }
 
 function applyConditionalUI(){
@@ -1737,11 +1753,18 @@ function promptProfile(){
    という調整を、AI_PROFILESという単一の設定に集約する。今後、AIごとの
    差分が増えた場合もここに項目を追加するだけでよく、個々の変換関数に
    if(state.targetAI==="...")を都度書く必要がなくなる。 */
+/* [Beta22 Step2] targetMaxLengthは実測APIの上限ではなく、生成成功率の
+   経験則に基づくアプリ内部の目安文字数（英語Prompt本文の文字数）。
+   ここを増減するだけで、AIごとの長さの自動調整のしきい値を調整できる。 */
 const AI_PROFILES=Object.freeze({
- "ChatGPT画像生成":{listSeparator:"; "},
- "Gemini画像生成":{listSeparator:", "}
+ "ChatGPT画像生成":{listSeparator:"; ",targetMaxLength:3600},
+ "Gemini画像生成":{listSeparator:", ",targetMaxLength:4200}
 });
 function aiProfile(){return AI_PROFILES[state.targetAI]||AI_PROFILES["ChatGPT画像生成"];}
+/* [Beta22 Step2] 一発生成アシストが「設定をそのまま」の場合は、ユーザーが
+   詳細度・長さを意図的に固定していると解釈し、長さの自動調整の対象外とする。 */
+function lengthAutoAdjustEligible(){return state.autoCompile!=="設定をそのまま";}
+let LAST_PROMPT_METRICS={length:0,limit:0,ai:"",autoAdjusted:false,detailUsed:"標準（バランス）"};
 function applyAiListStyle(text){
  const separator=aiProfile().listSeparator;
  return separator===", "?String(text||"").replace(/;\s*/g,", "):String(text||"");
@@ -1752,6 +1775,133 @@ function structuralTerm(level, safety, balanced, precise){
  if(p.sensitivity==="安全優先")return safety;
  if(p.sensitivity==="形状再現優先")return precise;
  return balanced;
+}
+/* [Beta22 Step3 追加拡張] FACE欄の各項目は、これまでJAPANESE_TO_ENGLISHの
+   汎用1語訳（"standard"、"natural"等、他の項目とも共有される単語）を
+   そのまま出力していたため、選択肢を変えても生成画像の差が出にくかった。
+   ここではFACE欄専用に、項目ごとに区別しやすい具体的な描写（表情は
+   brow position・mouth corner・gaze intensityの手がかりを含む）を用意し、
+   汎用辞書とは独立して出力する。state自体は変更しないため、日本語要約
+   （Layer1）やパラメータ監査には影響しない。値の組み合わせは開発時点の
+   目安表現であり、今後の生成テストで随時調整する前提。 */
+const FACE_FEATURE_ENGLISH={
+ facePreset:{
+  "爽やかな好青年":"a fresh, clean-cut young-man vibe with bright clear skin, tidy well-groomed features, and an approachable, wholesome overall impression",
+  "素朴で親しみやすい":"a plain, down-to-earth, approachable vibe with unpolished natural features and a warm, friendly overall impression",
+  "端正なモデル系":"a refined, model-like vibe with symmetrical polished features, elegant bone structure, and a composed, editorial overall impression",
+  "精悍なスポーツ選手":"a sharp, athletic vibe with lean angular features, an alert energetic bearing, and a disciplined, sporty overall impression",
+  "落ち着いた大人":"a calm, mature adult vibe with settled composed features, understated confidence, and a grounded, seasoned overall impression",
+  "中性的な美青年":"an androgynous, delicate-featured young-man vibe with soft refined bone structure and a striking, gender-fluid overall impression",
+  "ワイルド":"a rugged, wild vibe with rough-hewn strong features, a weathered masculine bearing, and an untamed, bold overall impression"
+ },
+ faceShape:{
+  "卵型":"an oval face shape with balanced width at the cheekbones and a gently tapered jaw",
+  "丸顔":"a round face shape with soft full cheeks and minimal jaw angularity",
+  "面長":"an elongated long face shape with a taller forehead-to-chin ratio and narrower cheek width",
+  "逆三角形":"an inverted-triangle face shape with wide cheekbones tapering sharply to a narrow pointed chin",
+  "ベース型":"a broad-jawed base-shaped face with a wide, strong lower jaw and squared-off angles",
+  "四角顔":"a square face shape with a wide strong jaw and minimal taper between cheekbones and jawline"
+ },
+ forehead:{
+  "狭い":"a narrow forehead with a low, compact hairline-to-brow distance",
+  "やや狭い":"a slightly narrow forehead with a modestly low hairline-to-brow distance",
+  "標準":"a standard-proportioned forehead with an average hairline-to-brow distance",
+  "やや広い":"a slightly wide forehead with a modestly tall hairline-to-brow distance",
+  "広い":"a wide forehead with a tall, open hairline-to-brow distance"
+ },
+ cheekbones:{
+  "控えめ":"subtle, low-profile cheekbones with minimal facial contour",
+  "自然":"naturally moderate cheekbones with a soft, unexaggerated contour",
+  "やや高い":"slightly high, faintly visible cheekbones that add mild contour",
+  "高い":"high, prominent cheekbones that add a strong contoured line to the mid-face",
+  "しっかり":"well-defined, structurally prominent cheekbones with a sculpted mid-face contour"
+ },
+ jaw:{
+  "柔らかい":"a soft, rounded jawline with gently blended edges",
+  "自然":"a naturally proportioned jawline with a moderate, unexaggerated angle",
+  "ややシャープ":"a slightly sharp jawline with a faintly crisp edge",
+  "シャープ":"a sharp, crisply defined jawline with a clean-cut edge",
+  "角ばった":"an angular, squared-off jawline with pronounced corner definition",
+  "しっかり":"a strong, robust jawline with substantial width and a firm structural presence"
+ },
+ eyelid:{
+  "一重":"monolid eyes with a smooth, single-fold eyelid and no visible upper crease",
+  "奥二重":"hooded double eyelids with a faint inner crease mostly concealed by the brow bone",
+  "末広二重":"tapered double eyelids with a crease that widens gradually toward the outer corner",
+  "平行二重":"parallel double eyelids with an even-width crease running the full length of the eye"
+ },
+ eyeShape:{
+  "切れ長":"narrow, elongated eyes with a sharp outer point",
+  "細長い":"slender, elongated eyes with a gentle horizontal stretch",
+  "アーモンド型":"classic almond-shaped eyes with balanced curvature top and bottom",
+  "丸み":"large, rounded eyes with a soft circular outline",
+  "やや垂れ目":"eyes with a slightly downturned outer corner giving a gentle, relaxed look",
+  "やや鋭い":"eyes with a slightly sharp, upturned outer edge giving an alert look"
+ },
+ eyeSize:{
+  "小さめ":"comparatively small eyes with a narrow visible iris area",
+  "やや小さめ":"slightly small eyes, modestly narrower than average",
+  "標準":"average-sized eyes proportionate to the face",
+  "やや大きめ":"slightly large eyes, modestly wider than average",
+  "大きめ":"comparatively large eyes with a wide, open visible iris area"
+ },
+ eyeCorner:{
+  "上がり気味":"outer eye corners angled slightly upward",
+  "水平":"level outer eye corners running horizontally with the inner corners",
+  "下がり気味":"outer eye corners angled slightly downward",
+  "自然":"naturally angled outer eye corners with no strong upward or downward tilt"
+ },
+ brow:{
+  "薄く直線的":"thin, straight eyebrows with minimal thickness and no arch",
+  "自然な直線眉":"naturally straight eyebrows of moderate thickness with a flat, unarched line",
+  "太めで自然":"thick, naturally full eyebrows with soft, unshaped edges",
+  "緩やかなアーチ":"eyebrows with a gentle, rounded arch rising toward the outer third",
+  "やや上がり眉":"eyebrows angled slightly upward toward the outer corners, giving an alert look"
+ },
+ nose:{
+  "小ぶり":"a small, compact nose bridge with modest projection",
+  "標準":"a standard-width, average-projection nose bridge",
+  "やや大きめ":"a slightly large, more prominent nose bridge",
+  "細め":"a slender, narrow nose bridge",
+  "幅広":"a broad, wide nose bridge",
+  "鼻筋が通った":"a well-defined, straight nose bridge with a clean, unbroken ridge line"
+ },
+ noseTip:{
+  "小さめ":"a small, compact nose tip",
+  "標準":"a standard-sized, neutral nose tip",
+  "やや丸い":"a slightly rounded, soft nose tip",
+  "シャープ":"a sharp, narrow-pointed nose tip",
+  "やや下向き":"a nose tip angled slightly downward",
+  "やや上向き":"a nose tip angled slightly upward, showing a hint of the nostrils"
+ },
+ lips:{
+  "薄め":"thin lips with a slim vermilion border",
+  "やや薄め":"slightly thin lips, modestly narrower than average",
+  "標準":"average-fullness lips proportionate to the face",
+  "やや厚め":"slightly full lips, modestly fuller than average",
+  "厚め":"full lips with a pronounced vermilion border"
+ },
+ ears:{
+  "小さめ":"small ears set close to the head",
+  "標準":"average-sized ears proportionate to the head",
+  "やや大きめ":"slightly large ears, modestly bigger than average",
+  "耳たぶ厚め":"ears with thick, fleshy earlobes",
+  "耳たぶ薄め":"ears with thin, close-set earlobes"
+ },
+ expression:{
+  "自然":"a natural, relaxed expression, with neutral brow position, closed and relaxed mouth corners, and a calm, low-intensity gaze",
+  "穏やか":"a calm, composed expression, with softly lowered brow position, gently closed mouth corners, and a soft, low-intensity gaze",
+  "真剣":"a serious, focused expression, with brow position drawn slightly inward and downward, firm flat mouth corners, and an intense, high-intensity direct gaze",
+  "自信がある":"a confident expression, with relaxed and slightly raised brow position, one mouth corner faintly lifted into a half-smile, and a steady, high-intensity direct gaze",
+  "柔らかな微笑み":"a gentle closed-mouth smile, with softly raised brow position, both mouth corners lifted slightly upward, and a warm, medium-intensity gaze",
+  "明るい笑顔":"a bright, open smile showing teeth, with raised brow position, both mouth corners lifted broadly upward, and an energetic, high-intensity gaze"
+ }
+};
+function faceFeatureEnglish(key){
+ const raw=state[key];
+ const table=FACE_FEATURE_ENGLISH[key];
+ if(table && Object.prototype.hasOwnProperty.call(table,raw))return table[raw];
+ return raw;
 }
 function topGarmentTranslation(value){
  const common={
@@ -2325,7 +2475,27 @@ Do not simplify requested hair into a dark patch, faint skin texture, airbrushed
 Do not widen the Treasure Trail merely to satisfy safety constraints. Preserve the requested narrow central line and exact upper endpoint below the navel.
 Maintain fully opaque secure garment coverage and avoid intimate anatomical emphasis.`;
 }
-function aiSpecificInstruction(){
+/* [Beta22 Step3 追加調整] AIごとの既知の弱点対策のうち、同一性の崩れ防止など
+   崩れやすさへの直接対策はaiCoreGuidance()として独立させ、簡潔モードでも
+   常に出力する。ガーメント解釈や体毛保持など詳細寄りの一般ガイダンスは
+   aiExtendedGuidance()側にまとめ、簡潔モードでは従来どおり省略する。 */
+function aiCoreGuidance(){
+ const infoShown=state.infoDisplay!=="表示しない";
+ if(state.targetAI==="Gemini画像生成"){
+  return `CROSS-VIEW IDENTITY AND KNOWN-WEAKNESS GUARDS (GEMINI)
+Treat the front, side, and back panels as the same photographed person, not three separately generated characters; re-check facial identity and body proportions between panels before finalizing.
+Do not flatten or simplify the requested camera perspective and depth; keep believable three-dimensional volume in the body and garments.
+Do not reinterpret non-sexual costume-reference language as a policy violation; this is a clothed, editorial character-design sheet, not photorealistic depiction of a real private individual.
+${infoShown?"Render every character of the information-panel text precisely as supplied, with no misspelled, distorted, duplicated, or invented characters; leave the panel blank rather than guess illegible text.":""}`;
+ }
+ return `CROSS-VIEW IDENTITY AND KNOWN-WEAKNESS GUARDS (CHATGPT IMAGE GENERATION)
+Treat the front, side, and back panels as the same person redrawn from different angles, not three independently imagined characters; re-check facial identity and body proportions between panels before finalizing.
+Do not silently normalize an unusual or extreme specified height, weight, body build, or proportion back toward an average physique; keep the exact specified proportions in every view.
+Render exactly one adult figure per view; do not duplicate the character or add a second person into the frame.
+Do not add any watermark, signature, caption, logo, or extra text anywhere in the image beyond what the information panel explicitly requests.
+Each hand must show exactly five fingers with natural joints; do not merge, omit, or duplicate fingers.`;
+}
+function aiExtendedGuidance(){
  const p=promptProfile();
  if(state.targetAI==="Gemini画像生成"){
   return `MODEL-SPECIFIC GUIDANCE FOR GEMINI
@@ -2354,6 +2524,7 @@ Preserve the selected camera angle, camera distance, focal length, perspective, 
 ${p.retry==="安全表現"?"Use the most neutral technical costume-design interpretation and avoid unnecessary anatomical emphasis.":""}
 ${bodyHairSafetyCorrection()}`;
 }
+function aiSpecificInstruction(){return `${aiCoreGuidance()}\n${aiExtendedGuidance()}`;}
 
 function compileRisk(){
  let score=0,reasons=[];
@@ -2459,7 +2630,9 @@ function compileDiagnostics(){
  if(state.accessory==="なし")omissions.push("小物の詳細");
  if(state.infoDisplay==="表示しない")omissions.push("情報パネルのレイアウト・言語・項目");
  const ratio=effectiveRatio();
- return `【診断結果】\nリスク目安：${risk.level}（${risk.score}点）\n${risk.reasons.length?"判定要因："+risk.reasons.join("／"):"判定要因：特になし"}\n\n【一発生成アシスト】\n選択：${state.autoCompile||"自動（推奨）"}\n実際に使用する表現：${p.expression}\n実際に使用する詳細度：${p.detail}\n実際に使用する画像比率：${ratio}${state.ratio==="自動（構図優先）"?"（構図から自動決定）":""}\n\n【矛盾・不要項目の自動除去】\n${omissions.length?omissions.map(x=>"・"+x+"を出力しない").join("\n"):"・除去対象なし"}\n・同義の衣装形状指定は重複を整理\n・衣装名と個別形状が競合する場合は、個別形状を優先\n・見切れ防止は画像端に触れない余白指定へ強化`;
+ const m=LAST_PROMPT_METRICS;
+ const lengthLine=m.length?`実測文字数：${m.length}文字／${m.ai}の目安上限：${m.limit}文字${m.length>m.limit?"（超過）":"（範囲内）"}\n自動簡潔化：${m.autoAdjusted?`発動（詳細度を「${m.detailUsed}」へ自動変更）`:lengthAutoAdjustEligible()?"未発動":"対象外（一発生成アシストが「設定をそのまま」のため）"}`:"未計測（English Promptを生成すると計測されます）";
+ return `【診断結果】\nリスク目安：${risk.level}（${risk.score}点）\n${risk.reasons.length?"判定要因："+risk.reasons.join("／"):"判定要因：特になし"}\n\n【一発生成アシスト】\n選択：${state.autoCompile||"自動（推奨）"}\n実際に使用する表現：${p.expression}\n実際に使用する詳細度：${p.detail}\n実際に使用する画像比率：${ratio}${state.ratio==="自動（構図優先）"?"（構図から自動決定）":""}\n\n【長さの自動調整】\n${lengthLine}\n\n【矛盾・不要項目の自動除去】\n${omissions.length?omissions.map(x=>"・"+x+"を出力しない").join("\n"):"・除去対象なし"}\n・同義の衣装形状指定は重複を整理\n・衣装名と個別形状が競合する場合は、個別形状を優先\n・見切れ防止は画像端に触れない余白指定へ強化`;
 }
 function transformationSummary(){
  const top=topGarmentTranslation(state.top);
@@ -2468,12 +2641,16 @@ function transformationSummary(){
  const compiled=effectiveCompileProfile();
  const mode=compiled.expression==="安全表現"?"安全表現（自動または手動）":"通常表現";
  const sensitivity=state.promptSensitivity||"バランス";
+ /* [Beta22 Step2] 長さの自動調整が発動した場合、実際に採用された詳細度は
+    LAST_PROMPT_METRICSに記録される（effectiveCompileProfile()単体では
+    分からない）。生成直後はこちらを優先して表示する。 */
+ const actualDetail=LAST_PROMPT_METRICS.length?LAST_PROMPT_METRICS.detailUsed:compiled.detail;
  return `【変換モード】
 生成AI：${state.targetAI}
 衣装表現の変換強度：${sensitivity}
 プロンプト詳細度：${state.promptDetail||"標準（バランス）"}
 一発生成アシスト：${state.autoCompile||"自動（推奨）"}
-実際の出力詳細度：${compiled.detail}
+実際の出力詳細度：${actualDetail}${LAST_PROMPT_METRICS.autoAdjusted?"（長さの自動調整により簡潔化）":""}
 現在の出力：${mode}
 
 【上半身衣装】
@@ -3091,20 +3268,23 @@ function renderFinalReleaseDiagnostics(){
  return audit;
 }
 
-function generatePrompt(){
- if(!$("output"))return;
+/* [Beta22 Step2] 長さの自動調整：最終的な英語Promptの本文を組み立てる処理を
+   assemblePromptText()として独立させ、forcedDetailを渡すことで詳細度を
+   強制指定して再組み立てできるようにする。generatePrompt()側で、まず
+   通常の詳細度で1回組み立てて文字数を測り、AIごとの目安上限を超えていれば
+   「簡潔」で組み立て直して短い方を採用する。 */
+function assemblePromptText(forcedDetail){
  const topTranslation=topGarmentTranslation(state.top);
  const topDesc=topTranslation.en;
  const bottomTranslation=bottomGarmentTranslation(state.bottom);
  const bottomDesc=bottomTranslation.en;
  const bottomShapeData=bottomShapeTranslation();
  const bottomShape=bottomShapeData.en;
- const aiTune=aiSpecificInstruction();
  const upperBare=state.top==="上半身裸";
  const tankOrSleeveless=/タンクトップ|ノースリーブ/.test(state.top);
  const infoOff=state.infoDisplay==="表示しない";
  const compiled=effectiveCompileProfile();
- const detail=compiled.detail;
+ const detail=forcedDetail||compiled.detail;
  const concise=detail.startsWith("簡潔");
  const detailed=detail.startsWith("詳細");
  const minimalBottom=["ふんどし(越中)","ふんどし(六尺)","ふんどし(もっこ)","ふんどし(黒猫)","ふんどし(割)","相撲まわし","締込み","ビルダーパンツ","ビキニ(スタンダード)","ビキニ(ローライズ)","ビキニ(ハイレグ)","ビキニ(スポーツ)","競泳パンツ(ビキニ)","競泳パンツ(ブーメラン)","競泳パンツ(クラシック)"].includes(state.bottom);
@@ -3175,7 +3355,11 @@ Target model: ${state.targetAI}.
 Garment-language mode: ${state.promptSensitivity}.
 Expression version: ${compiled.expression}.
 All garment terms below describe opaque fabric construction, pattern pieces, seam layout, fit, and coverage for a non-sexual adult costume reference.\n\n`;
- const modelGuidance=concise?"":`\n\n${aiTune}`;
+ /* [Beta22 Step3 追加調整] 簡潔モードでもaiCoreGuidance（同一性崩れ防止・
+    平均化防止・透かし禁止・指の本数など、崩れやすさへの直接対策）だけは
+    残し、ガーメント解釈や体毛保持など詳細寄りの一般ガイダンス
+    （aiExtendedGuidance）は従来どおり簡潔モードでは省略する。 */
+ const modelGuidance=`\n\n${concise?aiCoreGuidance():aiSpecificInstruction()}`;
  const extraConsistency=detailed?`\nMaintain matching garment seam placement, body-hair boundaries, and limb spacing across all three views.`:"";
 
  const prompt=`Create one clean, non-sexual adult male character turnaround sheet showing front, side, and back views of the same person.
@@ -3186,21 +3370,21 @@ Preserve the exact name string. Do not add kanji, aliases, pronunciation guides,
 Age: ${state.age}. Gender: ${state.gender}. Nationality: ${state.nationality}. Height: ${state.height}. Weight: ${state.weight}. Body type: ${state.bodyBuild}.
 
 FACE
-Overall impression: ${state.facePreset}.
-Face shape: ${state.faceShape}.
-Forehead: ${state.forehead}.
-Cheekbones: ${state.cheekbones}.
-Jawline: ${state.jaw}.
-Eyelids: ${state.eyelid}.
-Eye shape: ${state.eyeShape}.
-Eye size: ${state.eyeSize}.
-Outer eye corners: ${state.eyeCorner}.
-Eyebrows: ${state.brow}.
-Nose bridge: ${state.nose}.
-Nose tip: ${state.noseTip}.
-Lips: ${state.lips}.
-Ears: ${state.ears}.
-Expression: ${state.expression}.
+Overall impression: ${faceFeatureEnglish("facePreset")}.
+Face shape: ${faceFeatureEnglish("faceShape")}.
+Forehead: ${faceFeatureEnglish("forehead")}.
+Cheekbones: ${faceFeatureEnglish("cheekbones")}.
+Jawline: ${faceFeatureEnglish("jaw")}.
+Eyelids: ${faceFeatureEnglish("eyelid")}.
+Eye shape: ${faceFeatureEnglish("eyeShape")}.
+Eye size: ${faceFeatureEnglish("eyeSize")}.
+Outer eye corners: ${faceFeatureEnglish("eyeCorner")}.
+Eyebrows: ${faceFeatureEnglish("brow")}.
+Nose bridge: ${faceFeatureEnglish("nose")}.
+Nose tip: ${faceFeatureEnglish("noseTip")}.
+Lips: ${faceFeatureEnglish("lips")}.
+Ears: ${faceFeatureEnglish("ears")}.
+Expression: ${faceFeatureEnglish("expression")}.
 
 HAIR AND SKIN
 Hair color: ${state.hairColor}.
@@ -3270,9 +3454,25 @@ ${state.locked||"None."}
 AVOID
 ${state.negative||"extra limbs, malformed hands, inconsistent face, inconsistent body shape, inconsistent garment geometry, unreadable text, logos, watermarks"}`;
 
- const mappedPrompt=sanitizeEnglishPrompt(prompt.replace(/\n{3,}/g,"\n\n").trim());
+ return {prompt,detail};
+}
+function finalizeAssembledPrompt(assembled){
+ const mappedPrompt=sanitizeEnglishPrompt(assembled.prompt.replace(/\n{3,}/g,"\n\n").trim());
  const optimization=optimizeEnglishPrompt(mappedPrompt);
  const finalizedPrompt=stripOrdinaryJapaneseFromEnglish(optimization.text);
+ return {finalizedPrompt,optimization,detail:assembled.detail};
+}
+function generatePrompt(){
+ if(!$("output"))return;
+ let result=finalizeAssembledPrompt(assemblePromptText());
+ let autoAdjusted=false;
+ const profile=aiProfile();
+ if(lengthAutoAdjustEligible() && !result.detail.startsWith("簡潔") && result.finalizedPrompt.length>profile.targetMaxLength){
+   const concise=finalizeAssembledPrompt(assemblePromptText("簡潔（生成成功率重視）"));
+   if(concise.finalizedPrompt.length<result.finalizedPrompt.length){result=concise;autoAdjusted=true;}
+ }
+ LAST_PROMPT_METRICS={length:result.finalizedPrompt.length,limit:profile.targetMaxLength,ai:state.targetAI,autoAdjusted,detailUsed:result.detail};
+ const finalizedPrompt=result.finalizedPrompt,optimization=result.optimization;
  $("output").value=finalizedPrompt;
  if($("criticalRequirements"))$("criticalRequirements").value=criticalRequirementsEnglish();
  renderParameterMappingAudit(finalizedPrompt);
@@ -3282,7 +3482,8 @@ ${state.negative||"extra limbs, malformed hands, inconsistent face, inconsistent
  renderFinalReleaseDiagnostics();
  if($("jpSummary"))$("jpSummary").textContent=formatJapaneseSummaryForDisplay(japaneseSummary());
  if($("transformSummary"))$("transformSummary").textContent=formatAIConversionLogForDisplay(aiConversionLog());
- if($("promptStatus"))$("promptStatus").textContent=state.safeRetryLevel==="安全表現"?"✓ 安全表現で再生成済み":"通常表現"; applyConditionalUI();
+ if($("compileDiagnostics"))$("compileDiagnostics").textContent=compileDiagnostics();
+ if($("promptStatus"))$("promptStatus").textContent=state.safeRetryLevel==="安全表現"?"✓ 安全表現で再生成済み":(autoAdjusted?"✓ 長さの自動調整で簡潔化済み":"通常表現"); applyConditionalUI();
 }
 function safeGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
 function safeSet(k,v){try{localStorage.setItem(k,v);return true}catch(e){return false}}
